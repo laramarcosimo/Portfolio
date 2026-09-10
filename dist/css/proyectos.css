@@ -1,0 +1,1219 @@
+/* --- ESTILOS ESPECÍFICOS PARA PROYECTOS --- */
+
+/* =========================================
+   SECCIÓN DE ESCRITORIO Y BASE
+   ========================================= */
+
+/* Configuración de página clara */
+body.light-page {
+    background-color: #ffffff;
+    color: #192A56;
+    transition: background-color 1.2s ease; /* Transición para el fondo inmersivo */
+}
+
+/* Ajustes globales en modo claro */
+body.light-page .cursor-dot { background-color: #192A56; }
+body.light-page .cursor-dot.active { background-color: #192A56; opacity: 0.4; }
+body.light-page .cursor-dot.on-dark { background-color: #ffffff; }
+body.light-page .nav-link { color: #ffffff; }
+body.light-page .nav-link::after { background-color: #ffffff; }
+body.light-page .btn-contact { background-color: #ffffff; color: #192A56; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
+
+/* Contenedor Principal */
+.cv-container {
+    --primary-color: #192A56;
+    --secondary-color: #2E4E9F;
+    --bg-light: #f4f6f8;
+    --text-dark: #2c3e50;
+    --white: #ffffff;
+    
+    font-family: 'Quicksand', sans-serif;
+    background-color: var(--primary-color);
+    color: var(--text-dark);
+    line-height: 1.6;
+    padding-top: 120px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* =========================================
+   SECCIÓN CARRUSEL PROYECTOS (COVERFLOW 3D)
+   ========================================= */
+.projects-main {
+    padding-top: 100px !important; /* Compensa la altura del header para que las portadas no se corten por arriba */
+    min-height: 100vh;
+    display: block; /* Permite hacer scroll al footer abajo */
+    background-color: #192A56;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Efecto cristal visible sobre fondo liso */
+@media (min-width: 769px) {
+    body.light-page .site-header,
+    .site-header {
+        position: fixed !important;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 100%) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important; /* Soporte para Safari */
+        border-bottom: none !important; /* Eliminamos la línea dura y tajante */
+        box-shadow: none !important; /* Quitamos cualquier sombra que pueda parecer una línea */
+        /* Difumina físicamente el borde del cristal para que desaparezca en el fondo sin un corte recto */
+        -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%) !important;
+        mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%) !important;
+        padding-bottom: 2.5rem !important; /* Margen extra inferior para dar espacio a la transición */
+    }
+}
+
+/* Flechas de navegación */
+.coverflow-nav-btn {
+    position: absolute;
+    top: 46vh; /* Subidas un poco del centro */
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1); /* Fondo muy sutil */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borde fino */
+    width: 40px; /* Reducidas un 30% aprox */
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1rem; /* Icono más pequeño acorde al botón */
+    color: #ffffff; /* Flecha blanca */
+    cursor: pointer;
+    z-index: 20;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px); /* Ligero desenfoque detrás de la flecha */
+}
+.coverflow-nav-btn:hover {
+    background: #ffffff;
+    color: #192A56;
+    transform: translateY(-50%) scale(1.1);
+}
+.coverflow-nav-btn.prev { left: 22vw; } /* Más cerca del carrusel */
+.coverflow-nav-btn.next { right: 22vw; } /* Más cerca del carrusel */
+
+.projects-zigzag {
+    width: 100%;
+    height: calc(100vh - 100px); /* Restamos el margen del header para centrar perfecto la perspectiva 3D */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.project-section {
+    display: flex;
+    position: absolute; /* Apilamiento central para Coverflow */
+    height: 60vh; /* Altura conservadora para garantizar que se vea de un vistazo sin cortarse */
+    width: auto;
+    aspect-ratio: 1 / 1.414; /* Formato A4 Vertical estricto */
+    background-color: transparent;
+    /* Transición extendida a 1.2s con curva sedosa (Deceleration), eliminando el salto brusco de z-index, y suave para el color de fondo */
+    transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), filter 1.2s ease, opacity 1.2s ease, background-color 0.8s ease;
+    border-radius: 12px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none; /* Inactivas por defecto */
+    flex-direction: row;
+}
+
+/* --- ESTADOS DEL COVERFLOW --- */
+.project-section.cf-active {
+    transform: translateX(0) translateZ(150px) rotateY(0deg);
+    opacity: 1;
+    pointer-events: auto;
+    filter: brightness(1);
+}
+.project-section.cf-prev-1 {
+    transform: translateX(-60%) translateZ(-50px) rotateY(35deg);
+    opacity: 0.8; filter: brightness(0.5); pointer-events: auto;
+}
+.project-section.cf-next-1 {
+    transform: translateX(60%) translateZ(-50px) rotateY(-35deg);
+    opacity: 0.8; filter: brightness(0.5); pointer-events: auto;
+}
+.project-section.cf-prev-2 {
+    transform: translateX(-110%) translateZ(-250px) rotateY(45deg);
+    opacity: 0.2; filter: brightness(0.2); /* Más difuminado para ocultar el viaje de retorno del loop */
+    pointer-events: auto; /* Reactivamos los clics en las del fondo por si quieres saltar directo a ellas */
+}
+.project-section.cf-next-2 {
+    transform: translateX(110%) translateZ(-250px) rotateY(-45deg);
+    opacity: 0.2; filter: brightness(0.2); /* Más difuminado para ocultar el viaje de retorno del loop */
+    pointer-events: auto; /* Reactivamos los clics en las del fondo por si quieres saltar directo a ellas */
+}
+
+/* Reestructuración de Columnas para formato Póster fusionado */
+.project-text-col {
+    display: none; /* Ocultamos los textos para dejar la portada limpia visualmente */
+}
+
+.project-img-col {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden; /* Asegura que el zoom interior no rompa los bordes curvos */
+}
+
+/* Contenido de texto Sticky */
+.sticky-content {
+    position: relative;
+    top: auto;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 40px 25px;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.5s ease;
+    pointer-events: none; /* Clicks traspasan a la imagen interactiva */
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 40%, transparent 100%);
+    border-radius: 12px;
+}
+
+/* Mostrar texto solo en el cartel destacado frontal */
+.project-section.cf-active .sticky-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.project-name {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+
+.project-number {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7) !important;
+    margin-left: 0;
+    margin-top: 5px;
+}
+
+/* Botón OPEN minimalista */
+.open-link {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: #ffffff !important;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto; /* Reactivamos click en el botón en sí */
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    margin-top: 10px;
+}
+
+.open-link:hover {
+    color: #96C9FF !important;
+    gap: 12px;
+}
+
+/* Columna de imagen */
+.project-img-col {
+    z-index: 1;
+}
+
+.project-img-col img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+    transform: scale(1) !important;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+/* Animación de "Llamada a la acción" (Zoom interior) en la tarjeta frontal */
+.project-section.cf-active:hover .project-img-col img {
+    transform: scale(1.06) !important;
+}
+
+/* [NUEVO] Interacción Premium: Cursor expandido con texto "Toca" */
+.cursor-dot.hover-project {
+    width: 35px !important; /* Tamaño del círculo reducido a 35px */
+    height: 35px !important; /* Tamaño del círculo reducido a 35px */
+    background-color: #ffffff !important;
+    color: #192A56 !important; /* Azul corporativo para el texto */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.35rem !important; /* Texto aún más pequeño para encajar en 35px */
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    opacity: 1 !important;
+    transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                height 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                background-color 0.4s ease !important;
+}
+
+/* =========================================
+   ZOOM INMERSIVO (UNIVERSO PARALELO)
+   ========================================= */
+body.is-parallel-zooming {
+    overflow: hidden !important;
+}
+
+.parallel-fade {
+    opacity: 0 !important;
+    transform: scale(0.95) !important;
+    pointer-events: none;
+    transition: opacity 1.2s cubic-bezier(0.7, 0, 0.3, 1), transform 1.2s cubic-bezier(0.7, 0, 0.3, 1) !important;
+}
+
+.parallel-clone {
+    position: fixed;
+    z-index: 99990; /* Inmediatamente antes del cursor y el botón volver */
+    object-fit: cover;
+    transition: all 1.2s cubic-bezier(0.7, 0, 0.3, 1); /* [MODIFICADO] Animar todo para transicionar tamaño */
+    will-change: top, left, width, height, transform, opacity; /* Optimización extrema */
+    pointer-events: none;
+}
+
+/* [NUEVO] Contenedor para hacer scroll en el Universo Paralelo */
+.parallel-gallery {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99992; /* Sobre el clon animado y bajo el botón volver */
+    overflow-y: auto;
+    overflow-x: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 0; /* [MODIFICADO] Eliminado el espacio de scroll extra para poder ver el footer */
+}
+
+.parallel-gallery.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.gallery-cover-wrapper {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.gallery-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1); /* Mantiene la escala del túnel original */
+}
+
+.gallery-content {
+    width: 90vw;
+    max-width: 1000px;
+    height: auto;
+    object-fit: contain;
+    margin-top: 10vh;
+    margin-bottom: 15vh;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    z-index: 2;
+}
+
+/* [NUEVO] Sobrescribir estilos para la caja de texto explicativo en el Universo Paralelo */
+div.gallery-content.explanation-box {
+    width: 100vw;
+    max-width: none;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: #96C9FF;
+    color: #192A56;
+    padding: 12vh 5vw;
+    margin-top: 0; /* Elimina el espacio con la foto superior */
+    margin-bottom: 0; /* Elimina el espacio con el video inferior */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.explanation-box p {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.8;
+    text-align: center;
+    max-width: 900px;
+    margin: 0;
+}
+
+.return-btn {
+    position: fixed;
+    top: 40px;
+    left: 5vw;
+    z-index: 99995; 
+    background: transparent;
+    border: none;
+    color: #192A56; /* Azul primario por defecto */
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-30px);
+    transition: opacity 0.6s cubic-bezier(0.7, 0, 0.3, 1), transform 0.6s cubic-bezier(0.7, 0, 0.3, 1), color 0.4s ease, text-shadow 0.4s ease;
+    /* Sombra sutil para asegurar que resalte sobre fondos del mismo color */
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.6); 
+}
+
+body.is-parallel-zooming .return-btn {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+    transition-delay: 0.6s; /* Aparece sutilmente después del inicio del zoom */
+}
+
+.return-btn:hover {
+    opacity: 0.8;
+}
+
+/* Ajuste de color del botón si la imagen de fondo inmersiva es oscura */
+body.zoomed-dark-theme .return-btn {
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* [NUEVO] Estilo para que los videos encajen estéticamente en la galería */
+video.gallery-content {
+    background-color: #ffffff; /* [MODIFICADO] Fondo blanco para fundirse con los vídeos del logo */
+    outline: none;
+    width: 100vw;
+    height: auto; /* [MODIFICADO] Auto permite que tome todo el ancho y escale su altura sin cortar nada */
+    min-height: 50vh; /* [FIX] Evita que colapse a 0 píxeles antes de la carga rompiendo el scroll */
+    max-width: none;
+    object-fit: contain; /* [MODIFICADO] Asegura que el vídeo se reproduzca entero sin recortar sus proporciones */
+    border-radius: 0;
+    margin: 0; /* Se pega completamente a la caja de explicación */
+    display: block; /* Evita el espacio residual nativo inferior de las etiquetas de vídeo */
+}
+
+video.gallery-content + video.gallery-content {
+    margin-top: -2px; /* Solapa muy ligeramente un vídeo con otro para matar la raya por completo */
+}
+
+/* [NUEVO] Diseño específico para hacer el video de explicación más pequeño sin romper el bloque blanco continuo */
+video.gallery-content.video-explicacion {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: auto !important; /* [MODIFICADO] Altura automática para que no genere espacios en blanco */
+    min-height: auto !important;
+    box-sizing: border-box !important;
+    background-color: #ffffff !important;
+    object-fit: contain !important; /* [MODIFICADO] Centra y contiene el video para que se vea entero */
+    padding: 0 25.5vw 8vh 25.5vw !important; /* [MODIFICADO] Reducido un 2% más aumentando el padding lateral (1vw por lado) */
+    margin: 0 !important;
+    box-shadow: none !important; /* [NUEVO] Elimina la sombra que podía percibirse como un marco negro */
+}
+
+/* [NUEVO] Diseño específico para el video de papelería sin recortes */
+video.gallery-content.video-papeleria {
+    width: 100vw !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    object-fit: contain !important; /* Garantiza que el vídeo se vea 100% entero de lado a lado */
+    background-color: #192A56 !important; /* Se funde con el color del tríptico fotográfico superior */
+}
+
+/* [NUEVO] Diseño Full Bleed para respetar el ancho y largo original de los videos de colores */
+video.gallery-content.video-colores-fullbleed {
+    width: 100vw !important;
+    height: auto !important;
+    max-width: 100vw !important; 
+    margin: 0 !important;
+    padding: 0 !important;
+    object-fit: cover !important; /* Garantiza que cubra todo el ancho sin bordes blancos */
+}
+
+.parallel-gallery video.gallery-content.video-colores-fullbleed,
+.parallel-gallery video.gallery-content.video-papeleria {
+    display: block !important;
+}
+
+/* =========================================
+   [NUEVO] VIDEOS PARALELOS (PROYECTO 01)
+   ========================================= */
+.video-parallel-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100vw !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 8vh 0 !important; /* [MODIFICADO] Espacio vertical para compensar la reducción */
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: #ffffff; /* Fusión con el bloque superior */
+}
+
+video.video-half {
+    width: 35vw !important; /* [MODIFICADO] Reducido de 50vw a 35vw */
+    height: auto !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+    display: block !important;
+    background-color: #ffffff !important;
+}
+
+/* [NUEVO] Asegurar que en Web e iPad adapte el ancho al 100% de la pantalla y calcule el largo automáticamente */
+@media (min-width: 768px) {
+    video.gallery-content.video-colores-fullbleed.desktop-video {
+        /* [MODIFICADO] Se elimina la altura fija para que no genere un hueco y se pega a la siguiente sección */
+        height: auto !important; 
+        width: 100vw !important;
+        object-fit: cover !important; /* Usamos cover para que llene el ancho y la altura sea proporcional */
+        transform: scale(1.5) translateY(-5%) !important; /* [MODIFICADO] Subimos el video visualmente un 5% para centrar perfectamente el logo */
+    }
+}
+
+/* [NUEVO] Ocultar la versión móvil en iPad y pantallas grandes (Tablet/Escritorio) */
+@media (min-width: 768px) {
+    .mobile-video,
+    video.gallery-content.video-colores-fullbleed.mobile-video { display: none !important; }
+}
+
+/* [NUEVO] Ocultar la versión de escritorio exclusivamente en móviles puros */
+@media (max-width: 767px) {
+    .desktop-video,
+    video.gallery-content.video-colores-fullbleed.desktop-video { display: none !important; }
+}
+
+.cv-footer .footer-box {
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-align: center;
+    padding: 50px 20px;
+    position: relative; /* Para contener el canvas */
+    overflow: hidden;   /* Las líneas no se salen */
+}
+
+/* Canvas para el footer */
+#cv-footer-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Detrás del contenido */
+    pointer-events: none;
+}
+
+/* Contenido del footer por encima del canvas */
+.cv-footer .footer-contact-summary,
+.cv-footer .footer-links,
+.cv-footer .footer-line,
+.cv-footer .copyright {
+    position: relative;
+    z-index: 2;
+}
+
+.cv-footer .footer-links { margin-top: 15px; }
+.cv-footer .footer-links a { color: #ffffff; text-decoration: none; font-weight: bold; display: inline-block; transition: transform 0.3s ease, color 0.3s ease; padding: 0 10px; }
+.cv-footer .footer-links a:hover { transform: scale(1.3); color: #9690E4; }
+.cv-footer .footer-line { display: none; }
+.cv-footer .copyright {
+    margin-top: 40px; /* Más espacio con la información superior */
+    font-size: 0.85rem; /* Texto más pequeño */
+    opacity: 0.8;
+}
+.footer-contact-link { color: #ffffff; text-decoration: none; transition: color 0.3s; }
+.footer-contact-link:hover { color: #9690E4; text-decoration: underline; }
+
+/* Botón Subir */
+.back-to-top { position: fixed; bottom: 30px; right: 30px; background-color: #192A56; color: #ffffff; width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.4s ease; z-index: 1000; opacity: 0; pointer-events: none; transform: translateY(20px); }
+.back-to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.back-to-top.show:hover { background-color: #ffffff; color: #192A56; transform: scale(1.1) translateY(-5px); }
+
+.back-to-top.on-dark-bg { background-color: #ffffff; color: #192A56; }
+.back-to-top.on-dark-bg:hover { background-color: #192A56; color: #ffffff; }
+
+/* =========================================
+   SECCIÓN IDENTIDAD VISUAL SECUENCIAL
+   ========================================= */
+.parallel-gallery div.gallery-content.seccion-identidad {
+    width: 100vw !important;
+    height: auto !important; 
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    display: flex !important; 
+    flex-direction: row !important; /* Lado a lado en escritorio */
+    background-color: #192A56 !important; /* [NUEVO] El bloque azul oscuro ahora actúa como fondo sólido de pantalla completa */
+}
+
+.capa-color {
+    position: relative;
+    width: 33.333vw; /* Cada uno ocupa exactamente un tercio */
+    min-height: 100vh; /* Altura aumentada para hacer los cuadrados más largos */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Alineamos desde arriba para evitar diferencias por el logo */
+    align-items: flex-start;
+    padding: 25vh 4vw 10vh 4vw; /* Forzamos exactamente la misma altura superior para alinear los textos */
+    box-sizing: border-box;
+
+    /* [MODIFICADO] Control matemático desde JavaScript vía variables CSS */
+    --p: var(--scroll-progress, 0);
+    --inv: calc(1 - var(--p));
+    
+    opacity: 1;
+    transition: none; /* Anulamos transition para que JS controle cada milímetro al hacer scroll */
+}
+
+/* Configuraciones y colores (Efecto "Abrazo" Dinámico al Scroll) */
+.capa-color.lavanda { 
+    background-color: #9690E4; color: #192A56; 
+    transform: translateX(calc(-15vw * var(--inv))); 
+}
+.capa-color.medianoche { 
+    background-color: #192A56; color: #9690E4; 
+    transform: translateZ(0); /* Eliminada la escala para que el logo mida exactamente lo mismo que el resto */
+}
+.capa-color.pastel { 
+    background-color: #96C9FF; color: #192A56; 
+    transform: translateX(calc(15vw * var(--inv))); 
+}
+
+.capa-color .text-container {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    height: 35vh; /* [NUEVO] Unifica la altura para que todos los logos comiencen en la misma línea */
+    min-height: 280px; /* [NUEVO] Altura mínima de seguridad contra saltos de línea */
+}
+
+.capa-color h2.tw-line { font-size: clamp(1.2rem, 2vw, 2rem); margin: 0 0 1rem 0; min-height: clamp(3.5rem, 6vw, 5rem); }
+.capa-color p.tw-line { font-size: clamp(0.9rem, 1.2vw, 1.1rem); margin: 0.3rem 0; white-space: pre-wrap; min-height: clamp(1.5rem, 2vw, 2rem); } /* Textos de códigos más legibles en Web/iPad */
+
+/* Previene el colapso visual de altura antes de la inserción dinámica de JS */
+.tw-line::after { content: '\200B'; }
+
+.tw-cursor {
+    display: inline-block;
+    width: auto;
+    animation: blinkCursor 0.8s infinite step-end;
+    color: inherit;
+    font-weight: 400;
+}
+@keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+.logo-fade {
+    width: 18.4vw; max-width: 276px; min-width: 138px; margin-top: 6rem; /* Más aire entre el texto y el primer logo */
+    align-self: center; /* Centra los logos horizontalmente dentro de su cuadrado */
+    opacity: 0; transform: translateY(-15px); /* El logo también viene de arriba hacia abajo */
+    transition: opacity 1s ease-in-out, transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.logo-fade + .logo-fade {
+    margin-top: 2.5rem; /* Mayor separación entre el primer y segundo logo apilado ahora que son más grandes */
+}
+
+.logo-fade.visible { opacity: 1; transform: translateY(0); }
+
+/* =========================================
+   SECCIÓN DE MÓVIL (MEDIA QUERIES)
+   ========================================= */
+
+@media (max-width: 768px) {
+    /* [FIX] Restaura el header fijo en móvil para la página de proyectos,
+       anulando el estilo 'absolute' que se aplica a las 'light-page' desde estilo.css.
+       Esto devuelve el layout de logo a la izquierda y menú a la derecha. */
+    body.light-page .site-header {
+        position: fixed !important;
+        background-color: rgba(25, 42, 86, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+    }
+
+    /* Ajustes Coverflow Adaptado a Móvil */
+    .projects-main {
+        height: 100vh;
+        min-height: 100vh;
+        padding-bottom: 0;
+    }
+    .projects-zigzag {
+        height: 55vh; /* Altura ideal en móvil para que el A4 se vea de un vistazo */
+        margin-top: 5vh;
+    }
+    .project-section {
+        height: 100%;
+        width: auto;
+        aspect-ratio: 1 / 1.414; /* Mantener formato A4 vertical en móvil */
+        margin: 0;
+    }
+    .coverflow-nav-btn {
+        width: 35px; /* Ajuste proporcional para móviles */
+        height: 35px;
+        font-size: 1rem;
+    }
+    /* Estados Coverflow Móvil */
+    .project-section.cf-prev-1 { transform: translateX(-80%) translateZ(-100px) rotateY(40deg); opacity: 0.8; }
+    .project-section.cf-next-1 { transform: translateX(80%) translateZ(-100px) rotateY(-40deg); opacity: 0.8; }
+    .project-section.cf-prev-2, .project-section.cf-next-2 { opacity: 0; pointer-events: none; }
+
+    .project-text-col, .project-img-col {
+        width: 100%;
+        height: 100%;
+    }
+    .project-img-col img {
+        height: 100%;
+    }
+
+    .sticky-content {
+        height: 100%;
+        position: relative;
+        top: auto;
+        padding: 20px 15px;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 5px;
+    }
+
+    .project-name { font-size: 1.3rem; }
+    .project-number { font-size: 0.8rem; margin-top: 2px; margin-left: 0; }
+
+        /* Ajuste de fuente en móvil para el texto inmersivo */
+        .explanation-box p {
+            font-size: 0.85rem; /* Letra más pequeña para móvil */
+            line-height: 1.5;   /* Interlineado ajustado proporcionalmente */
+            padding: 0 30px;    /* Mayor margen lateral */
+        }
+
+    /* Ajustar tamaño del video explicativo en móvil */
+    video.gallery-content.video-explicacion {
+        height: auto !important;
+        min-height: auto !important;
+        padding: 0 1vw !important; /* [MODIFICADO] Reducido un 2% añadiendo 1vw de margen a cada lado */
+        background-color: transparent !important; /* Fondo transparente para fundirse con la web */
+    }
+
+    /* [MODIFICADO] Forzar al video móvil a ocupar la pantalla de lado a lado sin bordes blancos */
+    video.gallery-content.video-colores-fullbleed.mobile-video {
+        transform: scale(1) !important;
+        padding: 0 !important;
+        object-fit: cover !important;
+    }
+
+    /* [NUEVO] Ajustes videos paralelos en móvil (Apilados) */
+    .video-parallel-container {
+        flex-direction: column !important;
+        align-items: center;
+        padding: 5vh 0 !important;
+        gap: 2vh; /* [NUEVO] Pequeño espacio entre los videos al estar apilados */
+    }
+    video.video-half {
+        width: 85vw !important; /* [MODIFICADO] Reducido en móvil de 100vw a 85vw */
+    }
+
+    /* Ajustes para que la Identidad Visual vuelva a ser vertical en móviles */
+    .parallel-gallery div.gallery-content.seccion-identidad {
+        flex-direction: column !important;
+        margin-bottom: 15vh !important; /* [NUEVO] Da margen de scroll final para que el último bloque azul pueda llegar hasta la marca */
+    }
+    .capa-color {
+        width: 100vw;
+        min-height: 50vh; /* Cuadrados más largos en móvil */
+        padding: 8vh 8vw;
+        justify-content: center; /* En móvil los centramos individualmente de nuevo */
+    }
+
+    /* Hacer que las capas vengan completamente desde fuera de la pantalla (100vw) en móvil */
+    .capa-color.lavanda { transform: translateX(calc(-100vw * var(--inv))); }
+    .capa-color.pastel { transform: translateX(calc(100vw * var(--inv))); }
+    .capa-color.medianoche { transform: translateZ(0); } /* Eliminado el efecto de encogimiento en móvil */
+
+    .capa-color .text-container { height: auto; min-height: auto; } /* En móvil dejamos que fluya natural de nuevo */
+    .capa-color h2.tw-line { font-size: clamp(1.2rem, 4vw, 1.8rem); min-height: auto; } /* Textos más pequeños */
+    .capa-color p.tw-line { font-size: clamp(0.9rem, 3.5vw, 1.2rem); min-height: auto; } /* Códigos más grandes y legibles en móvil */
+    .logo-fade { width: 46vw; margin-top: 4rem; } /* Logos un poco más grandes en móvil */
+}
+
+/* =========================================
+   [NUEVO] COMPONENTE CATÁLOGO TIPOGRÁFICO
+   ========================================= */
+.typo-catalog-container {
+    width: 100vw !important;
+    max-width: none !important;
+    height: auto;
+    min-height: 100vh;
+    background-color: transparent;
+    color: #ffffff;
+    font-family: 'Quicksand', sans-serif;
+    display: flex;
+    padding: 0;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    /* Variable para controlar el peso de fuente desde JS */
+    --font-weight: 300;
+}
+
+/* [NUEVO] Columna única para mostrar una sola tipografía (Marca Personal, Identidad Visual) */
+.typo-single-col {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: transparent; /* Hereda del contenedor principal */
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.typo-single-col .typo-font-panel {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.typo-left-col {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding-right: 0;
+    background-color: #DB251E;
+    min-height: 100vh;
+}
+
+.typo-right-col {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    background-color: #0032A0;
+    min-height: 100vh;
+}
+
+.typo-font-panel {
+    min-height: 100%;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.typo-panel-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+.typo-single-col .typo-panel-inner {
+    align-items: center;
+    text-align: center;
+}
+
+/* [NUEVO] Layout dividido dentro de columna única (Marca Personal / Identidad) */
+.typo-split-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+}
+
+.typo-split-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.typo-split-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.typo-split-left .typo-title {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.typo-title {
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: var(--font-weight);
+    margin-bottom: 2rem;
+    letter-spacing: -0.05em;
+    transition: font-weight 0.4s ease;
+}
+
+.typo-weights-menu {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1.5rem;
+}
+
+.typo-single-col .typo-weights-menu {
+    justify-content: center;
+}
+
+.typo-weight-btn {
+    background: none;
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    color: #ffffff;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.75;
+}
+
+.typo-weight-btn:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.typo-weight-btn.active {
+    opacity: 1;
+    background-color: #DDAA55;
+    border-color: #DDAA55;
+    color: #192A56;
+    font-weight: 700;
+}
+
+.typo-char-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.5rem;
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    font-weight: var(--font-weight);
+    letter-spacing: -0.05em;
+    transition: font-weight 0.4s ease;
+}
+
+.typo-char-grid .typo-full-row {
+    grid-column: 1 / -1; /* Ocupa todas las columnas */
+    text-align: center;
+}
+
+.typo-single-col .typo-char-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem 2.5rem;
+}
+
+.typo-single-col .typo-char-grid .typo-full-row {
+    flex-basis: 100%;
+}
+
+/* Sobrescribir el centrado cuando el abecedario está en la parte izquierda */
+.typo-single-col .typo-split-left .typo-char-grid {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.typo-display {
+    font-size: clamp(10rem, 18vw, 18rem);
+    font-weight: var(--font-weight);
+    color: #ffffff;
+    line-height: 1;
+    display: flex;
+    flex-direction: row; /* [MODIFICADO] Las letras ahora se posicionan en la misma línea */
+    align-items: center; /* [MODIFICADO] Centrado vertical perfecto */
+    justify-content: center;
+    gap: 15px; /* [NUEVO] Separación ligera entre la A y la a */
+    letter-spacing: -0.05em;
+    transition: font-weight 0.4s ease;
+}
+
+/* --- Media Queries para Móvil --- */
+@media (max-width: 768px) {
+    .typo-catalog-container {
+        flex-direction: column;
+        padding: 4vh 10vw 8vh 10vw; /* [MODIFICADO] Menos padding superior */
+        margin-top: -10vh !important; /* [NUEVO] Absorbe el hueco grande de la sección anterior */
+        min-height: auto; /* Altura automática en móvil */
+    }
+
+    .typo-single-col, .typo-left-col, .typo-right-col {
+        width: 100%;
+        padding-right: 0;
+    }
+
+    .typo-right-col {
+        margin-top: 3rem;
+    }
+
+    .typo-char-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 columnas en móvil */
+        font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+        justify-items: center; /* [NUEVO] Centra los pares de letras horizontalmente */
+        text-align: center;
+    }
+
+    .typo-title {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .typo-display {
+        font-size: clamp(5rem, 18vw, 8rem);
+    }
+
+    .typo-weights-menu {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* [MODIFICADO] Forzar 2 arriba y 2 abajo */
+        gap: 1rem;
+    }
+
+    .typo-weight-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Apilamiento natural para dispositivos móviles */
+    .typo-split-container {
+        flex-direction: column;
+        gap: 4rem;
+    }
+
+    .typo-split-left {
+        align-items: center;
+        text-align: center;
+    }
+
+    .typo-split-left .typo-title,
+    .typo-single-col .typo-split-left .typo-char-grid {
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+/* =========================================
+   [NUEVO] TRÍPTICO DE fotos (PROYECTO 01)
+   ========================================= */
+.triptych-container {
+    display: flex;
+    flex-direction: row !important;
+    width: 100vw !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: #192A56; /* [NUEVO] Fondo para que el efecto de ondas nazca del color azul */
+}
+
+.triptych-container img {
+    width: 33.3333vw;
+    height: auto;
+    display: block;
+    margin: 0;
+    padding: 0;
+    object-fit: cover; /* Evita que queden huecos si tienen proporciones ligeramente distintas */
+    --wave-progress: 0; /* [NUEVO] Variable controlada por JS */
+    transform: translateZ(0); /* Aceleración de hardware para animaciones ultra fluidas */
+    will-change: mask-position, -webkit-mask-position;
+}
+
+/* Laterales (Riendo y De pie): Ola revelando desde ABAJO */
+.triptych-container img:nth-child(odd) {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200' preserveAspectRatio='none'%3E%3Cpath d='M0,100 C35,60 65,140 100,100 L100,200 L0,200 Z' fill='black'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200' preserveAspectRatio='none'%3E%3Cpath d='M0,100 C35,60 65,140 100,100 L100,200 L0,200 Z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-size: 100% 200%; mask-size: 100% 200%;
+    -webkit-mask-position: 0% calc(var(--wave-progress) * 100%); 
+    mask-position: 0% calc(var(--wave-progress) * 100%);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+
+/* Centro (Sentada): Ola revelando desde ARRIBA */
+.triptych-container img:nth-child(even) {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,100 C65,140 35,60 0,100 Z' fill='black'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,100 C65,140 35,60 0,100 Z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-size: 100% 200%; mask-size: 100% 200%;
+    -webkit-mask-position: 0% calc((1 - var(--wave-progress)) * 100%); 
+    mask-position: 0% calc((1 - var(--wave-progress)) * 100%);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+
+/* --- Media Queries para Móvil (Tríptico) --- */
+@media (max-width: 768px) {
+    .triptych-container {
+        flex-direction: column !important; /* Apila las fotos verticalmente */
+    }
+    .triptych-container img {
+        width: 100vw !important; /* Cada foto ocupa el 100% del ancho del móvil */
+    }
+}
+
+/* =========================================
+   [NUEVO] ESTILOS ESPECÍFICOS POR PROYECTO
+   ========================================= */
+
+/* Estilos para el proyecto "Identidad Visual" de Jaime */
+#proyecto-identidad-visual .project-name {
+    font-family: 'Fieldwork', sans-serif; /* Tipografía solicitada */
+    color: #000000; /* Color negro sobre fondo blanco */
+}
+
+/* Al pasar el ratón, el JS añade .dark-theme, y esta regla asegura que el texto se vuelva blanco */
+#proyecto-identidad-visual.dark-theme .project-name {
+    color: #ffffff;
+}
+
+/* =========================================
+   [NUEVO] FOOTER DE HERRAMIENTAS (PROYECTO 01)
+   ========================================= */
+.project-tools-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 30px 20px 50px 20px !important; /* Override padding, ajustado para centrado visual */
+    background-color: #192A56 !important; /* Match stationery background */
+    color: #ffffff;
+    font-family: 'Quicksand', sans-serif;
+    position: relative; /* [NUEVO] Necesario para contener el canvas de líneas */
+    overflow: hidden;   /* [NUEVO] Asegura que las líneas no se salgan */
+}
+
+.project-tools-footer span {
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 1;
+    color: #ffffff; /* Asegura que el texto sea blanco */
+    position: relative; /* [NUEVO] Para estar sobre el canvas */
+    z-index: 2;
+}
+
+.project-tools-footer .web-link {
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+}
+
+.project-tools-footer .web-link:hover {
+    color: #9690E4;
+    transform: scale(1.15);
+}
+
+.project-tools-footer .tools-icons {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    position: relative; /* [NUEVO] Para estar sobre el canvas */
+    z-index: 2;
+}
+
+.project-tools-footer .tools-icons img,
+.project-tools-footer .tools-icons i,
+.project-tools-footer .tools-icons .square-icon {
+    height: 45px;
+    width: auto;
+    font-size: 45px; /* Para los iconos de FontAwesome */
+    color: #ffffff;
+    object-fit: contain;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+    opacity: 0.8;
+}
+
+.project-tools-footer .tools-icons .square-icon {
+    width: 45px;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Quicksand', sans-serif;
+    background-color: #ffffff;
+    color: #192A56;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.project-tools-footer .tools-icons img:hover,
+.project-tools-footer .tools-icons i:hover,
+.project-tools-footer .tools-icons .square-icon:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* =========================================
+   [NUEVO] TRANSICIÓN DE DIBUJO LINEAL FLUIDO
+   ========================================= */
+#drawing-transition-overlay {
+    position: fixed;
+    inset: 0; /* top, right, bottom, left = 0 */
+    z-index: 99999; /* Por encima de todo */
+    pointer-events: none;
+    opacity: 0;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#drawing-transition-overlay svg {
+    width: 50vmin; /* Tamaño relativo al viewport más pequeño */
+    height: 50vmin;
+    overflow: visible; /* Permite que el stroke se expanda fuera del viewBox */
+}
+
+#drawing-transition-overlay path {
+    fill: none;
+    stroke: #192A56; /* Color azul corporativo */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}

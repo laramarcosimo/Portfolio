@@ -1,14 +1,85 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Portafolio personal" />
-    <title>Mi Portafolio</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio</title>
+    <link rel="stylesheet" href="dist/css/estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- FONDO TOPOGRÁFICO -->
+    <canvas id="topo-canvas"></canvas>
+
+    <!-- CURSOR PERSONALIZADO -->
+    <div class="cursor-dot"></div>
+
+    <div id="preloader">
+        <div class="curtain top"></div>
+        <div class="curtain bottom"></div>
+        <video id="loader-video" autoplay muted playsinline>
+            <source src="assets/VIDEOS/logo_azul.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <main>
+        <header class="site-header">
+            <div class="logo-container">
+                <a href="index.html?skipIntro=true">
+                    <img src="assets/fotos/logo_blanco.png" alt="Logo" class="site-logo">
+                </a>
+            </div>
+            <button class="menu-toggle" aria-label="Abrir menú">
+                <img src="assets/fotos/menublanco.png" alt="Menú">
+            </button>
+
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="dist/html/curriculum.html" class="nav-link"><i class="fas fa-file-invoice"></i>
+                            Currículum</a></li>
+                    <li><a href="dist/html/proyectos.html" class="nav-link"><i class="fas fa-briefcase"></i>
+                            Proyectos</a>
+                    </li>
+                </ul>
+                <a href="dist/html/contacto.html" class="btn-contact">Contacto</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div class="hero-sticky-container">
+                <h1 class="hero-title">
+                    <span>Aprender,</span> <span>crecer</span> <br class="mobile-break"> <span>y</span>
+                    <span>evolucionar.</span>
+                </h1>
+            </div>
+        </section>
+
+        <!-- NUEVA SECCIÓN: DETRÁS DEL DISEÑO -->
+        <section class="about-section" id="magnetic-section">
+            <div class="creative-sticky-wrapper">
+                <h2 class="creative-title">DETRÁS DEL DISEÑO</h2>
+
+                <div class="chaos-gallery">
+                    <img src="assets/fotos/gift/gift1.jpg" class="chaos-img" alt="Diseño 1">
+                    <img src="assets/fotos/gift/gift2.jpeg" class="chaos-img" alt="Diseño 2">
+                    <img src="assets/fotos/gift/gift3.jpeg" class="chaos-img" alt="Diseño 3">
+                    <img src="assets/fotos/gift/gift4.JPG" class="chaos-img" alt="Diseño 4">
+                </div>
+
+                <div class="creative-text">
+                    <p>Publicista y diseñadora en constante evolución.<br class="desktop-break">
+                        Creo en la estrategia que nace de la sinceridad<br class="desktop-break">
+                        y en el diseño que cuenta historias reales.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="dist/js/estructura.js"></script>
+</body>
+
 </html>

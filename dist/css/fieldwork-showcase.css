@@ -1,0 +1,89 @@
+/* 1. Configuración de fuentes locales con @font-face */
+
+/* Declaración de 4 familias de fuentes independientes, como se solicitó */
+@font-face {
+    font-family: 'Hum-Hair';
+    src: url('../assets/tipografia/jaime/Fieldwork-Hum-Hair.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Hum-Light';
+    src: url('../assets/tipografia/jaime/Fieldwork-Hum-Light.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Hum-Regular';
+    src: url('../assets/tipografia/jaime/Fieldwork-Hum-Regular.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Semi-Bold-Geo';
+    src: url('../assets/tipografia/jaime/Fieldwork-Semi-Bold-Geo.otf') format('opentype');
+}
+
+/* Estilos generales para la demostración */
+body {
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.font-showcase {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* 2. Estructura de la página */
+
+/* Título principal con la fuente Regular */
+.main-title {
+    font-family: 'Hum-Regular', sans-serif;
+    font-size: 4rem;
+    color: #1d1d1d;
+    margin-bottom: 30px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Estilo base para todos los botones */
+.font-btn {
+    padding: 12px 24px;
+    border: 2px solid #ddd;
+    background-color: #fff;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.font-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 3. Requisito técnico: Aplicar cada variante de fuente a su botón */
+
+.btn-hair {
+    font-family: 'Hum-Hair', sans-serif;
+}
+.btn-light {
+    font-family: 'Hum-Light', sans-serif;
+}
+.btn-regular {
+    font-family: 'Hum-Regular', sans-serif;
+}
+.btn-geo {
+    font-family: 'Semi-Bold-Geo', sans-serif;
+}

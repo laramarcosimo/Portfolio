@@ -1,0 +1,614 @@
+/* --- ESTILOS ESPECÍFICOS PARA CURRICULUM --- */
+
+/* [NUEVO] Declaración de la familia de fuentes local Quicksand */
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+/* =========================================
+   SECCIÓN DE ESCRITORIO Y BASE
+   ========================================= */
+
+/* Configuración de página clara (Fondo blanco) */
+body.light-page {
+    background-color: #ffffff;
+    color: #192A56;
+}
+
+/* Ajustes de elementos globales en modo claro */
+body.light-page .cursor-dot { background-color: #192A56; }
+body.light-page .cursor-dot.active { background-color: #192A56; opacity: 0.4; }
+body.light-page .cursor-dot.on-dark { background-color: #ffffff; }
+body.light-page .nav-link { color: #192A56; }
+body.light-page .nav-link::after { background-color: #192A56; }
+body.light-page .btn-contact { background-color: #192A56; color: #ffffff; box-shadow: 0 4px 10px rgba(25, 42, 86, 0.2); }
+
+.light-text { font-weight: 300; opacity: 0.9; }
+
+/* Variables y Contenedor Principal del CV */
+.cv-container {
+    --primary-color: #192A56;
+    --secondary-color: #2E4E9F;
+    --bg-light: #f4f6f8;
+    --text-dark: #2c3e50;
+    --white: #ffffff;
+    
+    font-family: 'Quicksand', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+    padding-top: 120px;
+    font-weight: 400; /* [NUEVO] Peso regular como base para el cuerpo */
+}
+
+/* Header del CV */
+.cv-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 90px 80px;
+    text-align: center;
+    position: relative; /* Necesario para contener el canvas */
+    overflow: hidden;   /* Asegura que las líneas no salgan del cuadrado */
+}
+
+.cv-container .profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid var(--white);
+    margin-bottom: 15px;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative; /* Para que quede por encima de las líneas */
+    z-index: 2;
+}
+
+.cv-container .profile-pic:hover { transform: scale(1.1) rotate(2deg); }
+
+.cv-container h1 { 
+    margin: 0; 
+    font-size: 2.2rem; 
+    letter-spacing: 1px; 
+    color: var(--white); 
+    font-weight: 700; /* [NUEVO] H1 con peso Bold */
+    position: relative; /* Para que quede por encima de las líneas */
+    z-index: 2;
+}
+.cv-container .subtitle { 
+    font-size: 1rem; 
+    opacity: 0.9; 
+    font-weight: 400; /* [NUEVO] Subtítulo con peso Regular */
+    position: relative; /* Para que quede por encima de las líneas */
+    z-index: 2;
+}
+
+/* Canvas de líneas topográficas dentro del header */
+#cv-header-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Detrás del contenido (z-index 2) pero sobre el fondo azul */
+    pointer-events: none;
+}
+
+/* Contenido principal del CV, donde van las secciones */
+.cv-content {
+    padding-bottom: 100px; /* Reducimos el espacio extra para un final más limpio */
+}
+
+/* Secciones del CV */
+.cv-container section {
+    max-width: 980px; /* Aumentado un 15% aprox. (de 850px) */
+    margin: 60px auto;
+    padding: 40px;
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.cv-container h2 {
+    color: var(--primary-color);
+    position: relative;
+    padding-bottom: 12px;
+    font-size: 1.4rem;
+    font-weight: 700; /* [NUEVO] H2 con peso Bold */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 2px solid rgba(26, 44, 90, 0.1);
+    margin-bottom: 25px;
+}
+
+.cv-container h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.4s ease;
+}
+
+.cv-container h2:hover::after { width: 100%; background-color: var(--secondary-color); }
+.cv-container h2 i { color: var(--primary-color); transition: 0.3s; }
+.cv-container h2:hover i { color: var(--secondary-color); transform: scale(1.2); }
+
+/* Datos Personales */
+/* Aumentar tamaño de la fuente del texto principal de "Sobre mí" */
+#sobre-mi > p {
+    font-size: 1.25rem;
+    font-weight: 300; /* [NUEVO] Descripción larga con peso Light */
+}
+
+.personal-data {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    background: var(--bg-light);
+    padding: 20px;
+    border-radius: 8px;
+}
+.personal-data p { margin: 0; font-size: 1.1875rem; font-weight: 400; } /* Aumento del 25% */
+.personal-data i { color: var(--secondary-color); width: 25px; }
+
+/* Listas */
+.cv-container ul { padding-left: 20px; list-style: none; }
+.cv-container li { margin-bottom: 12px; position: relative; transition: all 0.2s ease; display: flex; align-items: center; gap: 10px; }
+.cv-container li::before {
+    content: "";
+    position: absolute;
+    left: -25px;
+    width: 20px;
+    height: 20px;
+    background-image: url('../assets/fotos/lineaazul_ancha.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+}
+.cv-container li:hover { font-weight: bold; color: var(--primary-color); }
+.cv-container li:hover::before { transform: translateY(-50%) scale(1.5); }
+.cv-container li:hover strong { font-size: 1.1rem; transition: font-size 0.2s; }
+.cv-container li i { color: var(--secondary-color); width: 20px; text-align: center; }
+
+/* Experiencia Laboral */
+.experience-timeline { border-left: 3px solid var(--bg-light); padding-left: 20px; margin-left: 10px; }
+.job-card {
+    position: relative;
+    margin-bottom: 30px;
+    padding: 25px;
+    background: var(--white);
+    border: 1px solid var(--bg-light);
+    border-radius: 8px;
+    transition: 0.3s ease;
+}
+.job-card::before {
+    content: '';
+    position: absolute;
+    left: -33px;
+    top: 25px;
+    width: 20px;
+    height: 20px;
+    background: var(--secondary-color);
+    border: 4px solid var(--white);
+    border-radius: 50%;
+}
+.job-card:hover {
+    box-shadow: 0 10px 20px rgba(26, 44, 90, 0.1);
+    border-color: var(--secondary-color);
+    transform: translateX(5px);
+}
+.job-header { display: flex; justify-content: space-between; align-items: center; }
+.job-link { text-decoration: none; color: var(--secondary-color); transition: color 0.3s; }
+.job-link:hover { color: var(--primary-color); }
+.job-date { background: var(--primary-color); color: white; padding: 4px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+.job-role { font-weight: bold; color: var(--secondary-color); margin: 10px 0; }
+.job-desc { font-size: 1.125rem; color: #555; } /* Aumento del 25% */
+
+/* Ocultar versión móvil de la fecha por defecto */
+.mobile-ver { display: none; }
+
+/* --- Habilidades (Flip Cards) --- */
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centra las tarjetas y la última si es impar */
+    gap: 30px;
+    margin: 30px auto;
+    max-width: 1000px; /* Ancho aumentado para permitir 3 columnas */
+    perspective: 1000px;
+}
+
+.flip-card {
+    background-color: transparent;
+    width: calc(33.333% - 20px); /* 3 columnas: 33% menos ajuste del gap */
+    height: 220px;
+    border-radius: 10px;
+}
+
+/* Responsive: En móviles se apilan en 1 columna */
+@media (max-width: 768px) {
+    .flip-card {
+        width: 100%;
+    }
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.7s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+/* El giro ahora se controla por la clase .is-flipped (JS) en lugar de hover */
+.flip-card-inner.is-flipped {
+    transform: rotateY(180deg); 
+}
+
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.flip-card-front { background-color: var(--white); border: 1px solid var(--bg-light); }
+.flip-card-front img { width: 80px; height: 80px; object-fit: contain; }
+
+/* Ajuste visual específico para el logo de IA */
+.ai-logo {
+    width: 100px !important; /* Ligeramente más grande para igualar visualmente a los demás */
+    height: 100px !important;
+}
+
+.flip-card-back { color: white; transform: rotateY(180deg); font-size: 1.125rem; font-weight: 300; } /* Aumento del 25% */
+.photoshop-bg { background-color: #1A2C5A; } /* Azul oscuro Photoshop */
+.illustrator-bg { background-color: #1A2C5A; } /* Naranja oscuro Illustrator */
+.after-effects-bg { background-color: #1A2C5A; } /* Morado oscuro After Effects */
+.premiere-bg { background-color: #1A2C5A; } /* Rosa/Morado oscuro Premiere */
+.indesign-bg { background-color: #1A2C5A; } /* Fondo oscuro InDesign */
+.ai-bg { background-color: #1A2C5A; } /* Fondo oscuro para tarjeta IA */
+
+/* Indicador de giro (Hint) */
+.flip-hint {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: var(--secondary-color);
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+
+@keyframes pulse-hint {
+    0% { transform: scale(1) rotate(0deg); opacity: 0.4; }
+    50% { transform: scale(1.2) rotate(10deg); opacity: 0.8; }
+    100% { transform: scale(1) rotate(0deg); opacity: 0.4; }
+}
+
+/* --- Habilidades Estratégicas (Barras de Progreso) --- */
+.strategic-skills {
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.strategic-skills h3 {
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.skill-item {
+    margin-bottom: 25px;
+}
+
+.skill-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-weight: 500; /* [NUEVO] Peso Medium para subtítulos de habilidad */
+    color: #444; /* Gris oscuro */
+    font-size: 0.95rem;
+}
+
+.progress-track {
+    width: 100%;
+    height: 6px;
+    background-color: #eee;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0; /* Empieza en 0 para la animación JS */
+    background-color: #192A56; /* Color Dorado/Mostaza */
+    border-radius: 10px;
+    transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s;
+}
+
+.skill-item:hover .progress-fill {
+    background-color: #192A56; /* Dorado un poco más oscuro al hover */
+}
+
+.skill-hover-desc {
+    font-size: 1.0625rem; /* Aumento del 25% */
+    color: #666;
+    margin-top: 0;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    font-weight: 300; /* [NUEVO] Descripción con peso Light */
+    transform: translateY(-5px);
+}
+
+.skill-item:hover .skill-hover-desc {
+    max-height: 50px; /* Altura suficiente para mostrar el texto */
+    opacity: 1;
+    margin-top: 8px;
+    transform: translateY(0);
+}
+
+.skill-item.skill-item--highlighted {
+    background-color: #fdf8e9; /* Un fondo crema/dorado muy claro */
+    border-left: 4px solid #D4AF37;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+.skill-item--highlighted .skill-header {
+    justify-content: flex-start; /* Alinear al inicio */
+    margin-bottom: 5px;
+}
+
+.skill-item--highlighted .skill-name {
+    color: #B59020; /* Dorado oscuro */
+    font-weight: 700;
+}
+
+/* Descripción para la habilidad destacada (siempre visible) */
+.skill-item--highlighted .skill-desc {
+    font-size: 1.125rem; /* Aumento del 25% */
+    color: #555;
+    line-height: 1.5;
+    font-weight: 300; /* [NUEVO] Descripción con peso Light */
+    margin: 0;
+    opacity: 1;
+    max-height: none;
+}
+
+/* --- Intereses / Aficiones (Micro-Tarjetas) --- */
+.interests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.interest-card {
+    background-color: var(--white);
+    border: 1px solid var(--bg-light);
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.interest-card i {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    transition: transform 0.3s ease;
+}
+
+.interest-card span { font-weight: 500; color: var(--text-dark); font-size: 1.1875rem; } /* Aumento del 25% */
+
+.interest-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(26, 44, 90, 0.08); border-color: var(--secondary-color); }
+.interest-card:hover i { transform: scale(1.2); color: var(--primary-color); }
+.interest-card:hover span { color: var(--primary-color); }
+
+.cv-footer .footer-box {
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-align: center;
+    padding: 50px 20px;
+    position: relative; /* Para contener el canvas */
+    overflow: hidden;   /* Las líneas no se salen */
+}
+
+/* Canvas para el footer */
+#cv-footer-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Detrás del contenido */
+    pointer-events: none;
+}
+
+/* Contenido del footer por encima del canvas */
+.cv-footer .footer-contact-summary,
+.cv-footer .footer-links { margin-top: 15px; }
+.cv-footer .footer-line,
+.cv-footer .copyright {
+    position: relative;
+    z-index: 2;
+}
+
+.cv-footer .footer-links a { color: #ffffff; text-decoration: none; font-weight: bold; display: inline-block; transition: transform 0.3s ease, color 0.3s ease; padding: 0 10px; }
+.cv-footer .footer-links a:hover { transform: scale(1.3); color: #9690E4; }
+.cv-footer .footer-line { display: none; }
+.cv-footer .copyright {
+    margin-top: 40px; /* Más espacio con la información superior */
+    font-size: 0.85rem; /* Texto más pequeño */
+    opacity: 0.8;
+}
+.footer-contact-link { color: #ffffff; text-decoration: none; transition: color 0.3s; }
+.footer-contact-link:hover { color: #9690E4; text-decoration: underline; }
+
+/* Botón Subir */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #192A56;
+    color: #ffffff;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.4s ease;
+    z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(20px);
+}
+.back-to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.back-to-top.show:hover { background-color: var(--white); color: #192A56; transform: scale(1.1) translateY(-5px); }
+
+.back-to-top.on-dark-bg { background-color: #ffffff; color: #192A56; }
+.back-to-top.on-dark-bg:hover { background-color: #192A56; color: #ffffff; }
+
+/* Sidebar de Navegación */
+.cv-sidebar { position: fixed; left: 40px; top: 50%; transform: translateY(-50%); z-index: 100; display: none; }
+@media (min-width: 1300px) { .cv-sidebar { display: block; } } /* Ajustado para el nuevo ancho del contenido */
+.cv-sidebar ul { list-style: none; padding: 0; margin: 0; }
+.cv-sidebar li { margin-bottom: 25px; }
+.cv-sidebar a { text-decoration: none; color: var(--primary-color); font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 5px; opacity: 0.4; transition: all 0.3s ease; position: relative; }
+
+/* [NUEVO] Recurso lineaazul_ancha a la izquierda del enlace */
+.cv-sidebar a::before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url('../../assets/fotos/lineaazul_ancha.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+}
+
+.cv-sidebar a::after { display: none; }
+
+.cv-sidebar a.active { opacity: 1; transform: translateX(8px); font-size: 1.2rem; font-weight: 700; }
+.cv-sidebar a.active::before { opacity: 1; transform: scale(1); }
+.cv-sidebar li:hover a { opacity: 1; transform: translateX(5px); font-size: 1.1rem; }
+.cv-sidebar li:hover a::before { opacity: 1; transform: scale(1); }
+
+/* =========================================
+   SECCIÓN DE MÓVIL (MEDIA QUERIES)
+   ========================================= */
+
+@media (max-width: 768px) {
+    /* Ajuste del contenedor principal para no quedar debajo del header fijo */
+    .cv-container {
+        padding-top: 0; /* Quitamos espacio blanco: el contenido sube hasta arriba */
+    }
+
+    /* Header del CV (Cuadrado azul) */
+    .cv-header {
+        padding: 100px 20px 40px 20px; /* Reducido para subir la foto y centrarla visualmente */
+        background-color: #192A56; /* Mismo azul exacto que la barra superior */
+        margin-top: -1px; /* Asegura unión perfecta */
+    }
+    .cv-container .profile-pic { 
+        width: 120px; 
+        height: 120px; 
+        display: block; 
+        margin: 0 auto 20px auto;
+        border: 2px solid var(--white); /* Borde más fino */
+    }
+    .cv-container h1 { font-size: 1.8rem; }
+
+    /* Secciones */
+    .cv-container section {
+        margin: 30px 15px;
+        padding: 25px 15px;
+    }
+    .cv-container h2 { font-size: 1.3rem; }
+
+    /* Ajuste visual para encabezados de trabajos/educación en móvil */
+    #sobre-mi > p {
+        font-size: 1.1rem; /* Aumento más moderado para móvil */
+    }
+
+    .job-header h3 {
+        font-size: 0.95rem; /* Reduce el tamaño para evitar que se vea apretado */
+        line-height: 1.3;
+        padding-right: 10px; /* Pequeño espacio con la fecha */
+    }
+    
+    /* Texto azul (Rol/Puesto) más pequeño para mantener jerarquía visual */
+    .job-role { font-size: 0.85rem; margin: 4px 0; }
+
+    /* Descripción (texto gris) más pequeño para jerarquía */
+    .job-desc { font-size: 1rem; line-height: 1.4; } /* Aumento del 25% desde 0.8rem */
+
+    /* Cambiar "2022 - Hoy" por "Ahora" en móvil */
+    .desktop-ver { display: none; }
+    .mobile-ver { display: inline; }
+
+    /* Ajustes de Grid */
+    .personal-data { grid-template-columns: 1fr; } /* 1 columna */
+    .flip-card { width: 100%; height: 200px; } /* Tarjetas ancho completo */
+
+    /* Sidebar oculta (ya lo hace el CSS base, pero aseguramos) */
+    .cv-sidebar { display: none; }
+}

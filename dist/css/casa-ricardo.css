@@ -1,0 +1,581 @@
+/* --- ESTILOS GLOBALES BÁSICOS --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff !important; /* Fondo blanco para la página */
+    font-family: 'Quicksand', sans-serif;
+    /* Eliminamos el padding extra para que la página empiece desde arriba */
+    padding: 0;
+}
+
+/* Declaración de la familia de fuentes local Quicksand */
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Ajuste del padding superior para que el contenido empiece justo debajo del header fijo */
+.projects-main {
+    padding-top: 133px !important; /* Aproximadamente la altura del header en desktop */
+    position: relative; /* Necesario para que el botón de retorno se posicione respecto a este contenedor */
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700; /* Bold por defecto */
+    background-color: #ffffff !important; /* Fondo en blanco detrás de la portada reducida */
+}
+
+/* =========================================
+   BOTÓN DE RETORNO FIJO
+   ========================================= */
+.return-btn {
+    position: absolute; /* Para que se mueva con el scroll de la página, en lugar de ser fijo */
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+    top: 173px; /* 133px del header + 40px de margen */
+    transition: opacity 0.6s ease 0.8s, transform 0.6s ease 0.8s, top 0.4s ease;
+    text-decoration: none; /* Para que el enlace no tenga subrayado */
+}
+
+/* =========================================
+   SECCIÓN IDENTIDAD VISUAL SECUENCIAL
+   ========================================= */
+.seccion-identidad {
+    width: 100vw;
+    display: flex; 
+    flex-direction: row; /* Lado a lado en escritorio */
+    background-color: #ffffff;
+    overflow: hidden; /* Previene que los elementos que se mueven generen scroll horizontal */
+}
+
+.capa-color {
+    position: relative;
+    width: 33.333vw; /* Cada uno ocupa exactamente un tercio */
+    min-height: 90vh; /* Recortado un 10% por arriba */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: flex-start;
+    padding: 15vh 4vw 10vh 4vw; /* Ajuste del padding para compensar el recorte */
+    box-sizing: border-box;
+
+    /* Control matemático desde JavaScript vía variables CSS */
+    --p: var(--scroll-progress, 0);
+    --inv: calc(1 - var(--p));
+    
+    opacity: 1;
+    transition: none; /* JS controla la animación */
+}
+
+/* Configuraciones y colores (Efecto "Abrazo" Dinámico al Scroll adaptado a Casa Ricardo) */
+.capa-color.rojo { 
+    background-color: #DB251E; color: #ffffff; 
+    transform: translateX(calc(-15vw * var(--inv))); 
+}
+.capa-color.azul { 
+    background-color: #0032A0; color: #ffffff; 
+    transform: translateZ(0);
+}
+.capa-color.dorado { 
+    background-color: #DDAA55; color: #0032A0; 
+    transform: translateX(calc(15vw * var(--inv))); 
+}
+
+.capa-color .text-container {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    height: 35vh; 
+    min-height: 280px;
+    opacity: var(--p); /* Hace que el texto aparezca gradualmente al hacer scroll */
+    transform: translateY(calc(40px * var(--inv))); /* Efecto de deslizar hacia arriba (al subir) */
+}
+
+.capa-color h2.tw-line { font-size: clamp(1.26rem, 2.1vw, 2.1rem); margin: 0 0 1rem 0; min-height: clamp(3.5rem, 6vw, 5rem); font-family: 'ella-roman', sans-serif; }
+.capa-color p.tw-line {
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    margin: 0.3rem 0; white-space: pre-wrap; min-height: clamp(1.5rem, 2vw, 2rem);
+    font-weight: 500;
+    font-family: 'depot-new-condensed-web', sans-serif;
+}
+
+/* Previene el colapso visual de altura antes de la inserción dinámica de JS */
+.tw-line::after { content: '\200B'; }
+
+.tw-cursor {
+    display: inline-block;
+    width: auto;
+    animation: blinkCursor 0.8s infinite step-end;
+    color: inherit;
+    font-weight: 400;
+}
+@keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+.logo-fade {
+    width: calc(16vw * 0.7225); max-width: 352px; min-width: 176px; margin-top: 2rem;
+    align-self: center;
+    opacity: 0; transform: translateY(-15px);
+    transition: opacity 1s ease-in-out, transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.logo-fade + .logo-fade {
+    margin-top: 2.5rem;
+}
+
+.logo-fade.visible { opacity: 1; transform: translateY(0); }
+
+/* =========================================
+   SECCIÓN DE MÓVIL (MEDIA QUERIES)
+   ========================================= */
+
+@media (max-width: 768px) {
+    body {
+        padding: 0; /* En móvil no necesitamos padding extra */
+    }
+    .seccion-identidad {
+        flex-direction: column;
+    }
+    .capa-color {
+        width: 100vw;
+        min-height: 90vh; /* Recortado un 10% por arriba */
+        padding: 5vh 8vw 15vh 8vw;
+        justify-content: center;
+    }
+
+    /* Hacer que las capas vengan completamente desde fuera de la pantalla (100vw) en móvil */
+    .capa-color.rojo { transform: translateX(calc(-100vw * var(--inv))); }
+    .capa-color.dorado { transform: translateX(calc(100vw * var(--inv))); }
+    .capa-color.azul { transform: translateZ(0); }
+
+    .capa-color .text-container { height: auto; min-height: auto; }
+    .capa-color h2.tw-line { font-size: clamp(1.26rem, 4.2vw, 1.89rem); min-height: auto; font-family: 'ella-roman', sans-serif; }
+    .capa-color p.tw-line { font-size: clamp(0.9rem, 3.5vw, 1.2rem); min-height: auto; font-family: 'depot-new-condensed-web', sans-serif; }
+        .seccion-identidad .logo-fade { width: calc(40vw * 2.04); margin-top: 1.5rem; }
+}
+
+/* =========================================
+   RESTAURAR MENÚ SUPERIOR COMO EN CONTACTO
+   ========================================= */
+body.light-page .cursor-dot { background-color: #192A56 !important; }
+body.light-page .cursor-dot.active { background-color: #192A56 !important; opacity: 0.4 !important; }
+body.light-page .cursor-dot.on-dark { background-color: #ffffff !important; }
+
+body.light-page .nav-link { color: #192A56 !important; }
+body.light-page .nav-link::after { background-color: #192A56 !important; }
+body.light-page .btn-contact { background-color: #192A56 !important; color: #ffffff !important; box-shadow: 0 4px 10px rgba(25, 42, 86, 0.2) !important; }
+
+@media (min-width: 769px) {
+    body.light-page .site-header {
+        position: absolute !important;
+        background: #ffffff !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        padding: 1.5rem 5% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    body.light-page .site-header {
+        position: fixed !important;
+        background: #ffffff !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        padding: 15px !important;
+    }
+}
+
+/* =========================================
+   ESTILOS DE CONTENIDO DE PÁGINA
+   ========================================= */
+
+/* Caja de explicación de identidad */
+.explanation-box {
+    width: 100%;
+    background-color: #DDAA55; /* Fondo dorado adaptado para Casa Ricardo */
+    color: #0032A0;
+    padding: 12vh 5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.explanation-box p {
+    font-family: 'depot-new-condensed-web', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 400; /* Regular */
+    line-height: 1.5;
+    text-align: center;
+    max-width: 900px;
+    margin: 0;
+}
+
+/* Video de explicación del logo */
+.video-explicacion {
+    padding: 0 1vw !important;
+    background-color: #ffffff !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: auto !important;
+    min-height: auto !important;
+    box-sizing: border-box !important;
+    object-fit: contain !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Media query para móvil */
+@media (max-width: 768px) {
+    .explanation-box p {
+        font-size: 1.1rem;
+        line-height: 1.5;
+        padding: 0 30px;
+    }
+}
+
+/* =========================================
+   COMPARACIÓN DE LOGOS
+   ========================================= */
+.logo-comparison-container {
+    display: flex;
+    flex-direction: row;
+    width: 100vw !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 8vh 5vw 20vh 5vw !important; /* 20% (20vh) más de espacio en blanco inferior */
+    background-color: #ffffff !important; /* Fondo blanco continuo */
+    justify-content: center;
+    align-items: center;
+    gap: 8vw;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.logo-half {
+    width: 35vw; /* Ancho máximo común basado en el logo izquierdo */
+    height: 18vw; /* Altura máxima común para bounding box idéntico */
+    object-fit: contain;
+}
+
+/* Compensación visual de tamaños */
+.logo-comparison-container img:nth-child(1) {
+    transform: scale(1.25); /* Logo SF un 5% más grande */
+}
+.logo-comparison-container img:nth-child(2) {
+    transform: scale(0.85); /* Logo viejo un 15% más pequeño */
+}
+
+@media (max-width: 768px) {
+    .logo-comparison-container { flex-direction: column; padding: 8vh 10vw 20vh 10vw !important; gap: 6vh; }
+    .logo-half { width: 80vw; height: 40vw; }
+}
+
+/* Estilo para la imagen de portada del proyecto */
+.project-cover-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    margin-bottom: 0;
+    margin-top: -50px;
+    background-color: #ffffff;
+    transform: scale(0.85); /* Escala la portada reducida un 15% (de 1.25 a 1.06) */
+}
+
+.seccion-identidad .logo-fade {
+    width: calc(16vw * 2.04);
+    max-width: 484.5px;
+    min-width: 242px;
+}
+
+/* Compactamos el catálogo para que ocupe una sola pantalla sin scroll */
+.typo-catalog-container {
+    height: 100vh;
+    overflow: hidden;
+}
+.typo-font-panel {
+    padding: 3vh 2rem;
+    justify-content: center;
+}
+.typo-panel-inner {
+    gap: 1.5vh;
+}
+.typo-title {
+    margin-bottom: 0.5rem;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+}
+
+/* Reduce el espacio entre los botones (Regular/Bold) y las letras grandes (Aa) */
+.typo-weights-menu {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+.typo-display {
+    font-size: clamp(5rem, 14vh, 11rem) !important; /* Escala la 'Aa' según la altura de la pantalla */
+}
+
+.typo-char-grid {
+    gap: 1vh 2rem; /* Reduce el espacio vertical usando altura de pantalla (vh) */
+    justify-content: center; /* Centra todo el abecedario en medio del cuadrado */
+    grid-template-columns: repeat(6, max-content); /* Evita que las columnas se estiren y agrupa los pares */
+}
+
+/* Media query para móvil: Ajustar padding-top del main y margin-top de la imagen */
+@media (max-width: 768px) {
+    .projects-main {
+        padding-top: 80px !important;
+    }
+    .return-btn {
+        top: 120px;
+    }
+    .project-cover-image {
+        margin-top: -30px;
+        height: 60vh;
+        }
+        .typo-char-grid {
+            grid-template-columns: repeat(4, max-content); /* Adapta a 4 columnas agrupadas en móvil */
+            gap: 0.5rem 1.2rem;
+        }
+        .typo-catalog-container {
+            height: auto; /* En móvil dejamos que fluya normal para que no se aplaste */
+            overflow: visible;
+    }
+}
+
+/* =========================================
+   COMPOSICIÓN CUADRÍCULA DE PEGATINAS
+   ========================================= */
+.stickers-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    width: 100vw !important;
+    min-height: 100vh;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0;
+    align-items: center;
+    justify-items: center;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: #ffffff;
+}
+
+.stickers-container img {
+    width: 93%;
+    height: 93%;
+    max-width: 93%;
+    max-height: 93%;
+    display: block;
+    object-fit: cover;
+}
+
+.stickers-container.single-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 0;
+    min-height: auto;
+}
+
+.stickers-container.single-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 0;
+    min-height: auto;
+    overflow: hidden;
+}
+
+.stickers-container.single-image img.sticker-zoom {
+    width: 110vw;
+    height: auto;
+    max-width: none;
+    max-height: 95vh;
+    margin: 0 auto;
+    object-fit: contain;
+    transform: none !important;
+}
+
+.stickers-container img {
+    justify-self: center;
+    align-self: center;
+}
+
+.stickers-container img:nth-child(1) {
+    transform: translate(12%, 12%);
+}
+
+.stickers-container img:nth-child(2) {
+    transform: translate(-12%, 12%);
+}
+
+.stickers-container img:nth-child(3) {
+    transform: translate(12%, -12%);
+}
+
+.stickers-container img:nth-child(4) {
+    transform: translate(-12%, -12%);
+}
+
+/* Hacer las primeras dos pegatinas ligeramente más pequeñas */
+.stickers-container img.sticker-small {
+    width: 88%;
+    height: 88%;
+    max-width: 88%;
+    max-height: 88%;
+}
+
+/* =========================================
+   PAPELERÍA MOCKUPS
+   ========================================= */
+.stationery-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: #192A56;
+}
+
+/* Wrapper para la tarjeta para darle fondo completo (Adaptado a Casa Ricardo) */
+.tarjeta-wrapper {
+    width: 100vw;
+    background-color: #ffffff; /* Color azul para fundirse con la imagen en Casa Ricardo */
+}
+
+.stationery-main { width: 100vw; height: auto; display: block; object-fit: cover; }
+
+.stationery-row { display: flex; flex-direction: row; width: 100vw; }
+
+.stationery-row.no-wave { justify-content: center; gap: 3vw; background-color: #0032A0; padding: 2vw 0; }
+
+.stationery-half { width: 50vw; height: auto; display: block; object-fit: cover; }
+
+.stationery-row.no-wave .stationery-half { width: 34vw; max-width: 34vw; }
+
+/* Separador de onda (Wave gap) */
+.wave-separated {
+    position: relative;
+    overflow: hidden; /* Evita que la onda se salga por los bordes al animarse */
+}
+
+.wave-separator {
+    position: absolute;
+    top: -5%;
+    bottom: -5%;
+    left: 50%;
+    width: 4vw;
+    margin-left: -2vw; /* Centrado exacto sobre el corte de las imágenes */
+    background-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 30,0 C 70,33 -10,66 30,100 L 70,100 C 30,66 110,33 70,0 Z' fill='%23cccccc'/%3E%3C/svg%3E");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 2;
+    pointer-events: none; /* Permite hacer clics a través de la onda si hubiera enlaces */
+    animation: gentleWaveDesktop 6s ease-in-out infinite alternate;
+}
+
+@keyframes gentleWaveDesktop {
+    0% { transform: scale(1) translateY(0); }
+    100% { transform: scale(1.1, 1.05) translateY(-2%); }
+}
+
+/* =========================================
+   TRANSICIÓN DE ENTRADA (CORTINA)
+   ========================================= */
+.page-transition-curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.curtain-column {
+    flex: 1;
+    height: 100%;
+    background-color: #192A56;
+    transform: translateY(0%);
+    transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.page-transition-curtain.is-leaving .curtain-column {
+    transform: translateY(-100%);
+}
+
+@media (max-width: 768px) {
+    .stickers-container {
+        /* En móvil las pasamos a 1 sola columna para que no se vean muy pequeñas.
+           Si quieres que sigan en 2x2 en móvil, puedes comentar o eliminar la siguiente línea */
+        grid-template-columns: 1fr;
+    }
+    .stationery-row {
+        flex-direction: column;
+    }
+    .stationery-half {
+        width: 100vw;
+    }
+    
+    .stationery-main {
+        width: 100vw;
+    }
+    /* Adaptamos la onda para que sea horizontal en formato móvil */
+    .wave-separator {
+        top: 50%;
+        bottom: auto;
+        left: -5%;
+        right: -5%;
+        width: 110%;
+        height: 6vw;
+        margin: -3vw 0 0 0;
+        background-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0,30 C 33,70 66,-10 100,30 L 100,70 C 66,30 33,110 0,70 Z' fill='%23cccccc'/%3E%3C/svg%3E");
+        animation: gentleWaveMobile 6s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes gentleWaveMobile {
+    0% { transform: scale(1) translateX(0); }
+    100% { transform: scale(1.05, 1.1) translateX(-2%); }
+}

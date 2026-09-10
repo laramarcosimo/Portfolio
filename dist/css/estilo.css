@@ -1,0 +1,752 @@
+/* Reset general para evitar espacios en blanco */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* =========================================
+SECCIÓN DE ESCRITORIO Y BASE (ESTILOS GENERALES)
+========================================= */
+
+html { scroll-behavior: smooth; }
+
+body {
+    background-color: #192A56; /* Azul Marino */
+    color: #ffffff;
+    overflow: hidden; /* Evita el scroll mientras el preloader está activo */
+    font-family: 'Quicksand', sans-serif;
+    cursor: none !important;
+}
+
+/* [IMPORTANTE] Oculta el cursor del sistema en TODOS los elementos de la web */
+/* Se añaden selectores específicos para asegurar que no aparezca la flecha en enlaces o botones */
+html, body, *, a, button, input, textarea, select {
+    cursor: none !important; 
+}
+
+/* --- CURSOR PERSONALIZADO --- */
+.cursor-dot {
+    width: 20px; /* [AJUSTE] Punto más pequeño (antes 30px) */
+    height: 20px;
+    background-color: #FFFFFF; /* [AJUSTE] Blanco Puro */
+    border-radius: 50%; /* Forma circular perfecta */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100000; /* Siempre encima de todo */
+    pointer-events: none; /* Permite hacer clic a través del punto */
+    /* [IMPORTANTE] Quitamos 'transform' de aquí para evitar el lag en el movimiento */
+    /* [AJUSTE] Hacemos que el cambio de color de fondo y opacidad sea mucho más fluido */
+    transition: width 0.2s ease, height 0.2s ease, background-color 0.5s ease, opacity 0.3s ease;
+    will-change: transform; /* Optimización de rendimiento */
+}
+
+/* [NUEVO] Cursor AZUL durante la carga (porque el fondo es blanco) */
+body:not(.loaded) .cursor-dot {
+    background-color: #192A56;
+}
+
+/* Estado activo (al pasar sobre párrafos) */
+.cursor-dot.active {
+    width: 25px; /* 20px * 2.5 = 50px. Cambiamos tamaño real para no afectar posición */
+    height: 25px;
+    background-color: #ffffff;
+    opacity: 0.7; /* Permite ver el texto "dentro" del cursor */
+}
+
+/* [NUEVO] Forzar cursor azul cuando pasa sobre el botón blanco de volver arriba */
+.cursor-dot.force-blue {
+    background-color: #192A56 !important;
+}
+
+/* CONTENEDOR PRINCIPAL DEL PRELOADER */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50000; /* Aumentado para estar siempre sobre el menú */
+}
+
+#loader-video {
+    width: 500px;
+    height: auto;
+    position: relative;
+    z-index: 50002;
+    transition: opacity 0.5s ease;
+}
+
+.curtain {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50.5%;
+    background-color: #ffffff;
+    z-index: 50001;
+    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.curtain.top { top: 0; }
+.curtain.bottom { bottom: 0; }
+
+body.loaded .curtain.top { transform: translateY(-100%); }
+body.loaded .curtain.bottom { transform: translateY(100%); }
+body.loaded #loader-video { opacity: 0; pointer-events: none; }
+body.loaded #preloader { visibility: hidden; transition: visibility 1.1s; }
+body.loaded { overflow: auto; }
+
+/* --- HEADER MODIFICADO --- */
+.site-header {
+    position: fixed; /* Fixed para acompañar el scroll y poder reaparecer */
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem 5%; /* Un poco menos de padding arriba para elegancia */
+    z-index: 10002; /* [FIX] Ahora está por encima de hero-title (9999) */
+    display: flex;
+    justify-content: space-between; /* LOGO IZQUIERDA - MENÚ DERECHA */
+    align-items: center;
+    backdrop-filter: blur(5px); /* [MEJORA] Desenfoque elegante para que no corte el fondo */
+}
+
+/* [NUEVO] ESTILOS ESPECÍFICOS PARA PÁGINAS INTERNAS (LIGHT PAGES) */
+/* En estas páginas el menú NO es fijo y es BLANCO SÓLIDO sin efecto agua */
+body.light-page .site-header {
+    position: absolute; /* Se mueve con el scroll, no se queda fijo */
+    background-color: #ffffff; /* Cuadrado blanco sólido */
+    backdrop-filter: none; /* Sin difuminado */
+}
+
+/* Estilo del Logo */
+.site-logo {
+    height: 85px; /* [AJUSTAR AQUÍ] Cambia este número para hacer el LOGO más grande o pequeño */
+    width: auto;
+    display: block;
+    transition: opacity 0.3s ease;
+}
+
+.site-logo:hover {
+    opacity: 0.8;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 700; /* [AJUSTADO] Grosor a bold (negrita) */
+    font-size: 1.4rem; /* [AJUSTAR AQUÍ] Tamaño de letra del MENÚ (Proyectos, Servicios...). Sube el número para agrandar */
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #fff;
+    border-radius: 50%;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.nav-link:hover::after {
+    transform: scaleX(1);
+}
+
+/* Ocultar iconos (<i>) en la versión de escritorio */
+.nav-link i {
+    display: none;
+}
+
+.btn-contact {
+    text-decoration: none;
+    color: #192A56;
+    background-color: #fff;
+    padding: 0.7rem 1.8rem;
+    font-size: 1.2rem; /* [AJUSTAR AQUÍ] Tamaño de letra del BOTÓN CONTACTO */
+    border-radius: 50px;
+    font-weight: 700; /* [AJUSTADO] Grosor a bold (negrita) */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-contact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* --- HERO SECTION --- */
+.hero {
+    height: 200vh; /* Aumentado para crear zona de scroll para el efecto */
+    position: relative;
+}
+
+.hero-sticky-container {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden; /* Clave para que los elementos que escalan no se salgan */
+    padding-top: 80px;
+    padding-bottom: 23vh; /* Corrección óptica: Sube el centro visual por encima del matemático */
+}
+
+.hero-title {
+    font-size: 3.5rem; /* [AJUSTAR AQUÍ] Tamaño del TÍTULO PRINCIPAL del centro */
+    font-weight: 700; /* Blond (Light) para lo más importante */
+    line-height: 1.2;
+    letter-spacing: -1px;
+    position: relative; /* Para que el z-index funcione */
+    z-index: 9999; /* Por encima de las palabras (9998) y debajo del cursor (100000) */
+    will-change: transform, opacity; /* Optimización para la animación de scroll */
+    
+    /* Configuración inicial del contenedor (la opacidad la manejan los spans) */
+    opacity: 1; 
+    transform: translateY(50px);
+    transition: transform 1s ease 0.2s; /* Movimiento del bloque */
+}
+
+/* Estilos para las palabras individuales */
+.hero-title span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpWord 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    /* Pausado hasta que cargue la web */
+    animation-play-state: paused; 
+}
+
+/* Ocultar el salto de línea en escritorio */
+.mobile-break { display: none; }
+
+.desktop-break { display: block; }
+
+/* ESTADO CARGADO: Se activa la animación */
+body.loaded .hero-title {
+    transform: translateY(0);
+}
+body.loaded .hero-title span { animation-play-state: running; }
+
+/* Retrasos escalonados para cada palabra */
+body.loaded .hero-title span:nth-of-type(1) { animation-delay: 0.2s; }
+body.loaded .hero-title span:nth-of-type(2) { animation-delay: 0.4s; }
+body.loaded .hero-title span:nth-of-type(3) { animation-delay: 0.6s; }
+body.loaded .hero-title span:nth-of-type(4) { animation-delay: 0.8s; }
+
+@keyframes fadeUpWord {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- NUEVA SECCIÓN: DETRÁS DEL DISEÑO --- */
+.about-section {
+    height: 300vh; /* Altura extendida para dar tiempo a la animación de scroll */
+    position: relative;
+    z-index: 2; /* Por encima del canvas de fondo */
+    /* Eliminamos transiciones automáticas para control total JS */
+}
+
+.creative-sticky-wrapper {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* TÍTULO MAGNETIZADO */
+.creative-title {
+    font-size: 4rem; /* [AJUSTE] Tamaño desktop 4rem */
+    font-weight: 700;
+    text-transform: uppercase; /* [MEJORA] Mayúsculas para jerarquía */
+    letter-spacing: 0.15em; /* [AJUSTE] Tracking solicitado */
+    color: #ffffff;
+    z-index: 20;
+    position: relative;
+    margin: 0; /* El margen lo gestionará el texto inferior para evitar colapsos */
+    line-height: 1.2;
+    perspective: 1000px;
+}
+
+.creative-title span {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+    /* El estado inicial se definirá en JS para aleatoriedad, 
+       pero aquí aseguramos que no interfieran con el layout */
+}
+
+/* GALERÍA CAOS (PARALLAX) */
+.chaos-gallery {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    isolation: isolate; /* [ARREGLO] Crea un contexto nuevo para evitar errores de renderizado */
+    pointer-events: none; /* Dejar pasar clicks al texto */
+}
+
+.chaos-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Tamaños base eliminados, se controlan por nth-child para equilibrio */
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    transform: translate(-50%, -50%); /* Centradas por defecto */
+    /* [ARREGLO] Forzar visibilidad y evitar flickering */
+    opacity: 1 !important;
+    -webkit-backface-visibility: hidden; /* Vital para Safari/iPad */
+    backface-visibility: hidden;
+    transform: translate3d(-50%, -50%, 0); /* Forzar aceleración hardware desde el inicio */
+}
+
+/* [MEJORA] Las dos fotos de arriba más grandes para dar peso visual */
+.chaos-img:nth-child(1),
+.chaos-img:nth-child(2) {
+    width: 198.9px; /* Reducido un 15% del tamaño anterior (234px) */
+    height: 260.1px; /* Reducido un 15% del tamaño anterior (306px) */
+}
+
+/* [MEJORA] Las dos de abajo un poco más pequeñas */
+.chaos-img:nth-child(3),
+.chaos-img:nth-child(4) {
+    width: 190px; /* Reducido un 5% del tamaño anterior (200px) */
+    height: 247px; /* Reducido un 5% del tamaño anterior (260px) */
+}
+
+/* TEXTO FINAL Y BOTÓN */
+.creative-text {
+    position: relative;
+    margin-top: 40px; /* [AJUSTE] Separación exacta de 40px respecto al título */
+    bottom: auto;
+    z-index: 30;
+    width: 100%; /* Asegura centrado */
+    padding: 0 20px;
+    opacity: 0; /* Oculto inicialmente */
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    display: flex;
+    justify-content: center;
+}
+
+.creative-text p {
+    font-size: 1.4rem; /* [AJUSTE] Aumentado ligeramente (antes 1.25rem) */
+    line-height: 1.6; /* Compactado ligeramente (antes 1.8) */
+    max-width: 650px; /* [AJUSTE] Más ancho para que el texto no quede apretado */
+    margin-bottom: 0;
+    font-weight: 500;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* Sombra para leer sobre fotos */
+}
+
+/* --- NUEVA INTRO ANIMADA --- */
+.hero-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1553390496-04d033306414?q=80&w=1920');
+    background-size: cover;
+    background-position: center;
+    z-index: -3; /* Detrás de todo */
+    transform: scale(1.1);
+    filter: blur(40px);
+    transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1), filter 2.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hero-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #192A56;
+    opacity: 0;
+    z-index: -2;
+    transition: opacity 2.5s ease-in-out;
+}
+
+.noise-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03; /* Muy sutil */
+    z-index: -1; /* Detrás del contenido pero sobre el fondo */
+}
+
+/* --- EFECTO DE ESTELA DE TEXTO (TRAIL) --- */
+.trail-word {
+    position: fixed;
+    pointer-events: none; /* Para que no interfiera con el clic */
+    color: rgba(255, 255, 255, 0.9); /* Blanco casi puro */
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    z-index: 9998; /* Debajo del cursor pero encima del fondo */
+    will-change: transform, opacity; /* Optimización de rendimiento */
+}
+
+/* Estados finales de la animación de fondo */
+body.loaded .hero-background {
+    transform: scale(1);
+    filter: blur(0px);
+}
+body.loaded .hero-overlay {
+    opacity: 0.85;
+}
+
+/* --- FONDO TOPOGRÁFICO (NUEVO) --- */
+#topo-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* CRÍTICO: Detrás de todo el contenido */
+    pointer-events: none; /* CRÍTICO: Deja pasar los clics al contenido */
+    will-change: transform, opacity; /* Optimización para la animación de scroll */
+}
+
+/* --- ESTILOS DEL FOOTER (Añadidos para asegurar consistencia en Contacto) --- */
+.cv-footer .footer-box {
+    background-color: #192A56; /* Azul Primario */
+    color: #ffffff;
+    text-align: center;
+    padding: 50px 20px; /* Este padding asegura el tamaño correcto */
+    position: relative; /* Para contener el canvas */
+    overflow: hidden;
+}
+
+/* Canvas para el footer */
+#cv-footer-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Contenido del footer por encima del canvas */
+.cv-footer .footer-contact-summary,
+.cv-footer .footer-links,
+.cv-footer .footer-line,
+.cv-footer .copyright {
+    position: relative;
+    z-index: 2;
+}
+
+.cv-footer .footer-links { margin-top: 15px; }
+.cv-footer .footer-links a { color: #ffffff; text-decoration: none; font-weight: bold; display: inline-block; transition: transform 0.3s ease, color 0.3s ease; padding: 0 10px; }
+.cv-footer .footer-links a:hover { transform: scale(1.3); color: #9690E4; }
+.cv-footer .footer-line { display: none; }
+.cv-footer .copyright {
+    margin-top: 40px; /* Más espacio con la información superior */
+    font-size: 0.85rem; /* Texto más pequeño */
+    opacity: 0.8;
+}
+.footer-contact-link { color: #ffffff; text-decoration: none; transition: color 0.3s; }
+.footer-contact-link:hover { color: #9690E4; text-decoration: underline; }
+
+/* Botón Subir */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #96C9FF; /* Azul claro solicitado */
+    color: #192A56; /* Contraste oscuro para la flecha */
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: 0.4s;
+    z-index: 1000;
+}
+.back-to-top:hover { background-color: #ffffff; color: #96C9FF; transform: scale(1.1) translateY(-5px); }
+
+/* --- MENÚ HAMBURGUESA --- */
+.menu-toggle {
+    display: none; /* Oculto en escritorio */
+    width: 45px;
+    height: 45px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 10001; /* Muy alto para estar sobre todo */
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-toggle img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.menu-toggle.active img {
+    transform: rotate(90deg);
+}
+
+/* =========================================
+   SECCIÓN DE TABLET / IPAD (UNIFICADA 769px - 1366px)
+   ========================================= */
+@media (min-width: 769px) and (max-width: 1366px) {
+    /* [AJUSTE] Título universal para Tablet */
+    .creative-title {
+        font-size: 2.8rem;
+        letter-spacing: 0.05em; /* Espaciado limpio profesional */
+    }
+
+    /* [AJUSTE] Imágenes superiores más pequeñas */
+    .chaos-img:nth-child(1),
+    .chaos-img:nth-child(2) {
+        width: 137.7px; /* Reducido un 15% del tamaño anterior (162px) */
+        height: 183.6px; /* Reducido un 15% del tamaño anterior (216px) */
+    }
+
+    /* [AJUSTE] Imágenes inferiores al tamaño que tenían las superiores */
+    .chaos-img:nth-child(3),
+    .chaos-img:nth-child(4) {
+        width: 162.45px; /* Reducido un 5% del tamaño anterior (171px) */
+        height: 216.6px; /* Reducido un 5% del tamaño anterior (228px) */
+    }
+}
+
+/* =========================================
+   SECCIÓN DE MÓVIL (MEDIA QUERIES)
+   ========================================= */
+@media (max-width: 768px) {
+    /* 1. Usabilidad: Restaurar cursor nativo y ocultar el punto custom en táctil */
+    html, body, *, a, button, input, textarea, select {
+        cursor: auto !important;
+    }
+    .cursor-dot { display: none !important; }
+
+    /* 2. Header Adaptado */
+    .site-header {
+        flex-direction: row; /* Volvemos a fila para alinear Logo - Hamburguesa */
+        justify-content: space-between;
+        padding: 15px;
+        background-color: rgba(25, 42, 86, 0.95); /* Fondo oscuro para legibilidad */
+        backdrop-filter: blur(10px);
+        height: auto;
+        position: fixed; /* Fijo para que siempre esté accesible */
+    }
+
+    /* [NUEVO] Override para móvil en páginas claras */
+    body.light-page .site-header {
+        position: fixed !important; /* Ahora fijo en móvil para páginas claras */
+        background-color: #ffffff;
+        backdrop-filter: none;
+    }
+    
+    .menu-toggle {
+        display: flex; /* Mostrar hamburguesa */
+    }
+
+    /* Forzar colores legibles en el menú móvil (Texto blanco sobre fondo oscuro) */
+    .site-logo { 
+        height: 50px; 
+        filter: none !important; 
+    }
+
+    /* Menú Desplegable Tipo Modal Flotante */
+    /* [NUEVO] Ocultar los elementos de navegación de escritorio por defecto en móvil */
+    .site-header .main-nav .nav-list,
+    .site-header .main-nav .btn-contact {
+        display: none;
+    }
+
+    .main-nav { 
+        position: fixed; /* Cambiado a fijo para ocupar toda la pantalla */
+        top: 0; /* Desde la parte superior */
+        left: 0; /* Desde la parte izquierda */
+        width: 100vw; /* Ancho completo de la ventana */
+        height: 100vh; /* Alto completo de la ventana */
+        background-color: rgba(255, 255, 255, 0.98); /* Fondo casi blanco con ligera transparencia */
+        border-radius: 0; /* Sin bordes redondeados para pantalla completa */
+        box-shadow: none; /* Sin sombra para pantalla completa */
+        flex-direction: column;
+        justify-content: center; /* Centrar contenido verticalmente */
+        align-items: center; /* Centrar contenido horizontalmente */
+        padding: 80px 20px; /* Ajuste de padding para dejar espacio al header */
+        gap: 30px; /* Mayor espacio entre elementos del menú */
+        
+        /* Estado oculto inicial */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(100%); /* Deslizar desde abajo */
+        transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+        
+        z-index: 10000;
+    }
+
+    /* Triángulo decorativo del modal (apuntando al botón) */
+    .main-nav::before {
+        content: '';
+        display: none; /* Ocultar el triángulo en el menú a pantalla completa */
+    }
+    
+    .main-nav.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0); /* Deslizar a su posición */
+    }
+
+    /* [NUEVO] Mostrar los elementos de navegación cuando el menú móvil está activo */
+    .main-nav.active .nav-list,
+    .main-nav.active .btn-contact {
+        display: flex; /* O block, dependiendo del layout deseado para los elementos */
+    }
+
+    .nav-list { 
+        gap: 20px; /* Mayor espacio entre enlaces */
+        justify-content: center; /* Centrar enlaces */
+        width: 100%; 
+        padding: 0; 
+        flex-direction: column; 
+        align-items: center; /* Centrar enlaces */
+    }
+    
+    /* Estilos de los enlaces dentro del modal */
+    .nav-link { 
+        color: #192A56 !important; /* Texto oscuro */
+        font-size: 1.5rem; /* Tamaño de fuente más grande para pantalla completa */
+        display: flex;
+        align-items: center;
+        gap: 15px; /* Espacio entre icono y texto */
+        padding: 8px 0;
+    }
+    
+    .nav-link i {
+        display: block; /* Volver a mostrar los iconos en móvil */
+        color: #2E4E9F; /* Color de los iconos */
+        width: 25px; /* Iconos ligeramente más grandes */
+        text-align: center;
+        font-size: 1.5rem; /* Tamaño de los iconos */
+    }
+    
+    .nav-link::after { display: none; } /* Quitar subrayado animado en móvil */
+    
+    /* Botón de contacto en móvil dentro del modal */
+    .btn-contact { 
+        background-color: #192A56 !important; /* Fondo del botón */
+        color: #ffffff !important; /* Color del texto del botón */
+        padding: 1rem 2rem; /* Padding ajustado */
+        font-size: 1.2rem; /* Tamaño de fuente ajustado */
+        width: auto; /* Ancho automático */
+        margin-top: 30px; /* Margen superior */
+        border-radius: 50px; /* Bordes redondeados */
+        box-shadow: 0 5px 15px rgba(25, 42, 86, 0.2); /* Sombra */
+    }
+
+    /* [REFINAMIENTO] Desactivar completamente el efecto hover en el botón de contacto
+       para cumplir con la directiva de una experiencia 100% táctil en móvil. */
+    .btn-contact:hover {
+        transform: none;
+    }
+
+    /* 3. Hero Section */
+    .hero-sticky-container {
+        padding-top: 80px;
+        padding-bottom: 23vh; /* Misma corrección óptica en móvil */
+    }
+
+    .hero-title { 
+        font-size: 24px; /* Tamaño solicitado para evitar cortes */
+        padding: 0 10px; 
+        line-height: 1.4;
+    }
+    /* Mostrar el salto de línea para forzar 2 líneas centradas */
+    .mobile-break { display: block; }
+    .desktop-break { display: none; }
+
+    /* Ajuste del video preloader en móvil */
+    #loader-video {
+        width: 250px; /* Reducido para que no ocupe toda la pantalla */
+    }
+
+    /* 4. Footer Móvil */
+    .cv-footer .footer-box { padding: 40px 15px; }
+    .cv-footer .copyright { margin-top: 30px; font-size: 0.75rem; }
+    
+    /* Ocultar botón subir por defecto para que no moleste en la lectura */
+    .back-to-top { 
+        width: 45px; height: 45px; bottom: 20px; right: 20px; 
+        opacity: 0; pointer-events: none; transform: translateY(20px);
+    }
+    .back-to-top.show-mobile {
+        opacity: 1; pointer-events: auto; transform: translateY(0);
+    }
+
+    /* Ajustes Sección Detrás del Diseño */
+    .creative-title { 
+        font-size: 2.0rem; /* [AJUSTE] Reducido a 2.0rem */
+        white-space: normal; /* Permite saltos de línea */
+        word-wrap: break-word;
+        padding: 0 10px;
+        max-width: 80%; /* [AJUSTE] Ancho máximo para forzar 2 líneas estéticas */
+        margin: 0 auto; /* Centrado */
+    }
+
+    /* fotos al 35% del ancho de pantalla en móvil */
+    /* Imágenes superiores 15% más pequeñas */
+    .chaos-img:nth-child(1),
+    .chaos-img:nth-child(2) {
+        width: 28.05vw; /* 33vw * 0.85 */
+        height: 28.05vw; /* Asegura que sean cuadradas */
+    }
+    /* Imágenes inferiores 5% más pequeñas */
+    .chaos-img:nth-child(3),
+    .chaos-img:nth-child(4) {
+        width: 31.35vw; /* 33vw * 0.95 */
+        height: 31.35vw; /* Asegura que sean cuadradas */
+    }
+
+    .creative-text { margin-top: 20px; bottom: auto; }
+    .creative-text p { font-size: 1.05rem; line-height: 1.6; } /* Reducido de 1.2rem */
+    .creative-text { z-index: 50; padding: 0 25px; } /* [AJUSTE] Padding lateral de 25px */
+    
+    /* Asegurar que la sección ocupa pantalla completa o auto en móvil */
+    .about-section { height: 400vh; padding: 0 20px; } /* [AJUSTE] Aumentado a 400vh para scroll más largo */
+}

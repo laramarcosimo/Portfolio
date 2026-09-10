@@ -1,0 +1,422 @@
+/* --- ESTILOS ESPECÍFICOS PARA LA PÁGINA DE IDENTIDAD VISUAL --- */
+
+@font-face {
+    font-family: 'Fieldwork Hum';
+    src: url('../../assets/tipografia/jaime/fieldwork/Fieldwork-Hum-Hair.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fieldwork Hum';
+    src: url('../../assets/tipografia/jaime/fieldwork/Fieldwork-Hum-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fieldwork Hum';
+    src: url('../../assets/tipografia/jaime/fieldwork/Fieldwork-Hum-regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fieldwork Geo';
+    src: url('../../assets/tipografia/jaime/fieldwork/Fieldwork-Semi-Bold-Geo.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+/* Ajuste del padding superior para que el contenido empiece justo debajo del header fijo */
+.projects-main {
+    padding-top: 133px !important;
+    position: relative; /* Necesario para que el botón de retorno se posicione respecto a este contenedor */
+}
+
+/* Ajuste de color del cursor específico para esta página */
+body.light-page .cursor-dot {
+    background-color: #192A56 !important; /* Volvemos al azul corporativo */
+}
+
+body.light-page .cursor-dot.active {
+    background-color: #192A56 !important;
+    opacity: 0.4 !important;
+}
+
+/* El cursor se vuelve blanco sobre fondos oscuros (controlado por JS con la clase .on-dark) */
+body.light-page .cursor-dot.on-dark {
+    background-color: #ffffff !important;
+}
+
+/* =========================================
+   RESTAURAR MENÚ SUPERIOR COMO EN CONTACTO
+   ========================================= */
+body.light-page .nav-link { color: #192A56 !important; }
+body.light-page .nav-link::after { background-color: #192A56 !important; }
+body.light-page .btn-contact { background-color: #192A56 !important; color: #ffffff !important; box-shadow: 0 4px 10px rgba(25, 42, 86, 0.2) !important; }
+
+@media (min-width: 769px) {
+    body.light-page .site-header {
+        position: absolute !important;
+        background: #ffffff !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        padding: 1.5rem 5% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    body.light-page .site-header {
+        position: fixed !important;
+        background: #ffffff !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        padding: 15px !important;
+    }
+}
+
+/* =========================================
+   BOTÓN DE RETORNO (Flecha superior izquierda) y Contenido
+   ========================================= */
+.return-btn {
+    position: absolute; /* Se posiciona relativo al .projects-main */
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+    top: 173px; /* 133px del header + 40px de margen */
+    left: 5vw; /* Misma posición horizontal que en el resto de proyectos */
+    color: #000000; /* Color negro solicitado */
+    font-size: 1.8rem;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+    
+    /* Anulamos estilos de proyectos.css que no aplican aquí */
+    text-shadow: none;
+    background: transparent;
+    border: none;
+    z-index: 100; /* Aseguramos que esté por encima de la imagen de portada */
+}
+
+.return-btn:hover {
+    color: #333333; /* Un gris oscuro para el hover */
+    transform: translateX(-3px);
+}
+
+.project-cover-image {
+    width: 100%;
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    object-fit: cover; /* Asegura que la imagen cubra el área sin deformarse */
+    display: block;
+    /* El margin-top negativo sube la imagen para que quede detrás del header */
+    margin-top: -133px; 
+}
+
+/* [NUEVO] Caja de explicación para el proyecto de Jaime */
+.explanation-box-jaime {
+    background-color: #000000; /* Fondo negro solicitado */
+    color: #ffffff; /* Texto blanco solicitado */
+    padding: 12vh 8vw; /* Padding generoso para aire */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.explanation-box-jaime p {
+    font-family: 'Fieldwork Hum', sans-serif; /* Tipografía solicitada */
+    font-weight: 300;
+    font-size: 1.2rem;
+    line-height: 1.7;
+    max-width: 950px; /* Ancho máximo del texto */
+    margin: 0;
+}
+
+/* [NUEVO] Showcase de videos para el proyecto de Jaime */
+.video-showcase-jaime {
+    display: flex;
+    width: 100%;
+}
+
+/* [NUEVO] Contenedor para cada video para controlar su fondo y tamaño relativo */
+.video-wrapper {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4vh 0; /* Añade un poco de aire vertical para que no se vea tan pegado */
+}
+
+.video-wrapper.black-bg {
+    background-color: #000000;
+}
+
+.video-wrapper.white-bg {
+    background-color: #ffffff;
+}
+
+.video-showcase-jaime video {
+    width: 50%; /* Reducido para hacer los videos más pequeños */
+    height: auto;
+    display: block;
+}
+
+/* [NUEVO] Showcase de colores para el proyecto de Jaime */
+.color-identity-section {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    background-color: #ffffff !important; /* Fondo blanco detrás de los rectángulos de color */
+}
+
+.capa-color-cuadrada {
+    position: relative;
+    width: 33.333vw;
+    min-height: 100vh; /* Ajustado para que quepan los logos como en marca personal */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 14vh 4vw 10vh 4vw; /* Reducido el espacio superior (de 25vh a 14vh) */
+    box-sizing: border-box;
+    /* Variables para controlar la animación con JS */
+    --p: var(--scroll-progress, 0);
+    --inv: calc(1 - var(--p));
+    opacity: var(--p);
+    transform: translateY(calc(50px * var(--inv)));
+}
+
+.capa-color-cuadrada.negro {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.capa-color-cuadrada.blanco {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.capa-color-cuadrada.verde {
+    background-color: #00C896;
+    color: #000000; /* Texto en negro debido a que la luminosidad del verde elegido es alta */
+}
+
+.capa-color-cuadrada .text-container {
+    font-family: 'Fieldwork Geo', sans-serif;
+    text-align: center;
+    height: 35vh; /* Igualar altura para alinear los logos */
+    min-height: 280px;
+}
+
+.capa-color-cuadrada h2.tw-line {
+    font-size: clamp(1.425rem, 2.85vw, 2.85rem);
+    margin: 0 0 1.5rem 0;
+    font-weight: 600;
+    min-height: clamp(2rem, 4vw, 4rem);
+}
+
+.capa-color-cuadrada p.tw-line {
+    font-family: 'Fieldwork Hum', sans-serif; /* Tipografía más fina de la familia */
+    font-size: clamp(0.85rem, 1.23vw, 1.14rem);
+    margin: 0.5rem 0;
+    min-height: clamp(1rem, 1.8vw, 1.5rem);
+    font-weight: 300; /* Un grosor mucho más ligero (Light) para diferenciarlo del título */
+}
+
+.tw-line::after { content: '\200B'; } /* Evita colapso de altura antes de la animación */
+
+.tw-cursor { display: inline-block; width: auto; animation: blinkCursor 0.8s infinite step-end; color: inherit; font-weight: 400; }
+@keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* Ajuste de espaciado para los logos en esta página */
+.capa-color-cuadrada .logo-fade {
+    margin-top: 2.0rem; /* Reducido un 5% extra para acercarlo al texto CMYK */
+}
+
+.capa-color-cuadrada .logo-fade + .logo-fade {
+    margin-top: 1.5rem; /* Reduce también el hueco entre los logos que están apilados */
+}
+
+/* [NUEVO] Adaptación del catálogo tipográfico para la página de Jaime */
+.typo-catalog-container .typo-split-container {
+    align-items: flex-start !important; /* Alineación al inicio para control quirúrgico del nivel */
+}
+
+.typo-catalog-container,
+.typo-catalog-container .typo-single-col {
+    min-height: auto !important; /* Permite que el fondo verde se ajuste al contenido */
+}
+
+.typo-catalog-container .typo-font-panel {
+    padding: 8vh 2rem !important; /* Espacio simétrico: 8% arriba y 8% abajo */
+    justify-content: center;
+}
+
+.typo-catalog-container {
+    background-color: #00C896 !important; /* Verde Caribbean Green */
+    color: #000000 !important; /* Texto negro para contraste en verde */
+    font-family: 'Fieldwork Hum', sans-serif !important; /* Tipografía única Fieldwork */
+}
+
+.typo-catalog-container .typo-weight-btn {
+    border-color: rgba(0, 0, 0, 0.4) !important; /* Borde negro suave */
+    color: #000000 !important;
+    opacity: 0.8;
+    font-family: 'Fieldwork Hum', sans-serif !important;
+}
+
+.typo-catalog-container .typo-weight-btn:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.typo-catalog-container .typo-weight-btn.active {
+    background-color: #000000 !important; /* Botón activo negro */
+    border-color: #000000 !important;
+    color: #00C896 !important; /* Texto del botón activo verde */
+}
+
+.typo-catalog-container .typo-display {
+    color: #000000 !important; /* Letras grandes 'Aa' en negro */
+    font-size: clamp(8rem, 16vw, 16.5rem) !important; /* Ajustado para cuadrar con la altura del abecedario */
+}
+
+/* Ajuste de reducción de tamaños generales del texto tipográfico */
+.typo-catalog-container .typo-title { font-size: clamp(2.5rem, 6vw, 5.5rem) !important; }
+.typo-catalog-container .typo-char-grid { font-size: clamp(1rem, 1.6vw, 1.5rem) !important; }
+.typo-catalog-container .typo-weight-btn { font-size: 0.85rem !important; }
+.typo-catalog-container .typo-weights-menu { 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15) !important;
+    margin-top: 3.2rem; /* Baja los círculos a la altura visual del título Fieldwork */
+}
+
+/* [NUEVO] Estilos de la flecha flotante para que el color sea opuesto al fondo */
+
+/* Estado por defecto (sobre fondo claro): botón blanco, flecha negra */
+body.light-page .back-to-top {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #f0f0f0; /* Borde sutil para que no se pierda en el fondo blanco */
+}
+
+body.light-page .back-to-top:hover {
+    background-color: #f0f0f0; /* Gris muy claro en hover */
+}
+
+/* Cuando está sobre un fondo oscuro: botón negro, flecha blanca */
+body.light-page .back-to-top.on-dark-bg {
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+body.light-page .back-to-top.on-dark-bg:hover {
+    background-color: #333333; /* Gris oscuro en hover */
+}
+
+/* =========================================
+   MOCKUPS PAPELERÍA
+   ========================================= */
+.stationery-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: #000000;
+}
+.stationery-main { width: 100vw; height: auto; display: block; object-fit: cover; }
+.stationery-row { display: flex; flex-direction: row; width: 100vw; }
+.stationery-half { width: 50vw; height: auto; display: block; object-fit: cover; }
+
+/* =========================================
+   MEDIA QUERIES PARA MÓVIL
+   ========================================= */
+
+@media (max-width: 768px) {
+    .projects-main {
+        padding-top: 80px !important; /* Altura del header en móvil */
+    }
+
+    .return-btn {
+        top: 120px; /* 80px del header + 40px de margen */
+        font-size: 1.5rem;
+    }
+
+    .project-cover-image {
+        height: 60vh;
+        margin-top: -80px; /* Ajuste para el header móvil */
+    }
+
+    .explanation-box-jaime {
+        padding: 10vh 8vw;
+    }
+
+    .explanation-box-jaime p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    .video-showcase-jaime {
+        flex-direction: column;
+    }
+
+    .video-showcase-jaime .video-wrapper {
+        width: 100%;
+    }
+
+    /* En móvil ajustamos para que no se vean demasiado pequeños al estar apilados */
+    .video-showcase-jaime video {
+        width: 85%;
+    }
+}
+
+@media (max-width: 768px) {
+    .color-identity-section {
+        flex-direction: column;
+    }
+    .capa-color-cuadrada {
+        width: 100vw;
+        min-height: 100vh; /* En móvil ocupa toda la pantalla */
+        padding: 12vh 8vw 10vh 8vw; /* Ajuste del espacio superior e inferior */
+        justify-content: flex-start; /* Alineado arriba para que respete el margen y no baje el texto */
+    }
+    .capa-color-cuadrada h2.tw-line {
+        font-size: clamp(1.9rem, 7.6vw, 2.85rem);
+        min-height: auto;
+    }
+    .capa-color-cuadrada p.tw-line {
+        font-size: clamp(0.95rem, 3.8vw, 1.33rem);
+        min-height: auto;
+    }
+    
+    /* Ajustes espaciado logos en móvil */
+    .capa-color-cuadrada .logo-fade {
+        margin-top: 1.71rem; /* Reducción de un 5% extra en móviles */
+    }
+
+    /* Ajustes mockups en móvil */
+    .stationery-row {
+        flex-direction: column;
+    }
+    .stationery-half {
+        width: 100vw;
+    }
+
+    /* Ajustes tamaños catálogo tipográfico en móvil */
+    .typo-catalog-container .typo-title { font-size: clamp(1.6rem, 6vw, 2.4rem) !important; }
+    .typo-catalog-container .typo-display { font-size: clamp(4rem, 14vw, 6.4rem) !important; }
+    .typo-catalog-container .typo-char-grid { font-size: clamp(0.75rem, 2.8vw, 0.9rem) !important; }
+    .typo-catalog-container .typo-weights-menu { margin-top: 0 !important; } /* Reset en móvil */
+}

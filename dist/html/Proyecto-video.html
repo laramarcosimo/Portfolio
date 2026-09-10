@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Proyecto Video - Portafolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="../css/proyectos.css">
+    <link rel="stylesheet" href="../css/Proyecto-video.css">
+</head>
+
+<body class="video-project-page light-page">
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="logo-container">
+            <a href="../../index.html?skipIntro=true"><img src="../../assets/fotos/logo_blanco.png" alt="Logo"
+                    class="site-logo"></a>
+        </div>
+        <button class="menu-toggle" aria-label="Abrir menú">
+            <img src="../../assets/fotos/menublanco.png" alt="Menú">
+        </button>
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="../html/curriculum.html" class="nav-link"><i class="fas fa-file-invoice"></i>
+                        Currículum</a></li>
+                <li><a href="../html/proyectos.html" class="nav-link"><i class="fas fa-briefcase"></i> Proyectos</a>
+                </li>
+            </ul>
+            <a href="../html/contacto.html" class="btn-contact">Contacto</a>
+        </nav>
+    </header>
+
+    <section id="welcome-screen">
+        <div class="text-container">
+            <p class="intro-text">
+                <strong>SloMo × Lola Índigo.</strong><br>
+                Reinterpretación audiovisual nacida de la unión entre la música de Chanel y el universo visual de Lola
+                Índigo para crear un nuevo videoclip.
+            </p>
+        </div>
+
+        <div id="scroll-arrow" class="scroll-arrow">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <section id="video-section">
+        <div class="video-fullscreen-wrapper">
+            <video id="main-video" controls playsinline preload="auto">
+                <source src="../../assets/videos/Proyecto_video/video_lola.MP4" type="video/mp4">
+                Tu navegador no soporta la reproducción de video.
+            </video>
+        </div>
+    </section>
+
+    <!-- Project Tools Footer -->
+    <footer class="cv-footer">
+        <div class="footer-box project-tools-footer">
+            <span>Hecho con:</span>
+            <div class="tools-icons">
+                <img src="../../assets/fotos/logos_adobe/premier.png" alt="Adobe Premiere">
+            </div>
+            <!-- Botón para volver arriba -->
+            <a href="#inicio" class="back-to-top" title="Volver arriba">
+                <i class="fas fa-arrow-up"></i>
+            </a>
+        </div>
+    </footer>
+
+    <!-- Cursor personalizado -->
+    <div class="cursor-dot"></div>
+    <script src="../js/Proyecto-video.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Casa Ricardo - Portafolio</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="../css/proyectos.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.typekit.net/sjx7ptx.css">
+    <link rel="stylesheet" href="../css/casa-ricardo.css">
+</head>
+
+<body class="light-page" id="inicio">
+
+    <!-- Reutilizamos el header para poder volver -->
+    <header class="site-header">
+        <div class="logo-container">
+            <a href="../../index.html?skipIntro=true"><img src="../../assets/fotos/logo_blanco.png" alt="Logo"
+                    class="site-logo"></a>
+        </div>
+        <button class="menu-toggle" aria-label="Abrir menú">
+            <img src="../../assets/fotos/menublanco.png" alt="Menú">
+        </button>
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="../html/curriculum.html" class="nav-link"><i class="fas fa-file-invoice"></i>
+                        Currículum</a></li>
+                <li><a href="../html/proyectos.html" class="nav-link"><i class="fas fa-briefcase"></i> Proyectos</a>
+                </li>
+            </ul>
+            <a href="../html/contacto.html" class="btn-contact">Contacto</a>
+        </nav>
+    </header>
+
+    <main class="cv-container projects-main">
+
+        <!-- Botón Volver a Proyectos -->
+        <a href="proyectos.html" id="return-btn" class="return-btn" title="Volver a Proyectos">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <picture>
+            <source media="(max-width: 768px)" srcset="../../assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png">
+            <source media="(min-width: 769px)" srcset="../../assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png">
+            <img src="../../assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" alt="Portada Casa Ricardo"
+                class="project-cover-image">
+        </picture>
+
+        <div class="explanation-box">
+            <p>Durante mis prácticas trabajé en el rediseño de la identidad visual de Casa Ricardo, una tienda de
+                chuches y frutos secos. El objetivo era modernizar el logotipo sin perder la esencia cercana y
+                tradicional de la marca. Se mejoró la legibilidad, la composición y su adaptación a distintos formatos.
+                El resultado fue una imagen más actual y limpia, manteniendo la personalidad reconocible del negocio.
+            </p>
+        </div>
+
+        <!-- Comparación de Logos -->
+        <div class="gallery-content logo-comparison-container">
+            <img src="../../assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" alt="Logo Nuevo Casa Ricardo"
+                class="logo-half">
+            <img src="../../assets/fotos/Proyecto_casa_ricardo/Logo_viejo.png" alt="Logo Viejo Casa Ricardo"
+                class="logo-half">
+        </div>
+
+        <!-- Sección Identidad Visual Secuencial & Typewriter -->
+        <div class="seccion-identidad">
+            <section class="capa-color rojo">
+                <div class="text-container">
+                    <h2 class="tw-line" data-text="Rojo Casa Ricardo"></h2>
+                    <p class="tw-line" data-text="HEX     #DB251E"></p>
+                    <p class="tw-line" data-text="RGB     219, 37, 30"></p>
+                    <p class="tw-line" data-text="CMYK    0, 95, 95, 0"></p>
+                </div>
+                <img src="../../assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" class="logo-fade" alt="LOGO SF">
+            </section>
+
+            <section class="capa-color azul">
+                <div class="text-container">
+                    <h2 class="tw-line" data-text="Azul Tradición"></h2>
+                    <p class="tw-line" data-text="HEX     #0032A0"></p>
+                    <p class="tw-line" data-text="RGB     0, 50, 160"></p>
+                    <p class="tw-line" data-text="CMYK    100, 80, 0, 0"></p>
+                </div>
+                <img src="../../assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" class="logo-fade" alt="LOGO SF">
+            </section>
+
+            <section class="capa-color dorado">
+                <div class="text-container">
+                    <h2 class="tw-line" data-text="Dorado Tostado"></h2>
+                    <p class="tw-line" data-text="HEX     #DDAA55"></p>
+                    <p class="tw-line" data-text="RGB     221, 170, 85"></p>
+                    <p class="tw-line" data-text="CMYK    10, 30, 70, 0"></p>
+                </div>
+                <img src="../../assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" class="logo-fade" alt="LOGO SF">
+            </section>
+        </div>
+
+        <!-- Componente Catálogo Tipográfico -->
+        <div class="gallery-content typo-catalog-container initialized">
+            <div class="typo-left-col typo-font-panel">
+                <div class="typo-panel-inner">
+                    <h2 class="typo-title">Ella Roman</h2>
+                    <div class="typo-weights-menu">
+                        <button class="typo-weight-btn active" data-weight="700" data-style="normal"
+                            data-stretch="condensed" data-family="'ella-roman'">Bold</button>
+                        <button class="typo-weight-btn" data-weight="400" data-style="normal" data-stretch="normal"
+                            data-family="'ella-roman'">Regular</button>
+                    </div>
+                    <div class="typo-display">
+                        <span>A</span>
+                        <span>a</span>
+                    </div>
+                    <div class="typo-char-grid">
+                        <span>Aa</span><span>Bb</span><span>Cc</span><span>Dd</span><span>Ee</span><span>Ff</span>
+                        <span>Gg</span><span>Hh</span><span>Ii</span><span>Jj</span><span>Kk</span><span>Ll</span>
+                        <span>Mm</span><span>Nn</span><span>Oo</span><span>Pp</span><span>Qq</span><span>Rr</span>
+                        <span>Ss</span><span>Tt</span><span>Uu</span><span>Vv</span><span>Ww</span><span>Xx</span>
+                        <span>Yy</span><span>Zz</span>
+                        <span class="typo-full-row">1234567890</span>
+                        <span class="typo-full-row">! @ # $ % *</span>
+                    </div>
+                </div>
+            </div>
+            <div class="typo-right-col typo-font-panel">
+                <div class="typo-panel-inner">
+                    <h2 class="typo-title">Depot New</h2>
+                    <div class="typo-weights-menu">
+                        <button class="typo-weight-btn active" data-weight="400" data-style="normal"
+                            data-family="'depot-new-condensed-web'">Regular</button>
+                        <button class="typo-weight-btn" data-weight="700" data-style="normal"
+                            data-family="'depot-new-condensed-web'">Bold</button>
+                    </div>
+                    <div class="typo-display">
+                        <span>A</span>
+                        <span>a</span>
+                    </div>
+                    <div class="typo-char-grid">
+                        <span>Aa</span><span>Bb</span><span>Cc</span><span>Dd</span><span>Ee</span><span>Ff</span>
+                        <span>Gg</span><span>Hh</span><span>Ii</span><span>Jj</span><span>Kk</span><span>Ll</span>
+                        <span>Mm</span><span>Nn</span><span>Oo</span><span>Pp</span><span>Qq</span><span>Rr</span>
+                        <span>Ss</span><span>Tt</span><span>Uu</span><span>Vv</span><span>Ww</span><span>Xx</span>
+                        <span>Yy</span><span>Zz</span>
+                        <span class="typo-full-row">1234567890</span>
+                        <span class="typo-full-row">! @ # $ % *</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Composición de pegatinas en 4 partes -->
+        <div class="gallery-content stickers-container single-image">
+            <img class="sticker-zoom" src="../../assets/fotos/Proyecto_casa_ricardo/4_pegatinas.jpg" alt="4 pegatinas">
+
+        </div>
+
+
+        <!-- Mockups Papelería / Packaging -->
+        <div class="gallery-content stationery-container">
+            <div class="stationery-row no-wave">
+                <img src="../../assets/fotos/Proyecto_casa_ricardo/Packaging_delante.png" alt="Packaging 1"
+                    class="stationery-half">
+                <img src="../../assets/fotos/Proyecto_casa_ricardo/Packaging_detras.png" alt="Packaging 2"
+                    class="stationery-half">
+            </div>
+            <div class="tarjeta-wrapper stationery-row">
+                <img src="../../assets/fotos/Proyecto_casa_ricardo/bolsas_sin_fondo.png" alt="Bolsas Casa Ricardo"
+                    class="stationery-half">
+                <img src="../../assets/fotos/Proyecto_casa_ricardo/TARJETA_VISITA_SF.png" alt="Tarjeta Visita"
+                    class="stationery-half">
+            </div>
+            <div class="stationery-row">
+                <img src="../../assets/fotos/Proyecto_casa_ricardo/Valla.jpg" alt="Valla Casa Ricardo"
+                    class="stationery-half">
+                <img src="../../assets/fotos/Proyecto_casa_ricardo/MUPI.png" alt="MUPI Casa Ricardo"
+                    class="stationery-half">
+            </div>
+        </div>
+    </main>
+
+    <!-- Project Tools Footer -->
+    <footer class="cv-footer">
+        <div class="footer-box project-tools-footer">
+            <span>Hecho con:</span>
+            <div class="tools-icons">
+                <img src="../../assets/fotos/logos_adobe/illustrator.png" alt="Illustrator">
+                <img src="../../assets/fotos/logos_adobe/photoshop.png" alt="Photoshop">
+            </div>
+            <!-- Botón para volver arriba -->
+            <a href="#inicio" class="back-to-top" title="Volver arriba">
+                <i class="fas fa-arrow-up"></i>
+            </a>
+        </div>
+    </footer>
+
+    <div class="cursor-dot"></div>
+    <script src="../js/proyectos.js"></script>
+    <script src="../js/casa-ricardo.js"></script>
+</body>
+
+</html>

@@ -1,21 +1,19 @@
-# Portafolio Personal
+# Portafolio Personal — Lara Marco Simó
 
-Mi portafolio personal, hecho con React + Vite.
-
-## Desarrollo
-
-```bash
-npm install
-npm run dev
-```
-
-## Build
-
-```bash
-npm run build
-```
+Portafolio personal en HTML/CSS/JS vanilla, con animaciones de scroll, canvas de fondo y galería de proyectos de diseño e identidad visual.
 
 ## Estructura
 
-- `src/App.jsx` — secciones del portafolio (hero, sobre mí, proyectos, contacto)
-- `src/App.css` — estilos
+- `index.html` — página de inicio
+- `dist/html/` — páginas internas (currículum, proyectos, contacto, casos de estudio)
+- `dist/css/` — estilos por página
+- `dist/js/` — scripts por página
+- `assets/` — fotos, videos y tipografías
+
+## Desarrollo local
+
+Servir como sitio estático, por ejemplo:
+
+```bash
+npx serve .
+```

@@ -1,0 +1,471 @@
+/* --- ESTILOS GLOBALES BÁSICOS --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #192A56; /* Fondo por defecto */
+    font-family: 'Quicksand', sans-serif;
+    /* Eliminamos el padding extra para que la página empiece desde arriba */
+    padding: 0;
+}
+
+/* [NUEVO] Declaración de la familia de fuentes local Quicksand */
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Quicksand';
+    src: url('../../assets/tipografia/lara/quicksand/Quicksand-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Ajuste del padding superior para que el contenido empiece justo debajo del header fijo */
+.projects-main {
+    padding-top: 133px !important; /* Aproximadamente la altura del header en desktop */
+    position: relative; /* Necesario para que el botón de retorno se posicione respecto a este contenedor */
+    /* [NUEVO] Aplicar la tipografía principal al cuerpo del proyecto */
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700; /* Bold por defecto */
+}
+
+/* =========================================
+   BOTÓN DE RETORNO FIJO
+   ========================================= */
+/*
+  Hacemos visible el botón de retorno que por defecto está oculto en proyectos.css.
+*/
+.return-btn {
+    position: absolute; /* Para que se mueva con el scroll de la página, en lugar de ser fijo */
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+    /* [NUEVO] Ajustamos la posición para que esté sobre la foto de portada */
+    top: 173px; /* 133px del header + 40px de margen */
+    transition: opacity 0.6s ease 0.8s, transform 0.6s ease 0.8s, top 0.4s ease;
+    text-decoration: none; /* Para que el enlace no tenga subrayado */
+}
+/* =========================================
+   SECCIÓN IDENTIDAD VISUAL SECUENCIAL
+   ========================================= */
+.seccion-identidad {
+    width: 100vw;
+    display: flex; 
+    flex-direction: row; /* Lado a lado en escritorio */
+    background-color: #192A56;
+    overflow: hidden; /* Previene que los elementos que se mueven generen scroll horizontal */
+}
+
+.capa-color {
+    position: relative;
+    width: 33.333vw; /* Cada uno ocupa exactamente un tercio */
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: flex-start;
+    padding: 25vh 4vw 10vh 4vw; 
+    box-sizing: border-box;
+
+    /* Control matemático desde JavaScript vía variables CSS */
+    --p: var(--scroll-progress, 0);
+    --inv: calc(1 - var(--p));
+    
+    opacity: 1;
+    transition: none; /* JS controla la animación */
+}
+
+/* Configuraciones y colores (Efecto "Abrazo" Dinámico al Scroll) */
+.capa-color.lavanda { 
+    background-color: #9690E4; color: #192A56; 
+    transform: translateX(calc(-15vw * var(--inv))); 
+}
+.capa-color.medianoche { 
+    background-color: #192A56; color: #9690E4; 
+    transform: translateZ(0);
+}
+.capa-color.pastel { 
+    background-color: #96C9FF; color: #192A56; 
+    transform: translateX(calc(15vw * var(--inv))); 
+}
+
+.capa-color .text-container {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    height: 35vh; 
+    min-height: 280px;
+}
+
+.capa-color h2.tw-line { font-size: clamp(1.2rem, 2vw, 2rem); margin: 0 0 1rem 0; min-height: clamp(3.5rem, 6vw, 5rem); }
+.capa-color p.tw-line {
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    margin: 0.3rem 0; white-space: pre-wrap; min-height: clamp(1.5rem, 2vw, 2rem);
+    font-weight: 500;
+}
+
+/* Previene el colapso visual de altura antes de la inserción dinámica de JS */
+.tw-line::after { content: '\200B'; }
+
+.tw-cursor {
+    display: inline-block;
+    width: auto;
+    animation: blinkCursor 0.8s infinite step-end;
+    color: inherit;
+    font-weight: 400;
+}
+@keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+.logo-fade {
+    width: 18.4vw; max-width: 276px; min-width: 138px; margin-top: 6rem;
+    align-self: center;
+    opacity: 0; transform: translateY(-15px);
+    transition: opacity 1s ease-in-out, transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.logo-fade + .logo-fade {
+    margin-top: 2.5rem;
+}
+
+.logo-fade.visible { opacity: 1; transform: translateY(0); }
+
+/* =========================================
+   SECCIÓN DE MÓVIL (MEDIA QUERIES)
+   ========================================= */
+
+@media (max-width: 768px) {
+    body {
+        padding: 0; /* En móvil no necesitamos padding extra */
+    }
+    .typo-catalog-container .typo-weights-menu { margin-top: 0 !important; }
+    .seccion-identidad {
+        flex-direction: column;
+    }
+    .capa-color {
+        width: 100vw;
+        min-height: 100vh; /* Cada sección de color ocupa la pantalla */
+        padding: 15vh 8vw;
+        justify-content: center;
+    }
+
+    /* Hacer que las capas vengan completamente desde fuera de la pantalla (100vw) en móvil */
+    .capa-color.lavanda { transform: translateX(calc(-100vw * var(--inv))); }
+    .capa-color.pastel { transform: translateX(calc(100vw * var(--inv))); }
+    .capa-color.medianoche { transform: translateZ(0); }
+
+    .capa-color .text-container { height: auto; min-height: auto; }
+    .capa-color h2.tw-line { font-size: clamp(1.2rem, 4vw, 1.8rem); min-height: auto; }
+    .capa-color p.tw-line { font-size: clamp(0.9rem, 3.5vw, 1.2rem); min-height: auto; }
+    .logo-fade { width: 46vw; margin-top: 4rem; }
+}
+
+/* =========================================
+   RESTAURAR MENÚ SUPERIOR COMO EN CONTACTO
+   ========================================= */
+body.light-page .cursor-dot { background-color: #192A56 !important; }
+body.light-page .cursor-dot.active { background-color: #192A56 !important; opacity: 0.4 !important; }
+body.light-page .cursor-dot.on-dark { background-color: #ffffff !important; }
+
+body.light-page .nav-link { color: #192A56 !important; }
+body.light-page .nav-link::after { background-color: #192A56 !important; }
+body.light-page .btn-contact { background-color: #192A56 !important; color: #ffffff !important; box-shadow: 0 4px 10px rgba(25, 42, 86, 0.2) !important; }
+
+@media (min-width: 769px) {
+    body.light-page .site-header {
+        position: absolute !important;
+        background: #ffffff !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        padding: 1.5rem 5% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    body.light-page .site-header {
+        position: fixed !important;
+        background: #ffffff !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        padding: 15px !important;
+    }
+}
+
+/* =========================================
+   ESTILOS DE CONTENIDO DE PÁGINA
+   ========================================= */
+
+/* Caja de explicación de identidad */
+.explanation-box {
+    width: 100%;
+    background-color: #96C9FF; /* Fondo azul clarito */
+    color: #192A56;
+    padding: 12vh 5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.explanation-box p {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.2rem; /* [MODIFICADO] Tamaño de texto aumentado */
+    font-weight: 700; /* [MODIFICADO] Aumentado a bold para mayor impacto */
+    line-height: 1.8;
+    text-align: center; /* Texto centrado */
+    max-width: 900px;
+    margin: 0;
+}
+
+/* Video de explicación del logo */
+.video-explicacion {
+    padding: 0 1vw !important; /* [MODIFICADO] Reducido un 2% (1vw a cada lado) */
+    background-color: #ffffff !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: auto !important;
+    min-height: auto !important;
+    box-sizing: border-box !important;
+    object-fit: contain !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Media query para móvil */
+@media (max-width: 768px) {
+    .explanation-box p {
+        font-size: 1.1rem; /* [MODIFICADO] Tamaño de fuente aumentado para móviles */
+        line-height: 1.5;   /* Interlineado ajustado */
+        padding: 0 30px;    /* Padding lateral para que no toque los bordes */
+    }
+}
+
+/* Estilo para la imagen de portada del proyecto */
+.project-cover-image {
+    width: 100%; /* Ocupa el ancho del contenedor */
+    height: auto;
+    display: block; /* Para eliminar espacios extra debajo */
+    object-fit: cover;
+    margin-bottom: 0; /* Para que se pegue al texto de abajo */
+    margin-top: -50px; /* Ajusta este valor para mover la imagen hacia arriba */
+}
+
+/* Media query para móvil: Ajustar padding-top del main y margin-top de la imagen */
+@media (max-width: 768px) {
+    .projects-main {
+        padding-top: 80px !important; /* Altura del header en móvil */
+    }
+    .return-btn {
+        top: 120px; /* 80px del header + 40px de margen */
+    }
+    .project-cover-image {
+        margin-top: -30px; /* Ajuste para móvil, menos negativo para no subirla tanto */
+        height: 60vh; /* Altura similar a la de la página de proyectos para consistencia */
+    }
+}
+
+/* =========================================
+   PAPELERÍA MOCKUPS
+   ========================================= */
+.stationery-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important; /* Eliminado el padding inferior para quitar el espacio */
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: #192A56;
+}
+
+/* Wrapper para la tarjeta para darle fondo morado completo */
+.tarjeta-wrapper {
+    width: 100vw;
+    background-color: #9690E4; /* Color morado Lavanda para fundirse con la imagen */
+}
+
+/* =========================================
+   [NUEVO] VIDEOS PARALELOS FULL-WIDTH
+   ========================================= */
+.video-parallel-container.gallery-content {
+    width: 100vw !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: transparent !important;
+    gap: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.stationery-main { width: 100vw; height: auto; display: block; object-fit: cover; }
+
+.stationery-row { display: flex; flex-direction: row; width: 100vw; }
+
+.stationery-half, video.video-half { width: 50vw !important; height: 75vh !important; display: block; object-fit: cover !important; }
+
+/* Separador de onda (Wave gap) */
+.wave-separated {
+    position: relative;
+    overflow: hidden; /* Evita que la onda se salga por los bordes al animarse */
+}
+
+.wave-separator {
+    position: absolute;
+    top: -5%;
+    bottom: -5%;
+    left: 50%;
+    width: 4vw;
+    margin-left: -2vw; /* Centrado exacto sobre el corte de las imágenes */
+    background-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 30,0 C 70,33 -10,66 30,100 L 70,100 C 30,66 110,33 70,0 Z' fill='%23cccccc'/%3E%3C/svg%3E");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 2;
+    pointer-events: none; /* Permite hacer clics a través de la onda si hubiera enlaces */
+    animation: gentleWaveDesktop 6s ease-in-out infinite alternate;
+}
+
+@keyframes gentleWaveDesktop {
+    0% { transform: scale(1) translateY(0); }
+    100% { transform: scale(1.1, 1.05) translateY(-2%); }
+}
+
+/* =========================================
+   [NUEVO] CATÁLOGO TIPOGRÁFICO
+   ========================================= */
+.typo-catalog-container {
+    /* Aseguramos que el contenedor interno alinee al inicio */
+    --split-align: flex-start;
+}
+
+.typo-catalog-container .typo-split-container {
+    align-items: flex-start !important;
+}
+
+.typo-catalog-container .typo-font-panel {
+    padding-top: 12vh !important; /* Baja el bloque para equilibrar el espacio inferior */
+    justify-content: flex-start;
+}
+
+.typo-catalog-container {
+    background-color: #192A56 !important; /* Fondo azul corporativo para aislar la sección */
+    color: #9690E4 !important; /* Color Lavanda para todo el texto de la tipografía */
+}
+
+.typo-catalog-container .typo-weight-btn {
+    border-color: rgba(150, 144, 228, 0.7) !important;
+    color: #9690E4 !important;
+}
+
+.typo-catalog-container .typo-weight-btn:hover {
+    background-color: rgba(150, 144, 228, 0.12) !important;
+}
+
+.typo-catalog-container .typo-weight-btn.active {
+    background-color: #9690E4 !important; /* Botón activo en color Lavanda */
+    border-color: #9690E4 !important;
+    color: #192A56 !important; /* Texto del botón activo en color Azul */
+}
+
+.typo-catalog-container .typo-weights-menu {
+    border-bottom: 1px solid rgba(150, 144, 228, 0.4) !important;
+    margin-bottom: 2.5rem !important;
+    margin-top: 3.2rem; /* Baja los círculos a la altura del título Quicksand */
+}
+
+.typo-catalog-container .typo-display {
+    color: #9690E4 !important;
+    font-size: clamp(8rem, 16vw, 16.5rem) !important; /* Ajustado para cuadrar con la altura del abecedario */
+}
+
+/* =========================================
+   [NUEVO] TRANSICIÓN DE ENTRADA (CORTINA)
+   ========================================= */
+.page-transition-curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.curtain-column {
+    flex: 1;
+    height: 100%;
+    background-color: #192A56;
+    transform: translateY(0%); /* Estado inicial de entrada (cubriendo) */
+    transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.page-transition-curtain.is-leaving .curtain-column {
+    transform: translateY(-100%); /* Estado final de entrada (revelando) */
+}
+
+@media (max-width: 768px) {
+    .stationery-row {
+        flex-direction: column;
+    }
+    .stationery-half {
+        width: 100vw;
+    }
+
+    video.video-half {
+        width: 100vw !important; /* En móvil se apilan a pantalla completa */
+        height: 50vh !important;
+    }
+    
+    /* En móvil la hacemos un poquito más grande para que no se vea tan diminuta */
+    .stationery-main {
+        width: 100vw;
+    }
+    /* Adaptamos la onda para que sea horizontal en formato móvil */
+    .wave-separator {
+        top: 50%;
+        bottom: auto;
+        left: -5%;
+        right: -5%;
+        width: 110%; /* Sobresale un poco para que la animación no revele el borde */
+        height: 6vw; /* Área de oscilación de la onda */
+        margin: -3vw 0 0 0; /* Centrado vertical exacto sobre el corte de las fotos */
+        background-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0,30 C 33,70 66,-10 100,30 L 100,70 C 66,30 33,110 0,70 Z' fill='%23cccccc'/%3E%3C/svg%3E");
+        animation: gentleWaveMobile 6s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes gentleWaveMobile {
+    0% { transform: scale(1) translateX(0); }
+    100% { transform: scale(1.05, 1.1) translateX(-2%); }
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Marca Personal - Portafolio</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="../css/proyectos.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/marca-personal.css">
+</head>
+
+<body class="light-page" id="inicio">
+
+    <!-- Reutilizamos el header para poder volver -->
+    <header class="site-header">
+        <div class="logo-container">
+            <a href="../../index.html?skipIntro=true"><img src="../../assets/fotos/logo_blanco.png" alt="Logo"
+                    class="site-logo"></a>
+        </div>
+        <button class="menu-toggle" aria-label="Abrir menú">
+            <img src="../../assets/fotos/menublanco.png" alt="Menú">
+        </button>
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="../html/curriculum.html" class="nav-link"><i class="fas fa-file-invoice"></i>
+                        Currículum</a></li>
+                <li><a href="../html/proyectos.html" class="nav-link"><i class="fas fa-briefcase"></i> Proyectos</a>
+                </li>
+            </ul>
+            <a href="../html/contacto.html" class="btn-contact">Contacto</a>
+        </nav>
+    </header>
+
+    <main class="cv-container projects-main">
+
+        <!-- Botón Volver a Proyectos -->
+        <a href="proyectos.html" id="return-btn" class="return-btn" title="Volver a Proyectos">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <picture>
+            <source media="(max-width: 768px)" srcset="../../assets/fotos/Proyecto_mi_logo/Portada_logo.png">
+            <source media="(min-width: 769px)" srcset="../../assets/fotos/Proyecto_mi_logo/Potadas_proyectos.jpg">
+            <img src="../../assets/fotos/Proyecto_mi_logo/Potadas_proyectos.jpg" alt="Portada Marca Personal"
+                class="project-cover-image">
+        </picture>
+
+        <!-- Content moved from proyectos.html -->
+        <div class="explanation-box">
+            <p>Mi identidad visual es el punto de encuentro entre quién soy y lo que hago. El logotipo nace de la fusión
+                orgánica de mis iniciales (L, M y S), entrelazadas en un trazo que rinde homenaje a mis dos grandes
+                pasiones: la profundidad de la lectura y la pasión por el diseño. Es un diseño que busca el equilibrio
+                perfecto entre dinamismo y elegancia, donde cada línea fluye para representar una comunicación con
+                propósito, alma y rigor técnico.</p>
+        </div>
+
+        <!-- Nuevos videos con delay personalizado -->
+        <video src="../../assets/videos/Proyecto_mi_logo/explicacion.mp4" class="video-explicacion gallery-content"
+            data-delay="3000" muted loop playsinline preload="auto"></video>
+        <video src="../../assets/videos/Proyecto_mi_logo/logo_azul_fondobonito.mp4"
+            class="desktop-video video-colores-fullbleed gallery-content" data-delay="3000" muted loop playsinline
+            preload="auto"></video>
+        <video src="../../assets/videos/Proyecto_mi_logo/logo_azul_fondo_bonito_movil.mp4"
+            class="mobile-video video-colores-fullbleed gallery-content" data-delay="3000" muted loop playsinline
+            preload="auto"></video>
+
+        <!-- [NUEVO] Videos Paralelos Secundarios -->
+        <div class="gallery-content video-parallel-container">
+            <video src="../../assets/videos/Proyecto_mi_logo/Logo_blanco.mp4" class="video-half" data-delay="0" muted
+                loop playsinline preload="auto"></video>
+            <video src="../../assets/videos/Proyecto_mi_logo/logo_azul_secundario.mp4" class="video-half" data-delay="0"
+                muted loop playsinline preload="auto"></video>
+        </div>
+
+        <!-- Sección Identidad Visual Secuencial & Typewriter -->
+        <div class="seccion-identidad">
+            <section class="capa-color lavanda">
+                <div class="text-container">
+                    <h2 class="tw-line" data-text="Lavanda Pervinca"></h2>
+                    <p class="tw-line" data-text="HEX     #9690E4"></p>
+                    <p class="tw-line" data-text="RGB     150, 144, 228"></p>
+                    <p class="tw-line" data-text="CMYK    40, 38, 0, 0"></p>
+                </div>
+                <img src="../../assets/fotos/Proyecto_mi_logo/logo_blanco.png" class="logo-fade" alt="Logo Blanco">
+                <img src="../../assets/fotos/Proyecto_mi_logo/logo_azul.png" class="logo-fade" alt="Logo Azul">
+            </section>
+
+            <section class="capa-color medianoche">
+                <div class="text-container">
+                    <h2 class="tw-line" data-text="Azul Medianoche Profundo"></h2>
+                    <p class="tw-line" data-text="HEX     #192A56"></p>
+                    <p class="tw-line" data-text="RGB     25, 42, 86"></p>
+                    <p class="tw-line" data-text="CMYK    100, 88, 37, 31"></p>
+                </div>
+                <img src="../../assets/fotos/Proyecto_mi_logo/logo_blanco.png" class="logo-fade" alt="Logo Blanco">
+            </section>
+
+            <section class="capa-color pastel">
+                <div class="text-container">
+                    <h2 class="tw-line" data-text="Azul Pastel Vibrante"></h2>
+                    <p class="tw-line" data-text="HEX     #96C9FF"></p>
+                    <p class="tw-line" data-text="RGB     150, 201, 255"></p>
+                    <p class="tw-line" data-text="CMYK    40, 15, 0, 0"></p>
+                </div>
+                <img src="../../assets/fotos/Proyecto_mi_logo/logo_blanco.png" class="logo-fade" alt="Logo Blanco">
+                <img src="../../assets/fotos/Proyecto_mi_logo/logo_azul.png" class="logo-fade" alt="Logo Azul">
+            </section>
+        </div>
+
+        <!-- [NUEVO] Componente Catálogo Tipográfico -->
+        <div class="gallery-content typo-catalog-container" style="--font-weight: 700;">
+            <div class="typo-single-col">
+                <div class="typo-font-panel">
+                    <div class="typo-split-container">
+                        <!-- Columna Izquierda: Título y Abecedario -->
+                        <div class="typo-split-left">
+                            <h2 class="typo-title">Quicksand</h2>
+                            <div class="typo-char-grid">
+                                <span>Aa</span><span>Bb</span><span>Cc</span><span>Dd</span><span>Ee</span><span>Ff</span>
+                                <span>Gg</span><span>Hh</span><span>Ii</span><span>Jj</span><span>Kk</span><span>Ll</span>
+                                <span>Mm</span><span>Nn</span><span>Oo</span><span>Pp</span><span>Qq</span><span>Rr</span>
+                                <span>Ss</span><span>Tt</span><span>Uu</span><span>Vv</span><span>Ww</span><span>Xx</span>
+                                <span>Yy</span><span>Zz</span><span class="typo-full-row">1234567890!@#$%*</span>
+                            </div>
+                        </div>
+                        <!-- Columna Derecha: Variantes de la familia y Muestra 'Aa' -->
+                        <div class="typo-split-right">
+                            <div class="typo-weights-menu">
+                                <button class="typo-weight-btn active" data-weight="700"
+                                    data-family="'Quicksand'">Bold</button>
+                                <button class="typo-weight-btn" data-weight="600"
+                                    data-family="'Quicksand'">SemiBold</button>
+                                <button class="typo-weight-btn" data-weight="500"
+                                    data-family="'Quicksand'">Medium</button>
+                                <button class="typo-weight-btn" data-weight="400"
+                                    data-family="'Quicksand'">Regular</button>
+                                <button class="typo-weight-btn" data-weight="300"
+                                    data-family="'Quicksand'">Light</button>
+                            </div>
+                            <div class="typo-display">
+                                <span>A</span>
+                                <span>a</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- [NUEVO] Tríptico de fotos -->
+        <div class="gallery-content triptych-container">
+            <img src="../../assets/fotos/Proyecto_mi_logo/riendo.jpeg" alt="Riendo">
+            <img src="../../assets/fotos/Proyecto_mi_logo/sentada.jpeg" alt="Sentada">
+            <img src="../../assets/fotos/Proyecto_mi_logo/depie.jpeg" alt="De pie">
+        </div>
+
+        <!-- [NUEVO] Mockups Papelería -->
+        <div class="gallery-content stationery-container">
+            <div class="stationery-row wave-separated">
+                <img src="../../assets/fotos/Proyecto_mi_logo/libretas.png" alt="Libretas" class="stationery-half">
+                <div class="wave-separator"></div>
+                <img src="../../assets/fotos/Proyecto_mi_logo/Bolis.png" alt="Bolígrafos" class="stationery-half">
+            </div>
+            <div class="tarjeta-wrapper">
+                <img src="../../assets/fotos/Proyecto_mi_logo/tarjeta_visita.png" alt="Tarjeta de Visita"
+                    class="stationery-main">
+            </div>
+            <div class="stationery-row wave-separated">
+                <img src="../../assets/fotos/Proyecto_mi_logo/carpeta.png" alt="Carpeta" class="stationery-half">
+                <div class="wave-separator"></div>
+                <img src="../../assets/fotos/Proyecto_mi_logo/sobre.png" alt="Sobre" class="stationery-half">
+            </div>
+        </div>
+    </main>
+
+    <!-- Project Tools Footer -->
+    <footer class="cv-footer">
+        <div class="footer-box project-tools-footer">
+            <span>Hecho con:</span>
+            <div class="tools-icons">
+                <img src="../../assets/fotos/logos_adobe/illustrator.png" alt="Illustrator">
+                <img src="../../assets/fotos/logos_adobe/photoshop.png" alt="Photoshop">
+                <img src="../../assets/fotos/logos_adobe/after.png" alt="After Effects">
+            </div>
+            <!-- Botón para volver arriba -->
+            <a href="#inicio" class="back-to-top" title="Volver arriba">
+                <i class="fas fa-arrow-up"></i>
+            </a>
+        </div>
+    </footer>
+
+    <div class="cursor-dot"></div>
+    <script src="../js/proyectos.js"></script> <!-- Carga proyectos.js primero para funciones globales -->
+    <script src="../js/marca-personal.js"></script>
+</body>
+
+</html>
