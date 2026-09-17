@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyectos — Lara Marco Simó</title>
+  <meta name="description" content="Portafolio de proyectos de diseño de Lara Marco Simó: identidad de marca, packaging y edición audiovisual.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+
+<body>
+  <header class="site-header scrolled">
+    <a href="index.html" class="brand">
+      <img src="assets/fotos/logotipo/Horizontal_Negro_SF.png" alt="Lara Marco Simó" class="logo-light">
+      <img src="assets/fotos/logotipo/Horizontal_Blanco_SF.png" alt="Lara Marco Simó" class="logo-dark">
+    </a>
+    <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link magnetic">Inicio</a></li>
+        <li><a href="proyectos.html" class="nav-link active magnetic">Proyectos</a></li>
+        <li><a href="curriculum.html" class="nav-link magnetic">Currículum</a></li>
+      </ul>
+      <a href="index.html#contacto" class="btn-contact magnetic">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="projects-hero reveal">
+      <p class="eyebrow">Portafolio</p>
+      <h1 data-split>Cuatro proyectos, cuatro formas de contar una marca.</h1>
+      <p>Desde identidad personal hasta packaging y motion, cada proyecto combina estrategia, tipografía y color para construir sistemas visuales con propósito.</p>
+    </section>
+
+    <section class="section projects-index-section" style="padding-top:0;">
+      <div class="projects-index-head reveal">
+        <h2 data-split>Proyectos seleccionados</h2>
+        <span class="projects-count">— 04</span>
+      </div>
+
+      <div class="projects-index" id="projectsIndex">
+        <ul class="projects-list">
+          <li class="projects-row" data-preview="marca">
+            <a href="proyecto-marca-personal.html" class="projects-row-link magnetic" data-cursor="view">
+              <span class="projects-row-index">01</span>
+              <span class="projects-row-title"><i class="fas fa-arrow-right arrow"></i>Marca Personal</span>
+              <span class="projects-row-thumb"><img src="assets/fotos/Proyecto_mi_logo/Portada_logo.jpg" alt="" loading="lazy"></span>
+              <span class="projects-row-tag">Identidad de marca · Papelería</span>
+            </a>
+          </li>
+          <li class="projects-row" data-preview="identidad">
+            <a href="proyecto-identidad-visual.html" class="projects-row-link magnetic" data-cursor="view">
+              <span class="projects-row-index">02</span>
+              <span class="projects-row-title"><i class="fas fa-arrow-right arrow"></i>Identidad Visual</span>
+              <span class="projects-row-thumb"><img src="assets/fotos/Proyecto_logo_jaime_fotos/Potada_logo_jaime.jpg" alt="" loading="lazy"></span>
+              <span class="projects-row-tag">Branding para cliente · Sistema tipográfico</span>
+            </a>
+          </li>
+          <li class="projects-row" data-preview="casa">
+            <a href="proyecto-casa-ricardo.html" class="projects-row-link magnetic" data-cursor="view">
+              <span class="projects-row-index">03</span>
+              <span class="projects-row-title"><i class="fas fa-arrow-right arrow"></i>Casa Ricardo</span>
+              <span class="projects-row-thumb"><img src="assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" alt="" loading="lazy" style="object-fit:contain; background:#fff;"></span>
+              <span class="projects-row-tag">Rediseño de marca · Packaging</span>
+            </a>
+          </li>
+          <li class="projects-row" data-preview="slomo">
+            <a href="proyecto-slomo.html" class="projects-row-link magnetic" data-cursor="view">
+              <span class="projects-row-index">04</span>
+              <span class="projects-row-title"><i class="fas fa-arrow-right arrow"></i>SloMo × Lola Índigo</span>
+              <span class="projects-row-thumb"><img src="assets/fotos/Proyecto_video/Portada_video.jpg" alt="" loading="lazy"></span>
+              <span class="projects-row-tag">Edición de vídeo · Reinterpretación audiovisual</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="projects-preview" aria-hidden="true">
+          <div class="projects-preview-clip">
+            <img data-preview-img="marca" class="is-active" src="assets/fotos/Proyecto_mi_logo/Portada_logo.jpg" alt="">
+            <img data-preview-img="identidad" src="assets/fotos/Proyecto_logo_jaime_fotos/Potada_logo_jaime.jpg" alt="">
+            <img data-preview-img="casa" src="assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" alt="" style="object-fit:contain; background:#fff;">
+            <img data-preview-img="slomo" src="assets/fotos/Proyecto_video/Portada_video.jpg" alt="">
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 400 60" preserveAspectRatio="none" width="100%" height="100%">
+      <path d="M0,30 C25,5 45,55 70,30 C95,5 115,55 140,30 C165,5 185,55 210,30 C235,5 255,55 280,30 C305,5 325,55 350,30 C365,15 380,40 400,30" />
+    </svg>
+  </div>
+
+  <footer class="site-footer" id="contacto" data-theme="dark">
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <p class="eyebrow" style="color:var(--sky);">Hablemos</p>
+          <h2>¿Tienes un proyecto en mente?</h2>
+          <a href="mailto:laramarcosimo@gmail.com" class="footer-email">laramarcosimo@gmail.com</a>
+        </div>
+        <div class="footer-socials">
+          <a href="https://wa.me/34608350840" target="_blank" rel="noopener">WhatsApp — 608 350 840</a>
+          <a href="https://www.linkedin.com/in/lara-marco-sim%C3%B3-7317372aa" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://www.instagram.com/laramarcosimo_" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Lara Marco Simó · Santa Cruz de Tenerife</span>
+        <a href="#" class="back-to-top" title="Volver arriba"><i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+
+</html>

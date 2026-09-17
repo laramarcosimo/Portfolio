@@ -2,84 +2,165 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio</title>
-    <link rel="stylesheet" href="dist/css/estilo.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lara Marco Simó — Diseño gráfico &amp; publicidad</title>
+  <meta name="description" content="Portafolio de Lara Marco Simó, diseñadora gráfica y publicista en Santa Cruz de Tenerife.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
 </head>
 
 <body>
+  <header class="site-header">
+    <a href="index.html" class="brand">
+      <img src="assets/fotos/logotipo/Horizontal_Negro_SF.png" alt="Lara Marco Simó" class="logo-light">
+      <img src="assets/fotos/logotipo/Horizontal_Blanco_SF.png" alt="Lara Marco Simó" class="logo-dark">
+    </a>
+    <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link active">Inicio</a></li>
+        <li><a href="proyectos.html" class="nav-link">Proyectos</a></li>
+        <li><a href="curriculum.html" class="nav-link">Currículum</a></li>
+      </ul>
+      <a href="#contacto" class="btn-contact">Contacto</a>
+    </nav>
+  </header>
 
-    <!-- FONDO TOPOGRÁFICO -->
-    <canvas id="topo-canvas"></canvas>
+  <main>
+    <section class="hero" data-theme="light">
+      <p class="hero-kicker">Diseño gráfico &amp; publicidad — Santa Cruz de Tenerife</p>
+      <h1 class="hero-title">Ideas que <em>comunican</em>,<br>diseño que perdura.</h1>
+      <p class="hero-sub">Soy Lara Marco Simó. Fusiono estética visual con estrategia de comunicación para construir marcas con carácter propio.</p>
+      <div class="hero-manifesto reveal">
+        <span>Aprender</span>
+        <span class="divider" aria-hidden="true"></span>
+        <span>Crecer</span>
+        <span class="divider" aria-hidden="true"></span>
+        <span>Evolucionar</span>
+      </div>
+      <div class="hero-scroll"><span class="line"></span> Desplázate</div>
+      <div class="hero-wave" aria-hidden="true">
+        <div class="wave-track">
+          <svg viewBox="0 0 600 120" preserveAspectRatio="none">
+            <path class="w1" d="M0,70 C40,20 80,120 120,70 C160,20 200,120 240,70 C280,20 320,120 360,70 C400,20 440,120 480,70 C520,20 560,120 600,70"/>
+            <path class="w2" d="M0,85 C40,35 80,135 120,85 C160,35 200,135 240,85 C280,35 320,135 360,85 C400,35 440,135 480,85 C520,35 560,135 600,85"/>
+            <path class="w3" d="M0,55 C40,5 80,105 120,55 C160,5 200,105 240,55 C280,5 320,105 360,55 C400,5 440,105 480,55 C520,5 560,105 600,55"/>
+          </svg>
+          <svg viewBox="0 0 600 120" preserveAspectRatio="none">
+            <path class="w1" d="M0,70 C40,20 80,120 120,70 C160,20 200,120 240,70 C280,20 320,120 360,70 C400,20 440,120 480,70 C520,20 560,120 600,70"/>
+            <path class="w2" d="M0,85 C40,35 80,135 120,85 C160,35 200,135 240,85 C280,35 320,135 360,85 C400,35 440,135 480,85 C520,35 560,135 600,85"/>
+            <path class="w3" d="M0,55 C40,5 80,105 120,55 C160,5 200,105 240,55 C280,5 320,105 360,55 C400,5 440,105 480,55 C520,5 560,105 600,55"/>
+          </svg>
+        </div>
+      </div>
+    </section>
 
-    <!-- CURSOR PERSONALIZADO -->
-    <div class="cursor-dot"></div>
-
-    <div id="preloader">
-        <div class="curtain top"></div>
-        <div class="curtain bottom"></div>
-        <video id="loader-video" autoplay muted playsinline>
-            <source src="assets/VIDEOS/logo_azul.mp4" type="video/mp4">
-        </video>
+    <div class="wave-divider wave-divider--navy" aria-hidden="true">
+      <svg viewBox="0 0 400 60" preserveAspectRatio="none" width="100%" height="100%">
+        <path d="M0,30 C25,5 45,55 70,30 C95,5 115,55 140,30 C165,5 185,55 210,30 C235,5 255,55 280,30 C305,5 325,55 350,30 C365,15 380,40 400,30" />
+      </svg>
     </div>
 
-    <main>
-        <header class="site-header">
-            <div class="logo-container">
-                <a href="index.html?skipIntro=true">
-                    <img src="assets/fotos/logo_blanco.png" alt="Logo" class="site-logo">
-                </a>
-            </div>
-            <button class="menu-toggle" aria-label="Abrir menú">
-                <img src="assets/fotos/menublanco.png" alt="Menú">
-            </button>
+    <section class="section about-section" id="sobre-mi" data-theme="light">
+      <div class="about-grid">
+        <div class="about-photo reveal">
+          <img src="assets/fotos/fotocv.jpeg" alt="Lara Marco Simó" loading="lazy">
+        </div>
+        <div class="about-copy reveal">
+          <p class="eyebrow">Sobre mí</p>
+          <h2>Doble grado en diseño gráfico digital y publicidad</h2>
+          <p>Con experiencia en edición y una profunda pasión por la creatividad, estoy entusiasmada por aportar mis habilidades y mi visión innovadora al equipo. Actualmente curso el doble grado en diseño gráfico digital y publicidad, donde desarrollo proyectos que fusionan la estética visual con estrategias de comunicación efectivas.</p>
+          <div class="about-tags">
+            <span>Photoshop</span><span>Illustrator</span><span>InDesign</span><span>After Effects</span><span>Premiere</span>
+          </div>
+          <div class="about-links">
+            <a href="curriculum.html">Ver currículum completo <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <nav class="main-nav">
-                <ul class="nav-list">
-                    <li><a href="dist/html/curriculum.html" class="nav-link"><i class="fas fa-file-invoice"></i>
-                            Currículum</a></li>
-                    <li><a href="dist/html/proyectos.html" class="nav-link"><i class="fas fa-briefcase"></i>
-                            Proyectos</a>
-                    </li>
-                </ul>
-                <a href="dist/html/contacto.html" class="btn-contact">Contacto</a>
-            </nav>
-        </header>
+    <section class="section work-index" id="proyectos" data-theme="light">
+      <div class="work-heading reveal">
+        <div>
+          <p class="eyebrow">Trabajo seleccionado</p>
+          <h2>Proyectos</h2>
+        </div>
+        <a href="proyectos.html" class="about-links" style="margin-top:0;"><span style="border-bottom:2px solid var(--navy); padding-bottom:3px; font-weight:700;">Ver todos</span></a>
+      </div>
+      <div class="work-list reveal">
+        <a class="work-row" href="proyecto-marca-personal.html" data-cursor="view">
+          <span class="work-index-num">01</span>
+          <span class="work-title">Marca Personal</span>
+          <span class="work-thumb"><img src="assets/fotos/Proyecto_mi_logo/Portada_logo.jpg" alt="Marca Personal" loading="lazy"></span>
+          <i class="fas fa-arrow-up-right"></i>
+        </a>
+        <a class="work-row" href="proyecto-identidad-visual.html" data-cursor="view">
+          <span class="work-index-num">02</span>
+          <span class="work-title">Identidad Visual — Jaime</span>
+          <span class="work-thumb"><img src="assets/fotos/Proyecto_logo_jaime_fotos/Potada_logo_jaime.jpg" alt="Identidad Visual" loading="lazy"></span>
+          <i class="fas fa-arrow-up-right"></i>
+        </a>
+        <a class="work-row" href="proyecto-casa-ricardo.html" data-cursor="view">
+          <span class="work-index-num">03</span>
+          <span class="work-title">Casa Ricardo</span>
+          <span class="work-thumb"><img src="assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" alt="Casa Ricardo" loading="lazy"></span>
+          <i class="fas fa-arrow-up-right"></i>
+        </a>
+        <a class="work-row" href="proyecto-slomo.html" data-cursor="view">
+          <span class="work-index-num">04</span>
+          <span class="work-title">SloMo × Lola Índigo</span>
+          <span class="work-thumb"><img src="assets/fotos/Proyecto_video/Portada_video.jpg" alt="Proyecto de vídeo" loading="lazy"></span>
+          <i class="fas fa-arrow-up-right"></i>
+        </a>
+      </div>
+    </section>
 
-        <section class="hero">
-            <div class="hero-sticky-container">
-                <h1 class="hero-title">
-                    <span>Aprender,</span> <span>crecer</span> <br class="mobile-break"> <span>y</span>
-                    <span>evolucionar.</span>
-                </h1>
-            </div>
-        </section>
+    <section class="section tools-strip" data-theme="light">
+      <p class="eyebrow reveal" style="justify-content:center;">Herramientas</p>
+      <div class="tools-grid reveal">
+        <img src="assets/fotos/logos_adobe/photoshop.png" alt="Photoshop" loading="lazy">
+        <img src="assets/fotos/logos_adobe/illustrator.png" alt="Illustrator" loading="lazy">
+        <img src="assets/fotos/logos_adobe/indesing.png" alt="InDesign" loading="lazy">
+        <img src="assets/fotos/logos_adobe/after.png" alt="After Effects" loading="lazy">
+        <img src="assets/fotos/logos_adobe/premier.png" alt="Premiere" loading="lazy">
+        <img src="assets/fotos/logos_adobe/IA.png" alt="IA" loading="lazy">
+      </div>
+    </section>
+  </main>
 
-        <!-- NUEVA SECCIÓN: DETRÁS DEL DISEÑO -->
-        <section class="about-section" id="magnetic-section">
-            <div class="creative-sticky-wrapper">
-                <h2 class="creative-title">DETRÁS DEL DISEÑO</h2>
+  <div class="wave-divider wave-divider--lavender" aria-hidden="true">
+    <svg viewBox="0 0 400 60" preserveAspectRatio="none" width="100%" height="100%">
+      <path d="M0,30 C25,5 45,55 70,30 C95,5 115,55 140,30 C165,5 185,55 210,30 C235,5 255,55 280,30 C305,5 325,55 350,30 C365,15 380,40 400,30" />
+    </svg>
+  </div>
 
-                <div class="chaos-gallery">
-                    <img src="assets/fotos/gift/gift1.jpg" class="chaos-img" alt="Diseño 1">
-                    <img src="assets/fotos/gift/gift2.jpeg" class="chaos-img" alt="Diseño 2">
-                    <img src="assets/fotos/gift/gift3.jpeg" class="chaos-img" alt="Diseño 3">
-                    <img src="assets/fotos/gift/gift4.JPG" class="chaos-img" alt="Diseño 4">
-                </div>
+  <footer class="site-footer" id="contacto" data-theme="dark">
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <p class="eyebrow" style="color:var(--sky);">Hablemos</p>
+          <h2>¿Tienes un proyecto en mente?</h2>
+          <a href="mailto:laramarcosimo@gmail.com" class="footer-email">laramarcosimo@gmail.com</a>
+        </div>
+        <div class="footer-socials">
+          <a href="https://wa.me/34608350840" target="_blank" rel="noopener">WhatsApp — 608 350 840</a>
+          <a href="https://www.linkedin.com/in/lara-marco-sim%C3%B3-7317372aa" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://www.instagram.com/laramarcosimo_" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Lara Marco Simó · Santa Cruz de Tenerife</span>
+        <a href="#" class="back-to-top" title="Volver arriba"><i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
 
-                <div class="creative-text">
-                    <p>Publicista y diseñadora en constante evolución.<br class="desktop-break">
-                        Creo en la estrategia que nace de la sinceridad<br class="desktop-break">
-                        y en el diseño que cuenta historias reales.</p>
-                </div>
-            </div>
-        </section>
-    </main>
-    <script src="dist/js/estructura.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 
 </html>
