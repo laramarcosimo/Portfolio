@@ -40,37 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     waveDividers.forEach((el) => el.classList.add("is-drawn"));
   }
 
-  /* ---------- projects index: hover-reveal preview panel ---------- */
-  const projectsIndex = document.getElementById("projectsIndex");
-  if (projectsIndex) {
-    const rows = projectsIndex.querySelectorAll(".projects-row-link");
-    const previewImgs = projectsIndex.querySelectorAll("[data-preview-img]");
-    const setActive = (key) => {
-      previewImgs.forEach((img) => img.classList.toggle("is-active", img.dataset.previewImg === key));
-    };
-    rows.forEach((row) => {
-      const key = row.closest(".projects-row").dataset.preview;
-      row.addEventListener("mouseenter", () => {
-        setActive(key);
-        projectsIndex.classList.add("is-hovering");
-      });
-      row.addEventListener("focus", () => {
-        setActive(key);
-        projectsIndex.classList.add("is-hovering");
-      });
-    });
-    projectsIndex.addEventListener("mouseleave", () => projectsIndex.classList.remove("is-hovering"));
-
-    const clip = projectsIndex.querySelector(".projects-preview-clip");
-    if (clip && !reducedMotion && window.matchMedia("(hover: hover)").matches) {
-      projectsIndex.addEventListener("mousemove", (e) => {
-        const rect = projectsIndex.getBoundingClientRect();
-        const ratio = (e.clientY - rect.top) / rect.height;
-        const shift = (ratio - 0.5) * 24;
-        clip.style.transform = `translateY(${shift.toFixed(2)}px)`;
-      });
-    }
-  }
+  const desktopInteraction = window.matchMedia("(min-width: 901px) and (hover: hover) and (pointer: fine)");
 
   const header = document.querySelector(".site-header");
   const toggle = document.querySelector(".menu-toggle");
@@ -256,41 +226,6 @@ document.addEventListener("DOMContentLoaded", () => {
       el.addEventListener("mouseleave", () => {
         el.style.transform = "translate(0, 0)";
       });
-    });
-  }
-
-  /* ---------- custom cursor ---------- */
-  if (!reducedMotion && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    body.classList.add("has-custom-cursor");
-    const dot = document.createElement("div");
-    dot.className = "cursor-dot";
-    const ring = document.createElement("div");
-    ring.className = "cursor-ring";
-    body.appendChild(dot);
-    body.appendChild(ring);
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let ringX = mouseX;
-    let ringY = mouseY;
-
-    window.addEventListener("mousemove", (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-    });
-
-    const loop = () => {
-      ringX += (mouseX - ringX) * 0.18;
-      ringY += (mouseY - ringY) * 0.18;
-      ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
-      requestAnimationFrame(loop);
-    };
-    loop();
-
-    document.querySelectorAll("[data-cursor]").forEach((el) => {
-      el.addEventListener("mouseenter", () => ring.setAttribute("data-state", el.dataset.cursor));
-      el.addEventListener("mouseleave", () => ring.removeAttribute("data-state"));
     });
   }
 

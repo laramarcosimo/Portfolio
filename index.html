@@ -33,7 +33,7 @@
   <main>
     <section class="hero" data-theme="light">
       <p class="hero-kicker">Diseño gráfico &amp; publicidad — Santa Cruz de Tenerife</p>
-      <h1 class="hero-title">Ideas que <em>comunican</em>,<br>diseño que perdura.</h1>
+      <h1 class="hero-title"><span class="w-light">Ideas que</span> <span class="w-bold accent-lavender">comunican</span>,<br><span class="w-light">diseño que</span> <span class="w-bold accent-blue">perdura</span>.</h1>
       <p class="hero-sub">Soy Lara Marco Simó. Fusiono estética visual con estrategia de comunicación para construir marcas con carácter propio.</p>
       <div class="hero-manifesto reveal">
         <span>Aprender</span>
@@ -67,6 +67,11 @@
 
     <section class="section about-section" id="sobre-mi" data-theme="light">
       <div class="about-grid">
+        <div class="about-wave-bg" aria-hidden="true">
+          <svg viewBox="0 0 600 120" preserveAspectRatio="none">
+            <path fill="none" stroke="var(--lavender)" stroke-width="2" d="M0,70 C40,20 80,120 120,70 C160,20 200,120 240,70 C280,20 320,120 360,70 C400,20 440,120 480,70 C520,20 560,120 600,70"/>
+          </svg>
+        </div>
         <div class="about-photo reveal">
           <img src="assets/fotos/fotocv.jpeg" alt="Lara Marco Simó" loading="lazy">
         </div>
@@ -92,30 +97,38 @@
         </div>
         <a href="proyectos.html" class="about-links" style="margin-top:0;"><span style="border-bottom:2px solid var(--navy); padding-bottom:3px; font-weight:700;">Ver todos</span></a>
       </div>
-      <div class="work-list reveal">
-        <a class="work-row" href="proyecto-marca-personal.html" data-cursor="view">
-          <span class="work-index-num">01</span>
-          <span class="work-title">Marca Personal</span>
-          <span class="work-thumb"><img src="assets/fotos/Proyecto_mi_logo/Portada_logo.jpg" alt="Marca Personal" loading="lazy"></span>
-          <i class="fas fa-arrow-up-right"></i>
+      <div class="poster-grid poster-grid--teaser reveal">
+        <a class="poster-card" href="proyecto-marca-personal.html" style="--accent:var(--lavender);">
+          <span class="poster-num">01</span>
+          <div class="poster-media"><img src="assets/fotos/Proyecto_mi_logo/Portada_logo.jpg" alt="Marca Personal" loading="lazy"></div>
+          <div class="poster-info">
+            <h3>Marca Personal</h3>
+            <p class="poster-desc">Identidad de marca · Papelería</p>
+          </div>
         </a>
-        <a class="work-row" href="proyecto-identidad-visual.html" data-cursor="view">
-          <span class="work-index-num">02</span>
-          <span class="work-title">Identidad Visual — Jaime</span>
-          <span class="work-thumb"><img src="assets/fotos/Proyecto_logo_jaime_fotos/Potada_logo_jaime.jpg" alt="Identidad Visual" loading="lazy"></span>
-          <i class="fas fa-arrow-up-right"></i>
+        <a class="poster-card" href="proyecto-identidad-visual.html" style="--accent:#00c896;">
+          <span class="poster-num">02</span>
+          <div class="poster-media"><img src="assets/fotos/Proyecto_logo_jaime_fotos/Potada_logo_jaime.jpg" alt="Identidad Visual" loading="lazy"></div>
+          <div class="poster-info">
+            <h3>Identidad Visual — Jaime</h3>
+            <p class="poster-desc">Branding · Dirección de arte</p>
+          </div>
         </a>
-        <a class="work-row" href="proyecto-casa-ricardo.html" data-cursor="view">
-          <span class="work-index-num">03</span>
-          <span class="work-title">Casa Ricardo</span>
-          <span class="work-thumb"><img src="assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" alt="Casa Ricardo" loading="lazy"></span>
-          <i class="fas fa-arrow-up-right"></i>
+        <a class="poster-card" href="proyecto-casa-ricardo.html" style="--accent:#ddaa55;">
+          <span class="poster-num">03</span>
+          <div class="poster-media"><img src="assets/fotos/Proyecto_casa_ricardo/LOGO_SF.png" alt="Casa Ricardo" loading="lazy" style="object-fit:contain; background:#fff;"></div>
+          <div class="poster-info">
+            <h3>Casa Ricardo</h3>
+            <p class="poster-desc">Rediseño de marca · Packaging</p>
+          </div>
         </a>
-        <a class="work-row" href="proyecto-slomo.html" data-cursor="view">
-          <span class="work-index-num">04</span>
-          <span class="work-title">SloMo × Lola Índigo</span>
-          <span class="work-thumb"><img src="assets/fotos/Proyecto_video/Portada_video.jpg" alt="Proyecto de vídeo" loading="lazy"></span>
-          <i class="fas fa-arrow-up-right"></i>
+        <a class="poster-card" href="proyecto-slomo.html" style="--accent:var(--blue);">
+          <span class="poster-num">04</span>
+          <div class="poster-media"><img src="assets/fotos/Proyecto_video/Portada_video.jpg" alt="Proyecto de vídeo" loading="lazy"></div>
+          <div class="poster-info">
+            <h3>SloMo × Lola Índigo</h3>
+            <p class="poster-desc">Edición de vídeo · Reinterpretación audiovisual</p>
+          </div>
         </a>
       </div>
     </section>
