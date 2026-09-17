@@ -67,6 +67,11 @@ h1, h2, h3, h4 {
   letter-spacing: -0.01em;
 }
 
+h2 {
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  line-height: 1.3;
+}
+
 nav, button, .btn-contact {
   font-family: var(--font-body);
 }
@@ -112,6 +117,12 @@ ul {
 
 .reveal.reveal-fade {
   clip-path: none;
+}
+
+/* micro-reveal stagger: JS sets --stagger-i on groups of cards/pills/words
+   so siblings fade+rise in with a slight delay, sharing the site's easing */
+.reveal[style*="--stagger-i"] {
+  transition-delay: calc(var(--stagger-i, 0) * 80ms);
 }
 
 /* staggered word/character heading reveal */
@@ -379,8 +390,11 @@ ul {
 }
 
 /* -------------------- WAVE MOTIF SYSTEM -------------------- */
-/* Derived from the logomark's ribbon curve — used as the site's signature
-   recurring device: section dividers, hero backdrop and image-panel masks. */
+/* One canonical wave curve (the <symbol id="wave-motif"> injected in main.js,
+   viewBox 0 0 400 60) is reused everywhere via <use> so every wave on the
+   site shares identical curvature, stroke-width and proportion: section
+   dividers, the hero backdrop, the about-section watermark, the CV flip-card
+   base line and the contact-page header all reference the same path. */
 
 .wave-divider {
   display: block;
@@ -389,17 +403,24 @@ ul {
   color: var(--sky);
 }
 
-.wave-divider path {
+.wave-divider use,
+.hero-wave use,
+.about-wave-bg use,
+.flip-front-wave use,
+.contact-wave use {
   fill: none;
   stroke: currentColor;
-  stroke-width: 2.5;
   stroke-linecap: round;
+}
+
+.wave-divider use {
+  stroke-width: 2.5;
   stroke-dasharray: 400;
   stroke-dashoffset: 400;
   transition: stroke-dashoffset 1.6s var(--ease);
 }
 
-.wave-divider.is-drawn path {
+.wave-divider.is-drawn use {
   stroke-dashoffset: 0;
 }
 
@@ -416,14 +437,13 @@ ul {
   z-index: 0;
 }
 
-.hero-wave path {
-  fill: none;
+.hero-wave use {
   stroke-width: 2;
 }
 
-.hero-wave .w1 { stroke: var(--sky); opacity: 0.9; }
-.hero-wave .w2 { stroke: var(--lavender); opacity: 0.45; }
-.hero-wave .w3 { stroke: var(--navy); opacity: 0.22; }
+.hero-wave .w1 { color: var(--sky); opacity: 0.9; }
+.hero-wave .w2 { color: var(--lavender); opacity: 0.45; }
+.hero-wave .w3 { color: var(--navy); opacity: 0.22; }
 
 @keyframes wave-drift {
   0% { transform: translateX(0); }
@@ -441,9 +461,36 @@ ul {
   animation: wave-drift 18s linear infinite;
 }
 
+/* ---- scroll-linked connector: draws continuously as the user scrolls,
+   visually stitching the hero into the section that follows it ---- */
+.hero-connector {
+  width: 100%;
+  height: clamp(90px, 14vw, 170px);
+  display: flex;
+  justify-content: center;
+  color: var(--lavender);
+  background: var(--paper);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-connector svg {
+  height: 100%;
+  width: clamp(120px, 20vw, 220px);
+  overflow: visible;
+}
+
+.hero-connector path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-wave .wave-track { animation: none; }
-  .wave-divider path { transition: none; stroke-dashoffset: 0; }
+  .wave-divider use { transition: none; stroke-dashoffset: 0; }
+  .hero-connector path { stroke-dashoffset: 0 !important; }
 }
 
 /* -------------------- HEADER -------------------- */
@@ -543,6 +590,10 @@ ul {
   transform: translateY(-2px);
 }
 
+.btn-contact.active {
+  background: var(--blue);
+}
+
 .menu-toggle {
   display: none;
   background: none;
@@ -572,12 +623,74 @@ ul {
 .nav-open .menu-toggle span:nth-child(2) { opacity: 0; }
 .nav-open .menu-toggle span:nth-child(3) { top: 11px; transform: rotate(-45deg); }
 
+/* -------------------- CLOSING CTA (minimal, replaces the old big contact block) -------------------- */
+
+.closing-cta {
+  background: var(--navy);
+  color: var(--white);
+  padding: clamp(64px, 10vw, 120px) clamp(20px, 4vw, 56px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.closing-cta-text {
+  max-width: 46ch;
+}
+
+.closing-cta p.eyebrow {
+  color: var(--sky);
+  margin-bottom: 10px;
+}
+
+.closing-cta h2 {
+  color: var(--white);
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.closing-cta-btn {
+  flex: none;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+  color: var(--navy);
+  padding: 16px 30px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1.02rem;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.closing-cta-btn i {
+  transition: transform 0.3s var(--spring);
+}
+
+.closing-cta-btn:hover {
+  background: var(--sky);
+  transform: translateY(-3px);
+}
+
+.closing-cta-btn:hover i {
+  transform: translateX(4px);
+}
+
 /* -------------------- FOOTER -------------------- */
 
 footer.site-footer {
   background: var(--navy);
   color: var(--white);
-  padding: clamp(60px, 8vw, 110px) 0 32px;
+  padding: 28px 0;
+}
+
+footer.site-footer .footer-bottom {
+  padding-top: 0;
+  border-top: none;
 }
 
 .footer-top {
@@ -660,11 +773,11 @@ footer.site-footer {
 /* -------------------- HOME: HERO -------------------- */
 
 .hero {
-  min-height: 100svh;
+  min-height: clamp(560px, 88svh, 900px);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 140px clamp(20px, 4vw, 56px) 60px;
+  padding: clamp(110px, 16vw, 140px) clamp(20px, 4vw, 56px) clamp(40px, 6vw, 60px);
   position: relative;
   background:
     radial-gradient(60% 55% at 82% 12%, rgba(150, 201, 255, 0.55), transparent 60%),
@@ -684,7 +797,7 @@ footer.site-footer {
 .hero-title {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: clamp(2.2rem, 5.4vw, 3.8rem);
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
   line-height: 1.15;
   color: var(--navy);
   max-width: 20ch;
@@ -806,7 +919,7 @@ footer.site-footer {
 .about-grid {
   position: relative;
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: clamp(260px, 30vw, 380px) 1fr;
   gap: clamp(40px, 7vw, 100px);
   align-items: start;
 }
@@ -814,7 +927,7 @@ footer.site-footer {
 .about-photo {
   position: relative;
   width: 100%;
-  max-width: 300px;
+  max-width: clamp(260px, 30vw, 380px);
   aspect-ratio: 4/5;
   border-radius: 40% 60% 55% 45% / 48% 42% 58% 52%;
   overflow: hidden;
@@ -844,13 +957,16 @@ footer.site-footer {
   animation: wave-drift 26s linear infinite;
 }
 
+.about-wave-bg use {
+  stroke-width: 2;
+  color: var(--lavender);
+}
+
 .about-copy .eyebrow {
   margin-bottom: 4px;
 }
 
 .about-copy h2 {
-  font-size: clamp(1.8rem, 3vw, 2.2rem);
-  line-height: 1.4;
   letter-spacing: -0.005em;
   margin-top: 12px;
   margin-bottom: 20px;
@@ -921,8 +1037,6 @@ footer.site-footer {
 }
 
 .work-heading h2 {
-  font-size: clamp(1.8rem, 3vw, 2.2rem);
-  line-height: 1.4;
   font-weight: 600;
 }
 
@@ -1057,6 +1171,18 @@ footer.site-footer {
   }
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .poster-grid:hover .poster-card:not(:hover) {
+    opacity: 0.55;
+    transition: opacity 0.4s var(--ease);
+  }
+}
+
+.about-tags:hover span:not(:hover) {
+  opacity: 0.5;
+  transition: opacity 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
 @media (max-width: 720px) {
   .poster-grid,
   .poster-grid--teaser {
@@ -1108,9 +1234,9 @@ footer.site-footer {
 /* -------------------- CV PAGE -------------------- */
 
 .cv-hero {
-  padding: 150px clamp(20px, 4vw, 56px) 60px;
+  padding: clamp(110px, 16vw, 150px) clamp(20px, 4vw, 56px) 60px;
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: clamp(140px, 18vw, 200px) 1fr;
   gap: clamp(24px, 4vw, 56px);
   align-items: center;
 }
@@ -1188,7 +1314,6 @@ footer.site-footer {
 }
 
 .cv-content h2 {
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1380,12 +1505,12 @@ footer.site-footer {
   width: 100%;
   height: 34px;
   color: var(--sky);
-  opacity: 0.35;
+  opacity: 0.5;
   pointer-events: none;
 }
 
-.flip-front-wave path {
-  fill: currentColor;
+.flip-front-wave use {
+  stroke-width: 3;
 }
 
 .flip-back {
@@ -1744,6 +1869,177 @@ footer.site-footer {
   font-size: 1.4rem;
 }
 
+/* -------------------- CONTACTO PAGE -------------------- */
+
+.contact-hero {
+  padding: clamp(110px, 16vw, 150px) clamp(20px, 4vw, 56px) clamp(90px, 15vw, 150px);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-hero .eyebrow {
+  margin-bottom: 18px;
+}
+
+.contact-hero h1 {
+  font-weight: 300;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  line-height: 1.2;
+  max-width: 18ch;
+}
+
+.contact-hero h1 strong {
+  font-weight: 700;
+  color: var(--lavender);
+}
+
+.contact-hero p {
+  margin-top: 20px;
+  max-width: 52ch;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+}
+
+.contact-wave {
+  position: absolute;
+  inset: auto 0 0 0;
+  width: 100%;
+  height: clamp(60px, 10vw, 110px);
+  color: var(--sky);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.contact-wave use {
+  stroke-width: 2.5;
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(40px, 6vw, 90px);
+  padding: 0 clamp(20px, 4vw, 56px) clamp(80px, 10vw, 140px);
+  align-items: start;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-field label {
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.contact-field input,
+.contact-field textarea {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--navy);
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--line);
+  padding: 10px 2px;
+  transition: border-color 0.3s var(--ease);
+}
+
+.contact-field input:focus,
+.contact-field textarea:focus {
+  outline: none;
+  border-color: var(--lavender);
+}
+
+.contact-field textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.contact-submit {
+  align-self: flex-start;
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  padding: 16px 30px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.contact-submit:hover {
+  background: var(--blue);
+  transform: translateY(-2px);
+}
+
+.contact-direct {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(28px, 4vw, 40px);
+}
+
+.contact-direct h3 {
+  font-size: 1.15rem;
+  margin-bottom: 20px;
+}
+
+.contact-direct ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-direct a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.contact-direct li:last-child a {
+  border-bottom: none;
+}
+
+.contact-direct a i {
+  color: var(--lavender);
+  width: 20px;
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.contact-direct a:hover {
+  color: var(--navy);
+  transform: translateX(4px);
+}
+
+@media (max-width: 860px) {
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* -------------------- RESPONSIVE -------------------- */
 
 @media (max-width: 860px) {
@@ -1843,13 +2139,18 @@ footer.site-footer {
     display: block;
   }
 
-  .footer-top {
+  .footer-top,
+  .closing-cta {
     flex-direction: column;
     align-items: flex-start;
   }
 
   .footer-socials {
     align-items: flex-start;
+  }
+
+  .closing-cta-btn {
+    margin-left: 0;
   }
 
   .projects-grid {

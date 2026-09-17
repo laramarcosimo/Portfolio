@@ -2,7 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- wave motif: shared SVG clip-path defs ---------- */
+  /* ---------- wave motif: one canonical curve, shared via <symbol>/<use> ----------
+     Every wave on the site (dividers, hero backdrop, about watermark, CV flip-card
+     base line, contact header) references this single path so curvature, stroke
+     style and proportion stay identical everywhere. */
   const svgNS = "http://www.w3.org/2000/svg";
   const defsSvg = document.createElementNS(svgNS, "svg");
   defsSvg.setAttribute("width", "0");
@@ -18,8 +21,45 @@ document.addEventListener("DOMContentLoaded", () => {
           C0.26,0.94 0.2,0.78 0.12,0.86
           C0.06,0.92 0.02,0.9 0,0.88 Z" />
       </clipPath>
+      <symbol id="wave-motif" viewBox="0 0 400 60">
+        <path d="M0,30 C25,5 45,55 70,30 C95,5 115,55 140,30 C165,5 185,55 210,30 C235,5 255,55 280,30 C305,5 325,55 350,30 C365,15 380,40 400,30" />
+      </symbol>
     </defs>`;
   body.prepend(defsSvg);
+
+  const viewBoxSize = (svg) => {
+    const vb = (svg.getAttribute("viewBox") || "0 0 400 60").split(/\s+/).map(Number);
+    return { w: vb[2] || 400, h: vb[3] || 60 };
+  };
+
+  const makeUse = (svg, cls, yOffset) => {
+    const { w, h } = viewBoxSize(svg);
+    const use = document.createElementNS(svgNS, "use");
+    use.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#wave-motif");
+    use.setAttribute("href", "#wave-motif");
+    use.setAttribute("width", w);
+    use.setAttribute("height", h);
+    use.setAttribute("x", "0");
+    use.setAttribute("y", yOffset || 0);
+    use.setAttribute("preserveAspectRatio", "none");
+    if (cls) use.setAttribute("class", cls);
+    return use;
+  };
+
+  document.querySelectorAll(".wave-divider svg, .about-wave-bg svg, .flip-front-wave, .contact-wave svg").forEach((svg) => {
+    if (svg.querySelector("use")) return;
+    svg.querySelectorAll("path").forEach((p) => p.remove());
+    svg.appendChild(makeUse(svg));
+  });
+
+  document.querySelectorAll(".hero-wave svg").forEach((svg) => {
+    if (svg.querySelector("use")) return;
+    svg.querySelectorAll("path").forEach((p) => p.remove());
+    const { h } = viewBoxSize(svg);
+    svg.appendChild(makeUse(svg, "w1", 0));
+    svg.appendChild(makeUse(svg, "w2", h * 0.12));
+    svg.appendChild(makeUse(svg, "w3", -h * 0.12));
+  });
 
   /* ---------- wave dividers: draw-on-scroll ---------- */
   const waveDividers = document.querySelectorAll(".wave-divider");
@@ -39,6 +79,48 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     waveDividers.forEach((el) => el.classList.add("is-drawn"));
   }
+
+  /* ---------- hero connector: continuous scroll-driven stroke draw ----------
+     Not a one-time reveal-on-enter: the dashoffset is recomputed on every
+     scroll tick (via rAF) from the connector's live position in the viewport,
+     so the line visibly grows/shrinks as you scroll up and down through it,
+     stitching the hero into the section that follows. */
+  const heroConnector = document.querySelector(".hero-connector");
+  const heroConnectorPath = heroConnector?.querySelector("path");
+  if (heroConnectorPath && !reducedMotion) {
+    const len = heroConnectorPath.getTotalLength();
+    heroConnectorPath.style.strokeDasharray = String(len);
+    let ticking = false;
+    const updateConnector = () => {
+      const rect = heroConnector.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const progress = Math.min(1, Math.max(0, (vh - rect.top) / (rect.height + vh * 0.6)));
+      heroConnectorPath.style.strokeDashoffset = String(len * (1 - progress));
+      ticking = false;
+    };
+    updateConnector();
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateConnector);
+          ticking = true;
+        }
+      },
+      { passive: true }
+    );
+    window.addEventListener("resize", updateConnector);
+  } else if (heroConnectorPath) {
+    heroConnectorPath.style.strokeDashoffset = "0";
+  }
+
+  /* ---------- progressive micro-reveal stagger ---------- */
+  [".hero-manifesto span", ".about-tags span", ".poster-grid .poster-card", ".tools-grid img"].forEach((sel) => {
+    document.querySelectorAll(sel).forEach((el, i) => {
+      el.classList.add("reveal", "reveal-fade");
+      el.style.setProperty("--stagger-i", i);
+    });
+  });
 
   const desktopInteraction = window.matchMedia("(min-width: 901px) and (hover: hover) and (pointer: fine)");
 
