@@ -42,6 +42,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const desktopInteraction = window.matchMedia("(min-width: 901px) and (hover: hover) and (pointer: fine)");
 
+  /* ---------- skill flip cards: tap/click toggles the flip on touch devices ---------- */
+  document.querySelectorAll(".flip-card").forEach((card) => {
+    card.addEventListener("click", () => card.classList.toggle("is-flipped"));
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        card.classList.toggle("is-flipped");
+      }
+    });
+  });
+
   const header = document.querySelector(".site-header");
   const toggle = document.querySelector(".menu-toggle");
 
