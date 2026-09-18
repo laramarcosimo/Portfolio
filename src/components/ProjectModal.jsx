@@ -85,7 +85,7 @@ export default function ProjectModal({ project, onClose }) {
 
           {project.gallery.length > 0 && (
             <div className="mt-8 columns-1 gap-4 sm:columns-2">
-              {project.gallery.map((g) => (
+              {[{ src: project.cover, alt: `${project.title} — presentación` }, ...project.gallery].map((g) => (
                 <img
                   key={g.src}
                   src={g.src}

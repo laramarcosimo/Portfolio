@@ -1,10 +1,11 @@
 import { img, site } from '../data/content'
 
-/** Logotipo real (monograma L·M·S en ola + nombre). `variant`: azul (fondo claro) o blanco. */
-export default function Logo({ variant = 'azul', className = 'h-10' }) {
+/** Logotipo real. `mono`: solo el monograma L·M·S (barra de navegación); si no, monograma + nombre. */
+export default function Logo({ variant = 'azul', mono = false, className = 'h-10' }) {
+  const src = mono ? img('brand/monograma') : img(`brand/logo-${variant}`)
   return (
     <a href="#inicio" aria-label={`${site.name} — inicio`} className="inline-block">
-      <img src={img(`brand/logo-${variant}`)} alt={site.name} className={`w-auto ${className}`} />
+      <img src={src} alt={site.name} className={`w-auto ${className}`} />
     </a>
   )
 }

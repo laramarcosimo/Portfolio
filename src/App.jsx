@@ -23,10 +23,10 @@ export default function App() {
       <main ref={mainRef} className="relative isolate">
         <RibbonWave containerRef={mainRef} />
         <Hero active={active} />
-        <About />
+        <About active={active} />
         <Portfolio />
         <Services />
-        <Contact />
+        <Contact active={active} />
       </main>
       <Footer />
       <FloatingAction active={active} />

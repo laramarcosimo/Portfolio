@@ -124,6 +124,22 @@ export const projects = [
   },
 ]
 
+// Tarjetas del carrusel (como en la referencia): mockups reales de cada proyecto; al abrirlas se muestra su ficha.
+export const carouselCards = [
+  ['marca-personal', 'marca-personal/libretas'],
+  ['identidad-visual', 'identidad-visual/agenda'],
+  ['casa-ricardo', 'casa-ricardo/packaging-delante'],
+  ['marca-personal', 'marca-personal/tarjeta'],
+  ['identidad-visual', 'identidad-visual/web'],
+  ['casa-ricardo', 'casa-ricardo/valla'],
+  ['marca-personal', 'marca-personal/boligrafos'],
+  ['identidad-visual', 'identidad-visual/taza'],
+  ['casa-ricardo', 'casa-ricardo/pegatinas'],
+  ['proyecto-video', 'video/portada'],
+  ['marca-personal', 'marca-personal/carpeta'],
+  ['identidad-visual', 'identidad-visual/tarjeta'],
+].map(([projectId, image], i) => ({ id: `${projectId}-${i}`, projectId, src: img(image) }))
+
 export const toolLabels = {
   illustrator: 'Illustrator',
   photoshop: 'Photoshop',

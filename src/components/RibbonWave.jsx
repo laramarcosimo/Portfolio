@@ -2,21 +2,20 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAnimationFrame, useReducedMotion, useScroll } from 'framer-motion'
 
 /*
- * Hilo conductor de cintas: UN solo lienzo SVG global, desde el Hero hasta el Footer.
+ * Hilo conductor de cintas: UN solo lienzo SVG global, del Hero a la banda de Contacto.
  *
- * 1. Se miden las secciones reales del DOM y se fijan unos puntos de paso (buildPoints).
- * 2. Una spline Catmull-Rom centrípeta los une sin lazos ni sobreimpulsos, se suaviza la
- *    curvatura y se remuestrea a distancia uniforme (buildCurve): el trazo es un único
- *    recorrido continuo, sin cortes ni quiebros.
- * 3. Las tres cintas son copias paralelas (desplazadas a lo largo de la normal) que ondulan
- *    con olas que viajan por longitud de arco, y cuya fase se arrastra con el scroll.
- *
- * Capas: `back` (z-0, detrás del contenido) y `front` (z-20), que repite las cintas
- * recortadas a la esquina inferior derecha de la foto para que la abracen por delante.
+ * 1. Se miden las secciones reales del DOM y se fijan puntos de paso (buildPoints).
+ * 2. Una spline Catmull-Rom centrípeta los une, se suaviza la curvatura y se remuestrea a
+ *    distancia uniforme (buildCurve): un único recorrido continuo, sin cortes ni quiebros.
+ * 3. Tres cintas paralelas (marino, cielo, lavanda), dibujadas como bandas planas rellenas
+ *    cuyo grosor se afina hasta cero en la punta. Ondulan con olas que viajan por longitud
+ *    de arco y se DIBUJAN al hacer scroll, con un destello luminoso en la punta.
+ * 4. El lienzo termina a ras de la banda de Contacto: ahí las cintas quedan cortadas en plano.
  */
 
-const COLORS = ['#192a56', '#96c9ff', '#9690e4'] // marino, cielo, lavanda
-const CLIP_ID = 'ribbon-front-clip'
+const COLORS = ['#192a56', '#96c9ff', '#9690e4']
+const TAPER = 150 // longitud (px) de afinado de la punta
+const IDS = ['inicio', 'sobre-mi', 'about-photo', 'portafolio', 'carousel', 'servicios', 'contact-band']
 
 const rectIn = (el, origin) => {
   const r = el.getBoundingClientRect()
@@ -25,77 +24,69 @@ const rectIn = (el, origin) => {
 
 // Puntos de paso [x, y] del recorrido, en píxeles del contenedor.
 function buildPoints(W, m) {
-  const { hero: H, about: A, photo: P, portfolio: F, rail: R, services: S, contact: C, footer: Ft } = m
+  const { hero: H, about: A, photo: P, portfolio: F, carousel: Cr, services: S, band: B } = m
   const hh = H.b - H.t
   const ph = P.b - P.t
-  const pw = P.r - P.l
-  const ch = C.b - C.t
+  const crh = Cr.b - Cr.t
+  const sh = S.b - S.t
   const narrow = W < 700
-  const lx = narrow ? 0 : 0.05 // posición de las patas del arco de contacto
 
   return [
-    // HERO: cruce horizontal en la mitad inferior y giro amplio hacia la siguiente sección
-    [-0.06 * W, H.t + 0.62 * hh],
-    [0.22 * W, H.t + 0.74 * hh],
-    [0.5 * W, H.t + 0.66 * hh],
-    [0.78 * W, H.t + 0.52 * hh],
-    [1.02 * W, H.t + 0.62 * hh],
-    [1.04 * W, H.t + 0.84 * hh],
-    [0.88 * W, H.b - 12],
-    // SOBRE MÍ: bajan desde la esquina superior izquierda y pasan por detrás de la foto,
-    // y abrazan por delante su esquina inferior derecha.
+    // HERO: cruce ondulado a todo lo ancho
+    [-0.06 * W, H.t + 0.6 * hh],
+    [0.24 * W, H.t + 0.66 * hh],
+    [0.5 * W, H.t + 0.72 * hh],
+    [0.78 * W, H.t + 0.56 * hh],
+    [1.06 * W, H.t + 0.44 * hh],
+    [1.12 * W, H.t + 0.8 * hh],
+    // SOBRE MÍ: barrido superior de derecha a izquierda y lazo alrededor de la foto
+    [0.93 * W, H.b + 0.04 * (A.b - A.t)],
+    [0.62 * W, A.t + 110],
+    [0.36 * W, A.t + 92],
     ...(narrow
       ? [
-          [0.6 * W, A.t + 30],
-          [0.2 * W, P.t + 0.2 * ph],
-          [0.45 * W, P.t + 0.5 * ph],
-          [0.85 * W, P.t + 0.75 * ph],
-          [1.03 * W, P.t + 0.9 * ph],
-          [P.r - 40, P.b - 16],
-          [P.r - 130, P.b + 30],
-          [0.03 * W, P.b + 80],
-          [0.02 * W, A.b - 10],
+          [0.1 * W, A.t + 140],
+          [0.03 * W, P.t + 0.35 * ph],
+          [0.03 * W, P.b + 40],
+          [0.05 * W, A.b - 24],
+          [0.12 * W, F.t + 50],
+          [0.22 * W, F.t + 100],
         ]
       : [
-          [0.55 * W, A.t + 0.07 * (A.b - A.t)],
-          [Math.max(0, P.l - 0.1 * W), P.t - 30],
-          [P.l - 30, P.t + 0.16 * ph],
-          [P.l + 0.3 * pw, P.t + 0.46 * ph],
-          [P.l + 0.72 * pw, P.t + 0.66 * ph],
-          [P.r + 30, P.t + 0.72 * ph],
-          [P.r + 26, P.t + 0.88 * ph],
-          [P.r - 40, P.b - 36],
-          [P.r - 120, P.b + 44],
-          [0.16 * W, A.b - 6],
+          [Math.max(0.05 * W, P.l - 110), A.t + 150],
+          [P.l - 120, P.t + 0.2 * ph],
+          [P.l - 80, P.t + 0.68 * ph],
+          [P.l + 0.1 * (P.r - P.l), P.b + 62],
+          [0.55 * W, A.b - 46],
+          [0.84 * W, A.b - 70],
+          [0.94 * W, A.b + 10],
+          [0.92 * W, F.t + 70],
+          [0.62 * W, F.t + 44],
+          [0.3 * W, F.t + 64],
+          [0.18 * W, F.t + 128],
         ]),
-    // PORTAFOLIO: por el margen izquierdo hasta el riel ondulado bajo el carrusel (izquierda → derecha)
-    [0.04 * W, F.t + 0.32 * (F.b - F.t)],
-    [0, R - 20],
-    [0.2 * W, R + 14],
-    [0.4 * W, R - 14],
-    [0.6 * W, R + 16],
-    [0.8 * W, R - 12],
-    [1.02 * W, R - 30],
-    [1.06 * W, R + 70],
-    // SERVICIOS: bajan por el margen derecho y recorren la parte inferior hacia la izquierda
-    [1.02 * W, F.b + 30],
-    [0.98 * W, S.t + 0.5 * (S.b - S.t)],
-    [0.9 * W, S.b - 70],
-    [0.62 * W, S.b - 40],
-    [0.36 * W, S.b - 90],
-    [0.12 * W, S.b - 60],
-    [-0.04 * W, S.b - 10],
-    // CONTACTO: arco que enmarca el bloque (sube por la izquierda, cruza arriba, baja por la derecha)
-    [-0.02 * W, C.t + 0.5 * ch],
-    [lx * W, C.t + 0.3 * ch],
-    [0.14 * W, C.t + 90],
-    [0.5 * W, C.t + 50],
-    [0.86 * W, C.t + 90],
-    [(1 - lx) * W, C.t + 0.3 * ch],
-    [(1 - lx + 0.01) * W, C.t + 0.62 * ch],
-    [0.86 * W, C.b - 10],
-    [0.66 * W, Ft.t + 12],
-    [0.55 * W, Ft.t + 60],
+    // PORTAFOLIO: "S" por detrás del carrusel y riel inferior que se afina hacia la izquierda
+    [0.27 * W, Cr.t + 0.12 * crh],
+    [0.56 * W, Cr.t + 0.3 * crh],
+    [0.8 * W, Cr.t + 0.42 * crh],
+    [0.9 * W, Cr.b - 10],
+    [0.72 * W, Cr.b + 34],
+    [0.45 * W, Cr.b + 54],
+    [0.2 * W, Cr.b + 32],
+    [-0.05 * W, Cr.b + 52],
+    // SERVICIOS: bajan por el margen izquierdo hacia la banda de contacto
+    [-0.07 * W, F.b + 20],
+    [0.02 * W, S.t + 0.6 * sh],
+    [0.1 * W, S.b - 50],
+    // BANDA DE CONTACTO: remolino que termina cortado a ras del borde inferior
+    [0.28 * W, B.t - 12],
+    [0.5 * W, B.t + 14],
+    [0.68 * W, B.t + 50],
+    [0.73 * W, B.t + 118],
+    [0.56 * W, B.t + 174],
+    [0.36 * W, B.t + 190],
+    [0.26 * W, B.t + 236],
+    [0.23 * W, B.b + 60],
   ]
 }
 
@@ -148,7 +139,7 @@ function smooth(pts, radius, passes) {
   return cur
 }
 
-// Remuestreo a distancia uniforme: la longitud de arco guía después la onda.
+// Remuestreo a distancia uniforme: la longitud de arco guía la onda y el dibujado.
 function resample(pts, step) {
   const out = [pts[0]]
   let carry = 0
@@ -169,10 +160,8 @@ function resample(pts, step) {
   return out
 }
 
-// Recorrido final: spline centrípeta → suavizado → puntos equiespaciados con sus normales.
-function buildCurve(waypoints, step = 36) {
-  const dense = smooth(sampleSpline(waypoints, 8), 9, 4)
-  const base = resample(dense, step)
+function buildCurve(waypoints, step = 30) {
+  const base = resample(smooth(sampleSpline(waypoints, 8), 9, 4), step)
   const norm = base.map((_, i) => {
     const a = base[i - 1] ?? base[i]
     const b = base[i + 1] ?? base[i]
@@ -181,13 +170,16 @@ function buildCurve(waypoints, step = 36) {
     const len = Math.hypot(dx, dy) || 1
     return [-dy / len, dx / len]
   })
-  return { base, norm, step }
+  // y máxima acumulada: sirve para saber hasta dónde está "dibujado" el recorrido
+  let max = -Infinity
+  const maxY = base.map(([, y]) => (max = Math.max(max, y)))
+  return { base, norm, maxY, step }
 }
 
-// Béziers cúbicas Catmull-Rom sobre puntos equiespaciados (ya suaves).
-function toPath(pts) {
+// Segmentos Bézier cúbicos Catmull-Rom (sin el "M" inicial).
+function curve(pts) {
   const f = (n) => n.toFixed(1)
-  let d = `M${f(pts[0][0])} ${f(pts[0][1])}`
+  let d = ''
   for (let i = 0; i < pts.length - 1; i++) {
     const p0 = pts[i - 1] ?? pts[i]
     const p1 = pts[i]
@@ -198,43 +190,82 @@ function toPath(pts) {
   return d
 }
 
+const smoothstep = (t) => t * t * (3 - 2 * t)
+
 export default function RibbonWave({ containerRef }) {
   const reduce = useReducedMotion()
   const { scrollY } = useScroll()
-  const backPaths = useRef([])
-  const frontPaths = useRef([])
+  const paths = useRef([])
+  const glow = useRef(null)
   const geo = useRef(null)
-  const [box, setBox] = useState({ w: 0, h: 0, clip: null })
+  const [box, setBox] = useState({ w: 0, h: 0 })
 
   const draw = useCallback(
     (time) => {
       const g = geo.current
       if (!g) return
+      const n = g.base.length
       const scroll = scrollY.get()
+
+      // Punto hasta el que se ha "dibujado" el recorrido (según el scroll; siempre incluye el hero)
+      const limit = reduce ? Infinity : Math.max(scroll + g.vh * 0.62, g.heroBottom + 40)
+      let head = n - 1
+      for (let i = 0; i < n; i++) {
+        if (g.maxY[i] > limit) {
+          head = i
+          break
+        }
+      }
+      const done = head >= n - 1
+      const sHead = head * g.step
+
+      let tip = null
       for (let r = 0; r < 3; r++) {
-        const off = (r - 1) * g.gap
-        const pts = g.base.map(([x, y], i) => {
-          // Olas que viajan por longitud de arco (fluidas por construcción) + fase arrastrada por el scroll
+        const off = (r - 1) * g.spacing
+        const sEnd = done ? Infinity : sHead - r * 42
+        const left = []
+        const right = []
+        const mid = []
+        for (let i = 0; i < n; i++) {
           const s = i * g.step
+          if (s > sEnd) break
           const wave = reduce
             ? 0
-            : (Math.sin(s / 310 + time / 2600 + r * 0.9 + scroll / 700) + 0.5 * Math.sin(s / 520 - time / 3900 + r * 1.7)) *
-              g.amp *
-              0.7
+            : (Math.sin(s / 330 + time / 2600 + r * 0.9 + scroll / 700) + 0.5 * Math.sin(s / 540 - time / 3900 + r * 1.7)) * g.amp * 0.7
           const k = off + wave
-          return [x + g.norm[i][0] * k, y + g.norm[i][1] * k]
-        })
-        const d = toPath(pts)
-        backPaths.current[r]?.setAttribute('d', d)
-        frontPaths.current[r]?.setAttribute('d', d)
+          const x = g.base[i][0] + g.norm[i][0] * k
+          const y = g.base[i][1] + g.norm[i][1] * k
+          const t = done ? 1 : smoothstep(Math.min(1, Math.max(0, (sEnd - s) / TAPER)))
+          const hw = (g.width / 2) * Math.max(t, 0.02)
+          left.push([x + g.norm[i][0] * hw, y + g.norm[i][1] * hw])
+          right.push([x - g.norm[i][0] * hw, y - g.norm[i][1] * hw])
+          mid.push([x, y])
+        }
+        if (left.length < 2) {
+          paths.current[r]?.setAttribute('d', '')
+          continue
+        }
+        right.reverse()
+        const d = `M${left[0][0].toFixed(1)} ${left[0][1].toFixed(1)}${curve(left)} L${right[0][0].toFixed(1)} ${right[0][1].toFixed(1)}${curve(right)}Z`
+        paths.current[r]?.setAttribute('d', d)
+        if (r === 1) tip = mid[mid.length - 1]
+      }
+
+      // Destello luminoso en la punta mientras se dibuja
+      const el = glow.current
+      if (el) {
+        if (done || !tip) el.setAttribute('opacity', '0')
+        else {
+          el.setAttribute('opacity', '1')
+          el.setAttribute('cx', tip[0].toFixed(1))
+          el.setAttribute('cy', tip[1].toFixed(1))
+        }
       }
     },
     [reduce, scrollY],
   )
 
-  useAnimationFrame((t) => {
-    if (!reduce) draw(t)
-  })
+  useAnimationFrame((t) => draw(t))
 
   useEffect(() => {
     const container = containerRef.current
@@ -242,22 +273,21 @@ export default function RibbonWave({ containerRef }) {
 
     const measure = () => {
       const origin = container.getBoundingClientRect()
-      const get = (id) => document.getElementById(id)
-      const els = ['inicio', 'sobre-mi', 'about-photo', 'portafolio', 'carousel', 'servicios', 'contacto', 'site-footer'].map(get)
+      const els = IDS.map((id) => document.getElementById(id))
       if (els.some((e) => !e)) return
-      const [hero, about, photo, portfolio, carousel, services, contact, footer] = els.map((e) => rectIn(e, origin))
+      const [hero, about, photo, portfolio, carousel, services, band] = els.map((e) => rectIn(e, origin))
       const W = origin.width
 
-      const waypoints = buildPoints(W, { hero, about, photo, portfolio, rail: carousel.b + 6, services, contact, footer })
-      const rw = parseFloat(getComputedStyle(container).getPropertyValue('--rw')) || 5
-      geo.current = { ...buildCurve(waypoints), gap: rw * 3.6, amp: W < 700 ? 9 : 16 }
-
-      setBox({
-        w: W,
-        h: origin.height,
-        // Región donde las cintas se dibujan POR DELANTE de la foto (esquina inferior derecha)
-        clip: { x: photo.r - 130, y: photo.t + 0.82 * (photo.b - photo.t), w: 300, h: 0.18 * (photo.b - photo.t) + 90 },
-      })
+      const width = Math.max(11, Math.min(40, W * 0.026))
+      geo.current = {
+        ...buildCurve(buildPoints(W, { hero, about, photo, portfolio, carousel, services, band })),
+        width,
+        spacing: width + Math.max(2, width * 0.1),
+        amp: W < 700 ? 8 : 15,
+        vh: window.innerHeight,
+        heroBottom: hero.b,
+      }
+      setBox({ w: W, h: band.b })
       draw(performance.now())
     }
 
@@ -272,38 +302,25 @@ export default function RibbonWave({ containerRef }) {
     }
   }, [containerRef, draw])
 
-  const paths = (store) =>
-    COLORS.map((c, i) => (
-      <path
-        key={c}
-        ref={(el) => (store.current[i] = el)}
-        fill="none"
-        stroke={c}
-        strokeWidth="var(--rw)"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    ))
-
-  const svgProps = {
-    width: box.w,
-    height: box.h,
-    viewBox: `0 0 ${box.w || 1} ${box.h || 1}`,
-    'aria-hidden': true,
-    className: 'pointer-events-none absolute left-0 top-0',
-  }
-
   return (
-    <>
-      <svg {...svgProps} className={`${svgProps.className} z-0`}>
-        {paths(backPaths)}
-      </svg>
-      <svg {...svgProps} className={`${svgProps.className} z-20`}>
-        <defs>
-          <clipPath id={CLIP_ID}>{box.clip && <rect {...box.clip} rx="0" />}</clipPath>
-        </defs>
-        <g clipPath={`url(#${CLIP_ID})`}>{paths(frontPaths)}</g>
-      </svg>
-    </>
+    <svg
+      width={box.w}
+      height={box.h}
+      viewBox={`0 0 ${box.w || 1} ${box.h || 1}`}
+      aria-hidden="true"
+      className="pointer-events-none absolute left-0 top-0 z-0 overflow-hidden"
+    >
+      <defs>
+        <radialGradient id="ribbon-glow">
+          <stop offset="0" stopColor="#bdf0ff" stopOpacity="0.95" />
+          <stop offset="0.35" stopColor="#7fd8ff" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#7fd8ff" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {COLORS.map((c, i) => (
+        <path key={c} ref={(el) => (paths.current[i] = el)} fill={c} />
+      ))}
+      <circle ref={glow} r="46" fill="url(#ribbon-glow)" opacity="0" />
+    </svg>
   )
 }
