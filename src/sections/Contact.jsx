@@ -1,75 +1,87 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Check, Send } from 'lucide-react'
-import RibbonTrack from '../components/Ribbon'
-import useRibbonProgress from '../hooks/useRibbonProgress'
-import SectionDots from '../components/SectionDots'
+import { AtSign, Check, MapPin, MessageCircle, Send } from 'lucide-react'
 import Button from '../components/Button'
 import Reveal from '../components/Reveal'
-import { site } from '../data/content'
+import { contact, site } from '../data/content'
 
 const field =
-  'mt-1.5 w-full rounded-md border border-navy/15 bg-white px-3.5 py-2.5 text-sm text-navy placeholder:text-navy/40 transition focus:border-sky focus:outline-none focus:ring-4 focus:ring-sky/30'
+  'mt-1.5 w-full rounded-xl border border-navy/15 bg-white px-4 py-3 text-sm font-medium text-navy placeholder:text-navy/40 transition focus:border-sky focus:outline-none focus:ring-4 focus:ring-sky/40'
+
+const details = [
+  { icon: AtSign, label: site.email, href: `mailto:${site.email}` },
+  { icon: MessageCircle, label: site.phone, href: site.whatsapp },
+  { icon: MapPin, label: site.city },
+]
 
 export default function Contact() {
-  const ref = useRef(null)
-  const progress = useRibbonProgress(ref)
   const [sent, setSent] = useState(false)
 
+  // Sin backend: abre el cliente de correo con el mensaje ya redactado.
   const onSubmit = (e) => {
     e.preventDefault()
-    // TODO: conectar con un servicio de formularios (Formspree, Resend, etc.)
+    const data = new FormData(e.currentTarget)
+    const subject = `Contacto desde el portafolio — ${data.get('name')}`
+    const body = `${data.get('message')}\n\n${data.get('name')} (${data.get('email')})`
+    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     setSent(true)
-    e.currentTarget.reset()
   }
 
   return (
-    <section id="contacto" ref={ref} className="bg-white">
-      {/* Banda superior con el lazo final de las cintas */}
-      <div className="relative h-[300px] bg-mist sm:h-[420px]">
-        <SectionDots current="contacto" className="absolute inset-x-0 top-6" />
-        <RibbonTrack name="contact" progress={progress} className="inset-x-0 top-0 z-[1] h-full" />
-      </div>
+    <section id="contacto" className="relative pb-28 pt-40 sm:pt-44">
+      <div className="absolute inset-0 -z-10 bg-mist" aria-hidden="true" />
 
-      <div className="mx-auto grid max-w-3xl gap-10 px-5 py-16 sm:px-8 md:grid-cols-2 md:py-20">
+      {/* El arco de cintas enmarca este bloque */}
+      <div className="relative z-10 mx-auto grid max-w-5xl gap-12 px-6 sm:px-10 md:grid-cols-2 md:gap-16">
         <Reveal>
-          <h2 className="text-4xl tracking-tight text-navy">Contacto</h2>
-          <p className="mt-4 text-sm leading-relaxed text-navy/70">
-            ¿Tienes un proyecto en mente? Cuéntamelo y te responderé lo antes posible. También puedes escribirme a{' '}
-            <a href={`mailto:${site.email}`} className="font-semibold underline decoration-sky decoration-2 underline-offset-4">
-              {site.email}
-            </a>
-            .
-          </p>
+          <h2 className="text-3xl font-bold tracking-tight text-navy sm:text-4xl">{contact.title}</h2>
+          <p className="mt-4 text-base leading-relaxed text-navy/80">{contact.text}</p>
+          <ul className="mt-8 space-y-4">
+            {details.map(({ icon: Icon, label, href }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target={href?.startsWith('http') ? '_blank' : undefined}
+                  rel="noreferrer"
+                  className={`flex items-center gap-3 text-sm font-semibold text-navy ${href ? 'hover:text-lilac' : ''}`}
+                >
+                  <span className="grid h-10 w-10 place-items-center rounded-full bg-sky/30">
+                    <Icon size={18} />
+                  </span>
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </Reveal>
 
         <motion.form
           onSubmit={onSubmit}
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7 }}
-          className="space-y-4"
+          className="space-y-4 rounded-3xl bg-white p-6 shadow-xl shadow-navy/10 sm:p-8"
         >
-          <label className="block text-xs font-medium text-navy">
-            Nombre <span className="text-red-500">*</span>
+          <label className="block text-sm font-bold text-navy">
+            Nombre
             <input name="name" required autoComplete="name" placeholder="Tu nombre" className={field} />
           </label>
-          <label className="block text-xs font-medium text-navy">
-            Email <span className="text-red-500">*</span>
+          <label className="block text-sm font-bold text-navy">
+            Email
             <input name="email" type="email" required autoComplete="email" placeholder="tu@email.com" className={field} />
           </label>
-          <label className="block text-xs font-medium text-navy">
-            Mensaje <span className="text-red-500">*</span>
+          <label className="block text-sm font-bold text-navy">
+            Mensaje
             <textarea name="message" required rows={4} placeholder="Cuéntame sobre tu proyecto" className={`${field} resize-none`} />
           </label>
           <div className="flex flex-wrap items-center gap-4">
             <Button as="button" type="submit">
-              Enviar <Send size={15} />
+              Enviar mensaje <Send size={15} />
             </Button>
             {sent && (
-              <p role="status" className="flex items-center gap-1.5 text-sm font-medium text-navy">
-                <Check size={16} className="text-lilac" /> ¡Gracias! Te responderé pronto.
+              <p role="status" className="flex items-center gap-1.5 text-sm font-semibold text-navy">
+                <Check size={16} className="text-lilac" /> Se abrirá tu aplicación de correo.
               </p>
             )}
           </div>

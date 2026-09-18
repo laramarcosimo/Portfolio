@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
+@font-face { font-family: "Quicksand"; font-weight: 400; font-display: swap; src: url("../assets/fonts/Quicksand-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Quicksand"; font-weight: 500; font-display: swap; src: url("../assets/fonts/Quicksand-Medium.ttf") format("truetype"); }
+@font-face { font-family: "Quicksand"; font-weight: 600; font-display: swap; src: url("../assets/fonts/Quicksand-SemiBold.ttf") format("truetype"); }
+@font-face { font-family: "Quicksand"; font-weight: 700; font-display: swap; src: url("../assets/fonts/Quicksand-Bold.ttf") format("truetype"); }
+
 @theme {
-  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Lora", ui-serif, Georgia, serif;
+  --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
   --color-navy: #192a56;
   --color-sky: #96c9ff;
   --color-lilac: #9690e4;
@@ -10,24 +14,22 @@
 }
 
 :root {
-  /* grosor de las cintas */
-  --rw: 30px;
+  /* grosor de cada cinta */
+  --rw: 18px;
 }
 
-@media (max-width: 640px) {
-  :root { --rw: 18px; }
-}
+@media (max-width: 1023px) { :root { --rw: 14px; } }
+@media (max-width: 639px) { :root { --rw: 9px; } }
 
 @layer base {
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
   body {
     background: #fff;
     color: var(--color-navy);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
   }
-  html, body, section { overflow-x: clip; }
-  h1, h2 { font-family: var(--font-serif); font-weight: 500; }
   section[id] { scroll-margin-top: 4rem; }
   :focus-visible { outline: 2px solid var(--color-sky); outline-offset: 3px; }
 }

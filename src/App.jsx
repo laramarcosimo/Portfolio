@@ -1,6 +1,8 @@
+import { useRef } from 'react'
 import './styles/global.css'
 import Navbar from './components/Navbar'
 import FloatingAction from './components/FloatingAction'
+import RibbonWave from './components/RibbonWave'
 import Hero from './sections/Hero'
 import About from './sections/About'
 import Portfolio from './sections/Portfolio'
@@ -12,12 +14,15 @@ import { sectionIds } from './data/content'
 
 export default function App() {
   const active = useActiveSection(sectionIds)
+  const mainRef = useRef(null)
 
   return (
     <>
       <Navbar active={active} />
-      <main>
-        <Hero />
+      {/* Contenedor único: las cintas se pintan en un lienzo global que cruza todas las secciones */}
+      <main ref={mainRef} className="relative isolate">
+        <RibbonWave containerRef={mainRef} />
+        <Hero active={active} />
         <About />
         <Portfolio />
         <Services />
