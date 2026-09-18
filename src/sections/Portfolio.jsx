@@ -1,35 +1,42 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
-import RibbonSet from '../components/Ribbon'
-import Reveal from '../components/Reveal'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import RibbonTrack from '../components/Ribbon'
+import useRibbonProgress from '../hooks/useRibbonProgress'
+import SectionDots from '../components/SectionDots'
 import { projects } from '../data/content'
 
+const GAP = 28
+
 function Mockup({ layout, colors: [a, b] }) {
-  const bg = { background: `linear-gradient(135deg, ${a}, ${b})` }
   return (
-    <div className="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-2xl" style={bg}>
+    <div className="grid h-full w-full place-items-center" style={{ background: `linear-gradient(135deg, ${a}, ${b})` }}>
       {layout === 'browser' && (
-        <div className="w-[78%] overflow-hidden rounded-lg bg-white shadow-xl">
-          <div className="flex gap-1 border-b border-navy/10 px-2.5 py-2">
+        <div className="w-[70%] overflow-hidden rounded-md bg-white shadow-lg">
+          <div className="flex gap-1 border-b border-navy/10 px-2 py-1.5">
             {[0, 1, 2].map((i) => (
-              <span key={i} className="h-1.5 w-1.5 rounded-full bg-navy/20" />
+              <span key={i} className="h-1 w-1 rounded-full bg-navy/25" />
             ))}
           </div>
-          <div className="space-y-2 p-3">
-            <div className="h-10 rounded bg-navy/10" />
-            <div className="h-2 w-2/3 rounded bg-navy/20" />
-            <div className="h-2 w-1/2 rounded bg-navy/10" />
+          <div className="space-y-1.5 p-2.5">
+            <div className="h-8 rounded-sm bg-navy/10" />
+            <div className="h-1.5 w-2/3 rounded bg-navy/20" />
+            <div className="h-1.5 w-1/2 rounded bg-navy/10" />
           </div>
         </div>
       )}
       {layout === 'poster' && (
-        <div className="grid h-[72%] w-[48%] rotate-[-6deg] place-items-center rounded-lg bg-white shadow-xl">
-          <div className="h-14 w-14 rounded-full" style={{ background: `linear-gradient(135deg, ${a}, ${b})` }} />
+        <div className="relative h-[68%] w-[58%]">
+          <div className="absolute inset-0 -rotate-[8deg] rounded-sm bg-white shadow-lg" />
+          <div className="absolute inset-0 rotate-[5deg] rounded-sm bg-white p-2.5 shadow-lg">
+            <div className="h-7 w-7 rounded-full" style={{ background: a }} />
+            <div className="mt-2 h-1.5 w-3/4 rounded bg-navy/25" />
+            <div className="mt-1 h-1.5 w-1/2 rounded bg-navy/15" />
+          </div>
         </div>
       )}
       {layout === 'phone' && (
-        <div className="h-[82%] w-[34%] rounded-[1.25rem] border-4 border-white bg-white/90 p-2 shadow-xl">
+        <div className="h-[82%] w-[32%] rounded-2xl border-[3px] border-white bg-white/90 p-1.5 shadow-lg">
           <div className="h-full rounded-xl" style={{ background: `linear-gradient(180deg, ${b}, ${a})` }} />
         </div>
       )}
@@ -38,98 +45,94 @@ function Mockup({ layout, colors: [a, b] }) {
 }
 
 export default function Portfolio() {
-  const track = useRef(null)
-  const [index, setIndex] = useState(0)
-
-  const step = () => {
-    const el = track.current
-    const card = el?.querySelector('article')
-    return card ? card.offsetWidth + 24 : 320
-  }
-
-  const onScroll = useCallback(() => {
-    const el = track.current
-    if (!el) return
-    setIndex(Math.min(projects.length - 1, Math.round(el.scrollLeft / step())))
-  }, [])
+  const ref = useRef(null)
+  const progress = useRibbonProgress(ref)
+  const [index, setIndex] = useState(2)
+  const [cardW, setCardW] = useState(280)
 
   useEffect(() => {
-    onScroll()
-  }, [onScroll])
+    const update = () => setCardW(window.innerWidth < 640 ? 210 : 290)
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
 
-  const goTo = (i) => track.current?.scrollTo({ left: i * step(), behavior: 'smooth' })
-  const move = (dir) => goTo(Math.max(0, Math.min(projects.length - 1, index + dir)))
+  const last = projects.length - 1
+  const go = (i) => setIndex(Math.max(0, Math.min(last, i)))
+  const x = -(index + 0.5) * (cardW + GAP) + GAP / 2
+  const current = projects[index]
 
   return (
-    <section id="portafolio" className="relative overflow-hidden bg-white py-24 sm:py-32">
-      <RibbonSet variant="carousel" className="inset-x-0 bottom-0 z-0 h-[65%]" />
+    <section
+      id="portafolio"
+      ref={ref}
+      aria-roledescription="carrusel"
+      aria-label="Portafolio"
+      className="relative bg-mist py-32 sm:py-40"
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowLeft') go(index - 1)
+        if (e.key === 'ArrowRight') go(index + 1)
+      }}
+    >
+      <SectionDots current="portafolio" className="absolute inset-x-0 top-6" />
+      <RibbonTrack name="portfolio" progress={progress} className="inset-0 z-[1]" />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-8">
-        <div className="flex items-end justify-between gap-6">
-          <Reveal>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-lilac">Portafolio</p>
-            <h2 className="text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">Proyectos seleccionados</h2>
-          </Reveal>
-          <div className="flex gap-2">
-            {[
-              { dir: -1, Icon: ChevronLeft, label: 'Anterior', disabled: index === 0 },
-              { dir: 1, Icon: ChevronRight, label: 'Siguiente', disabled: index === projects.length - 1 },
-            ].map(({ dir, Icon, label, disabled }) => (
-              <button
-                key={label}
-                onClick={() => move(dir)}
-                disabled={disabled}
-                aria-label={label}
-                className="grid h-11 w-11 place-items-center rounded-full border border-navy/15 bg-white text-navy shadow-sm transition hover:border-sky hover:bg-sky/20 disabled:opacity-30"
-              >
-                <Icon size={20} />
-              </button>
-            ))}
-          </div>
-        </div>
+      <h2 className="sr-only">Portafolio</h2>
 
-        <div
-          ref={track}
-          onScroll={onScroll}
-          className="no-scrollbar -mx-5 mt-10 flex snap-x snap-mandatory gap-6 overflow-x-auto px-5 pb-14 pt-4 sm:-mx-8 sm:px-8"
-        >
-          {projects.map((p, i) => (
-            <motion.article
-              key={p.title}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.08 }}
-              whileHover={{ y: -10 }}
-              className="group w-[82%] shrink-0 snap-start rounded-3xl bg-white p-4 shadow-lg transition-shadow hover:shadow-2xl hover:shadow-navy/20 sm:w-[46%] lg:w-[31.5%]"
-            >
-              <Mockup layout={p.layout} colors={p.colors} />
-              <div className="flex items-start justify-between px-2 pb-2 pt-5">
-                <div>
-                  <p className="text-xs font-medium text-navy/60">
-                    {p.category} · {p.year}
-                  </p>
-                  <h3 className="mt-1 text-lg font-bold text-navy">{p.title}</h3>
-                </div>
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-mist text-navy transition group-hover:bg-navy group-hover:text-white">
-                  <ArrowUpRight size={18} />
-                </span>
-              </div>
-            </motion.article>
-          ))}
-        </div>
+      <div className="relative z-10">
+        <div className="relative mx-auto h-[300px] max-w-5xl overflow-hidden sm:h-[340px]">
+          <motion.div
+            className="absolute left-1/2 top-1/2 flex -translate-y-1/2 cursor-grab items-center active:cursor-grabbing"
+            style={{ gap: GAP }}
+            animate={{ x }}
+            transition={{ type: 'spring', stiffness: 220, damping: 30 }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.15}
+            onDragEnd={(_, { offset }) => {
+              if (offset.x < -50) go(index + 1)
+              else if (offset.x > 50) go(index - 1)
+            }}
+          >
+            {projects.map((p, i) => {
+              const active = i === index
+              return (
+                <motion.button
+                  key={p.title}
+                  type="button"
+                  onClick={() => go(i)}
+                  aria-label={`${p.title}, ${p.category}`}
+                  aria-current={active}
+                  animate={{ scale: active ? 1.14 : 0.96 }}
+                  whileHover={{ y: -6 }}
+                  className="aspect-[4/3] shrink-0 overflow-hidden rounded-md bg-white shadow-lg transition-shadow hover:shadow-2xl hover:shadow-navy/25"
+                  style={{ width: cardW }}
+                >
+                  <Mockup layout={p.layout} colors={p.colors} />
+                </motion.button>
+              )
+            })}
+          </motion.div>
 
-        <div className="flex justify-center gap-2 rounded-full">
-          {projects.map((p, i) => (
+          {[
+            { dir: -1, Icon: ChevronLeft, label: 'Anterior', side: 'left-3' },
+            { dir: 1, Icon: ChevronRight, label: 'Siguiente', side: 'right-3' },
+          ].map(({ dir, Icon, label, side }) => (
             <button
-              key={p.title}
-              onClick={() => goTo(i)}
-              aria-label={`Ir al proyecto ${i + 1}`}
-              aria-current={i === index}
-              className={`h-2.5 rounded-full bg-white shadow transition-all ${i === index ? 'w-8' : 'w-2.5 opacity-70'}`}
-            />
+              key={label}
+              onClick={() => go(index + dir)}
+              disabled={index + dir < 0 || index + dir > last}
+              aria-label={label}
+              className={`absolute ${side} top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white text-navy shadow-md transition hover:bg-sky/30 disabled:opacity-30`}
+            >
+              <Icon size={20} />
+            </button>
           ))}
         </div>
+
+        <p className="mt-4 text-center text-sm text-navy/70" aria-live="polite">
+          <span className="font-semibold text-navy">{current.title}</span> · {current.category} · {current.year}
+        </p>
       </div>
     </section>
   )

@@ -2,10 +2,20 @@
 
 @theme {
   --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Lora", ui-serif, Georgia, serif;
   --color-navy: #192a56;
   --color-sky: #96c9ff;
   --color-lilac: #9690e4;
   --color-mist: #f8fafc;
+}
+
+:root {
+  /* grosor de las cintas */
+  --rw: 30px;
+}
+
+@media (max-width: 640px) {
+  :root { --rw: 18px; }
 }
 
 @layer base {
@@ -15,8 +25,9 @@
     color: var(--color-navy);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
+  html, body, section { overflow-x: clip; }
+  h1, h2 { font-family: var(--font-serif); font-weight: 500; }
   section[id] { scroll-margin-top: 4rem; }
   :focus-visible { outline: 2px solid var(--color-sky); outline-offset: 3px; }
 }

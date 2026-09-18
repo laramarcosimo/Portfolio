@@ -1,32 +1,30 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { navLinks, site } from '../data/content'
+import { navLinks } from '../data/content'
+import Logo from './Logo'
 
 export default function Navbar({ active }) {
   const [open, setOpen] = useState(false)
+  // "Servicios" no está en el menú: cuenta como parte de Portafolio.
+  const current = active === 'servicios' ? 'portafolio' : active
 
   return (
     <header className="sticky top-0 z-50 border-b border-navy/5 bg-white/80 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8" aria-label="Principal">
-        <a href="#inicio" aria-label={site.name} className="flex items-center gap-2.5 font-bold text-navy">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-navy text-sm tracking-tight text-white">
-            {site.monogram}
-          </span>
-          <span className="hidden text-sm sm:block">{site.name}</span>
-        </a>
+      <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8" aria-label="Principal">
+        <Logo />
 
         <ul className="hidden items-center gap-8 md:flex">
           {navLinks.map((l) => (
             <li key={l.id}>
               <a
                 href={`#${l.id}`}
-                className={`relative py-1 text-sm font-medium text-navy transition-opacity hover:opacity-100 ${
-                  active === l.id ? 'opacity-100' : 'opacity-70'
+                className={`relative py-1 text-sm font-medium transition-colors hover:text-navy ${
+                  current === l.id ? 'text-navy' : 'text-navy/70'
                 }`}
               >
                 {l.label}
-                {active === l.id && (
+                {current === l.id && (
                   <motion.span layoutId="nav-underline" className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-sky" />
                 )}
               </a>

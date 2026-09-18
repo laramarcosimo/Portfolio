@@ -1,36 +1,48 @@
+import { useRef } from 'react'
 import { motion } from 'framer-motion'
+import RibbonTrack from '../components/Ribbon'
+import useRibbonProgress from '../hooks/useRibbonProgress'
+import SectionDots from '../components/SectionDots'
 import Reveal from '../components/Reveal'
-import { services } from '../data/content'
-
-const tones = {
-  sky: { bg: 'bg-sky/25', icon: 'text-[#4f9be0]' },
-  lilac: { bg: 'bg-lilac/20', icon: 'text-lilac' },
-}
+import { services, site } from '../data/content'
 
 export default function Services() {
+  const ref = useRef(null)
+  const progress = useRibbonProgress(ref)
+
   return (
-    <section id="servicios" className="bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <Reveal className="mx-auto max-w-xl text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-lilac">Servicios</p>
-          <h2 className="text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">Cómo puedo ayudarte</h2>
+    <section id="servicios" ref={ref} className="relative bg-white pb-24 pt-60 sm:pb-32 sm:pt-64">
+      <RibbonTrack name="services" progress={progress} className="inset-x-0 top-0 z-[1] h-[260px] " />
+      <SectionDots current="servicios" className="absolute inset-x-0 bottom-6" />
+
+      {/* Marca de agua */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/3 select-none text-[16rem] font-extrabold italic leading-none tracking-tighter text-navy/[0.04] sm:text-[24rem]"
+      >
+        {site.monogram}
+      </span>
+
+      <div className="relative z-10 mx-auto max-w-4xl px-5 sm:px-8">
+        <Reveal className="text-center">
+          <h2 className="text-4xl tracking-tight text-navy">Servicios</h2>
+          <p className="mx-auto mt-3 max-w-md text-sm text-navy/65">
+            Diseño y desarrollo con un enfoque claro, cuidado y a medida.
+          </p>
         </Reveal>
 
         <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map(({ icon: Icon, title, text, tone }, i) => (
+          {services.map(({ icon: Icon, title, text }, i) => (
             <motion.div
               key={title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="flex flex-col items-center text-center"
             >
-              <span className={`grid h-16 w-16 place-items-center rounded-2xl ${tones[tone].bg}`}>
-                <Icon size={30} strokeWidth={1.5} className={tones[tone].icon} />
-              </span>
-              <h3 className="mt-5 text-lg font-bold text-navy">{title}</h3>
-              <p className="mt-2 max-w-[16rem] text-sm leading-relaxed text-navy/70">{text}</p>
+              <Icon size={34} strokeWidth={1.4} className="text-navy" />
+              <h3 className="mt-4 text-sm font-bold text-navy">{title}</h3>
+              <p className="mt-1.5 text-xs leading-relaxed text-navy/65">{text}</p>
             </motion.div>
           ))}
         </div>
