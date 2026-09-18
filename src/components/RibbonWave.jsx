@@ -140,7 +140,7 @@ export default function RibbonWave({ containerRef }) {
           // vaivén ondulatorio permanente + fase arrastrada por el scroll (parallax)
           const wave = reduce
             ? 0
-            : Math.sin(time / (1500 + r * 350) + i * 0.75 + r * 1.4 + scroll / 260) * g.amp
+            : (Math.sin(time / 2800 + i * 0.42 + r * 0.9 + scroll / 520) + 0.5 * Math.sin(time / 4300 - i * 0.27 + r * 1.7)) * g.amp * 0.7
           const k = off + wave
           return [x + g.norm[i][0] * k, y + g.norm[i][1] * k]
         })
@@ -170,7 +170,7 @@ export default function RibbonWave({ containerRef }) {
 
       const base = buildPoints(W, { hero, about, photo, portfolio, rail: carousel.b + 6, services, contact, footer })
       const rw = parseFloat(getComputedStyle(container).getPropertyValue('--rw')) || 16
-      geo.current = { base, norm: normals(base), gap: rw * 1.6, amp: rw * 0.9 }
+      geo.current = { base, norm: normals(base), gap: rw * 3.6, amp: W < 700 ? 9 : 16 }
 
       setBox({
         w: W,

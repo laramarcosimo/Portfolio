@@ -15,11 +15,11 @@
 
 :root {
   /* grosor de cada cinta */
-  --rw: 18px;
+  --rw: 5px;
 }
 
-@media (max-width: 1023px) { :root { --rw: 14px; } }
-@media (max-width: 639px) { :root { --rw: 9px; } }
+@media (max-width: 1023px) { :root { --rw: 4px; } }
+@media (max-width: 639px) { :root { --rw: 3px; } }
 
 @layer base {
   html { scroll-behavior: smooth; overflow-x: clip; }
