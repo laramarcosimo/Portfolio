@@ -1,10 +1,32 @@
 import './styles/global.css'
+import Navbar from './components/Navbar'
+import FloatingAction from './components/FloatingAction'
+import Hero from './sections/Hero'
+import About from './sections/About'
+import Portfolio from './sections/Portfolio'
+import Services from './sections/Services'
+import Contact from './sections/Contact'
+import Footer from './sections/Footer'
+import useActiveSection from './hooks/useActiveSection'
+import { navLinks } from './data/content'
+
+const ids = navLinks.map((l) => l.id)
 
 export default function App() {
+  const active = useActiveSection(ids)
+
   return (
-    <main>
-      <h1>Lara Marco</h1>
-      <p>Portafolio en construcción.</p>
-    </main>
+    <>
+      <Navbar active={active} />
+      <main>
+        <Hero active={active} />
+        <About />
+        <Portfolio />
+        <Services />
+        <Contact />
+      </main>
+      <Footer />
+      <FloatingAction active={active} />
+    </>
   )
 }
