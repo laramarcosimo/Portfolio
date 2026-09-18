@@ -1,19 +1,22 @@
-# Portafolio Personal — Lara Marco Simó
+# Portafolio
 
-Portafolio personal en HTML/CSS/JS vanilla, con animaciones de scroll, canvas de fondo y galería de proyectos de diseño e identidad visual.
+Portafolio personal de Lara Marco. React + Vite.
+
+## Scripts
+
+- `npm run dev` — servidor de desarrollo
+- `npm run build` — build de producción en `dist/`
+- `npm run preview` — previsualiza el build
+- `npm run lint` — oxlint
 
 ## Estructura
 
-- `index.html` — página de inicio
-- `dist/html/` — páginas internas (currículum, proyectos, contacto, casos de estudio)
-- `dist/css/` — estilos por página
-- `dist/js/` — scripts por página
-- `assets/` — fotos, videos y tipografías
+- `src/components` — piezas reutilizables
+- `src/sections` — secciones de página
+- `src/pages` — páginas
+- `src/hooks` — hooks propios
+- `src/data` — contenido (proyectos, CV…)
+- `src/styles` — estilos globales
+- `public` — estáticos
 
-## Desarrollo local
-
-Servir como sitio estático, por ejemplo:
-
-```bash
-npx serve .
-```
+La versión HTML/CSS/JS anterior se conserva en el tag `v1-portfolio-anterior`.

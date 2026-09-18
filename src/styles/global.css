@@ -1,0 +1,16 @@
+:root {
+  --bg: #fff;
+  --fg: #111;
+  --accent: #6c4cff;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
