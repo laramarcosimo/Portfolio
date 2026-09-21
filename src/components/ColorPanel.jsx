@@ -5,7 +5,7 @@ export default function ColorPanel({ color }) {
   const text = color.dark ? 'text-navy' : 'text-white'
   return (
     <div
-      className={`relative flex min-h-[18rem] flex-col justify-between overflow-hidden p-7 ${text} ${color.bordered ? 'ring-1 ring-navy/15 ring-inset' : ''}`}
+      className={`relative flex min-h-[12.5rem] flex-col justify-between overflow-hidden p-6 sm:min-h-[18rem] sm:p-7 ${text} ${color.bordered ? 'ring-1 ring-navy/15 ring-inset' : ''}`}
       style={{ background: color.bg }}
     >
       <Typewriter lines={[color.name, ...color.lines]} />

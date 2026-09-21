@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useAnimationFrame, useReducedMotion, useScroll } from 'framer-motion'
+import { useAnimationFrame, useReducedMotion } from 'framer-motion'
 import { RIBBON_COLORS, buildCurve, ribbonPath, ribbonWidth } from '../lib/ribbonGeometry'
 
 /**
@@ -16,7 +16,6 @@ const NO_IDS = []
 
 export default function FluidLines({ containerRef, ids = NO_IDS, build, minReveal, className = '' }) {
   const reduce = useReducedMotion()
-  const { scrollY } = useScroll()
   const paths = useRef([])
   const geo = useRef(null)
   const [box, setBox] = useState({ w: 0, h: 0 })
@@ -31,7 +30,7 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
       if (!g) return
       const n = g.base.length
       const total = (n - 1) * g.step
-      const scroll = scrollY.get()
+      const scroll = window.scrollY
       const dt = Math.min(64, Math.max(0, time - last.current))
       last.current = time
 
@@ -59,7 +58,7 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
         paths.current[r]?.setAttribute('d', ribbonPath(g, r, time, scroll, sEnd, reduce))
       }
     },
-    [reduce, scrollY],
+    [reduce],
   )
 
   useAnimationFrame((t) => draw(t))

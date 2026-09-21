@@ -75,7 +75,24 @@ export default function Curriculum() {
         <p className="mt-2 text-sm font-medium text-navy/70">{cv.subtitle}</p>
       </header>
 
-      <div className="mx-auto grid max-w-4xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[9rem_1fr]" id="inicio">
+      {/* Navegación interna en móvil: chips que se quedan fijos bajo la barra superior */}
+      <nav aria-label="Secciones del currículum" className="sticky top-16 z-40 mt-10 border-y border-navy/5 bg-white/90 backdrop-blur-md lg:hidden">
+        <ul className="no-scrollbar mx-auto flex max-w-4xl gap-2 overflow-x-auto px-5 py-2.5">
+          {nav.map(([id, label]) => (
+            <li key={id} className="shrink-0">
+              <a
+                href={`#${id}`}
+                aria-current={active === id}
+                className={`block rounded-full px-4 py-2.5 text-xs font-semibold transition ${active === id ? 'bg-navy text-white' : 'bg-fog text-navy'}`}
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div className="mx-auto grid max-w-4xl gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[9rem_1fr] lg:py-16">
         <aside className="hidden lg:block">
           <ul className="sticky top-28 space-y-1 text-[13px] font-medium">
             {nav.map(([id, label]) => (

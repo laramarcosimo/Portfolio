@@ -194,7 +194,7 @@ export default function ProjectPage() {
 
           {/* Fotos (Marca Personal) */}
           {page.photos && (
-            <div className="mx-auto mt-14 grid max-w-5xl gap-4 px-5 sm:grid-cols-3 sm:px-8">
+            <div className="mx-auto mt-14 grid max-w-5xl grid-cols-3 gap-2 px-5 sm:gap-4 sm:px-8">
               {page.photos.map((g) => (
                 <Photo key={g.src} g={g} className="aspect-[3/4] rounded-[3px] object-cover" />
               ))}

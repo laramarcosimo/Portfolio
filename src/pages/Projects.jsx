@@ -27,7 +27,7 @@ export default function Projects() {
               <h2 className="mt-2 text-2xl font-bold tracking-tight text-navy sm:text-3xl">{p.name}</h2>
               <Link
                 to={`/proyectos/${p.slug}`}
-                className="mt-5 inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-navy/20 transition hover:-translate-y-0.5"
+                className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-7 text-xs font-semibold text-white shadow-md shadow-navy/20 transition hover:-translate-y-0.5"
               >
                 VER <ArrowRight size={14} />
               </Link>

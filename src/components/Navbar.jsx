@@ -36,7 +36,7 @@ export default function Navbar() {
         </ul>
 
         <button
-          className="grid h-10 w-10 place-items-center rounded-full text-navy md:hidden"
+          className="grid h-11 w-11 place-items-center rounded-full text-navy md:hidden"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
@@ -55,7 +55,7 @@ export default function Navbar() {
           >
             {navLinks.map((l) => (
               <li key={l.to}>
-                <NavLink to={l.to} end={l.to === '/'} onClick={() => setOpen(false)} className="block py-3 text-base font-medium text-navy">
+                <NavLink to={l.to} end={l.to === '/'} onClick={() => setOpen(false)} className="block py-3.5 text-lg font-semibold text-navy">
                   {l.label}
                 </NavLink>
               </li>

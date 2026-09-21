@@ -15,7 +15,7 @@ const brandIcons = [
   },
 ]
 
-const iconClass = 'grid h-9 w-9 place-items-center rounded-full text-white transition hover:bg-white/10 hover:text-sky'
+const iconClass = 'grid h-11 w-11 place-items-center rounded-full text-white transition hover:bg-white/10 hover:text-sky'
 const linkClass = 'underline-offset-4 hover:text-white hover:underline'
 
 /** Pie de la web original: contacto resumido, redes y copyright. `phone`: 'phone' (608 350 840) o 'phoneIntl' (+34 …). */

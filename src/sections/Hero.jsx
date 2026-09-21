@@ -3,13 +3,14 @@ import { hero } from '../data/content'
 
 export default function Hero() {
   return (
-    <section id="inicio" className="relative min-h-[calc(100svh-4rem)]">
-      <div className="relative z-10 px-5 pt-16 text-center sm:pt-24">
+    // En móvil el hero es más bajo (no una pantalla vacía) y el titular más grande y equilibrado
+    <section id="inicio" className="relative min-h-[64svh] sm:min-h-[calc(100svh-4rem)]">
+      <div className="relative z-10 px-6 pt-20 text-center sm:pt-24">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9 }}
-          className="font-display text-4xl font-medium leading-tight tracking-tight text-navy sm:text-6xl"
+          className="font-display text-balance text-[2.75rem] font-semibold leading-[1.1] tracking-tight text-navy sm:text-6xl sm:font-medium"
         >
           {hero.title}
         </motion.h1>
@@ -17,7 +18,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="mt-3 text-sm font-medium text-navy/60"
+          className="mt-4 text-base font-medium text-navy/60 sm:mt-3 sm:text-sm"
         >
           {hero.tagline}
         </motion.p>

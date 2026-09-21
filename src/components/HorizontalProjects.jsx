@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { featuredProjects } from '../data/content'
@@ -45,7 +45,7 @@ function ProjectCard({ p, cardW }) {
         </div>
         <Link
           to={`/proyectos/${p.slug}`}
-          className="mt-0.5 inline-flex shrink-0 items-center gap-1 rounded-full border border-navy/20 px-3 py-1.5 text-[11px] font-semibold text-navy transition hover:border-navy hover:bg-navy hover:text-white"
+          className="mt-0.5 inline-flex min-h-9 shrink-0 items-center gap-1 rounded-full border border-navy/20 px-3.5 text-[11px] font-semibold text-navy transition hover:border-navy hover:bg-navy hover:text-white"
         >
           Ver <ArrowRight size={13} />
         </Link>
@@ -55,7 +55,7 @@ function ProjectCard({ p, cardW }) {
 }
 
 const Heading = ({ className = '' }) => (
-  <h2 className={`text-4xl font-bold tracking-tight text-navy sm:text-5xl ${className}`}>Proyectos</h2>
+  <h2 className={`text-3xl font-bold tracking-tight text-navy sm:text-5xl ${className}`}>Proyectos</h2>
 )
 
 /**
@@ -92,7 +92,25 @@ export default function HorizontalProjects() {
     return () => clearTimeout(t)
   }, [])
 
-  const { scrollYProgress } = useScroll({ target: targetRef, offset: ['start start', 'end end'] })
+  // Progreso (0→1) de la sección anclada, calculado a partir de su posición real: funciona igual en todos los navegadores
+  const scrollYProgress = useMotionValue(0)
+  useEffect(() => {
+    const update = () => {
+      const el = targetRef.current
+      if (!el) return
+      const r = el.getBoundingClientRect()
+      const range = r.height - window.innerHeight
+      scrollYProgress.set(range > 0 ? Math.min(1, Math.max(0, -r.top / range)) : 0)
+    }
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [scrollYProgress, dims.dist])
+
   const smooth = useSpring(scrollYProgress, { stiffness: 110, damping: 26, mass: 0.4 })
   // La marino va delante y las otras dos la siguen con más inercia
   const lines = [
@@ -103,7 +121,7 @@ export default function HorizontalProjects() {
   const x = useTransform(smooth, [0, 1], [0, -dims.dist])
 
   // Portadas pequeñas (3:4): limitadas también por el alto de pantalla
-  const cardW = `min(56vw, 14rem, calc((100svh - 22rem) * 0.75))`
+  const cardW = `min(64vw, 14rem, calc((100svh - 22rem) * 0.75))`
 
   const end = (
     <div className="flex shrink-0 items-center pr-[10vw]" style={{ width: 'min(70vw, 16rem)' }}>
@@ -135,9 +153,9 @@ export default function HorizontalProjects() {
 
   return (
     <section id="portafolio" ref={targetRef} aria-label="Proyectos" className="relative bg-white" style={{ height: dims.dist ? dims.dist + dims.vh : '300vh' }}>
-      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden pb-[12vh] pt-24">
+      <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pb-[12svh] pt-24">
         {/* Título encima del carrusel */}
-        <Heading className="absolute left-[8vw] top-[calc(4rem+5vh)] z-10" />
+        <Heading className="absolute left-[8vw] top-[calc(4rem+4svh)] z-10" />
 
         <motion.div ref={trackRef} className="relative z-10 flex items-center gap-14 pl-[8vw] pr-[6vw] sm:gap-24" style={{ x }}>
           {featuredProjects.map((p) => (
