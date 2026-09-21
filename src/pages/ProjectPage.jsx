@@ -226,9 +226,14 @@ export default function ProjectPage() {
           )}
 
           {/* Identidad de color */}
-          <section className="mx-auto mt-14 grid max-w-5xl px-5 sm:px-8 md:grid-cols-3" aria-label="Paleta de color">
+          <section
+            className={`mx-auto mt-14 grid px-5 sm:px-8 ${
+              page.compactColors ? 'max-w-3xl gap-3 sm:grid-cols-3' : 'max-w-5xl md:grid-cols-3'
+            }`}
+            aria-label="Paleta de color"
+          >
             {page.colors.map((c) => (
-              <ColorPanel key={c.name} color={c} />
+              <ColorPanel key={c.name} color={c} compact={page.compactColors} />
             ))}
           </section>
 
@@ -243,15 +248,6 @@ export default function ProjectPage() {
               </div>
             )}
           </section>
-
-          {/* Fotos (Marca Personal) */}
-          {page.photos && (
-            <div className="mx-auto mt-14 grid max-w-5xl grid-cols-3 gap-2 px-5 sm:gap-4 sm:px-8">
-              {page.photos.map((g) => (
-                <Photo key={g.src} g={g} className="aspect-[3/4] rounded-[3px] object-cover" />
-              ))}
-            </div>
-          )}
 
           {/* Pegatinas (Casa Ricardo) */}
           {page.stickers && (
