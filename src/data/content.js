@@ -1,5 +1,8 @@
-import { PenTool, LayoutTemplate, Clapperboard, Megaphone } from 'lucide-react'
-import videoLola from '../assets/video/video-lola.mp4'
+/*
+ * Contenido de la web. Todos los textos proceden de https://laramarcosimoportafolio.netlify.app/
+ * y se conservan tal cual (no reescribir).
+ */
+import { BookOpen, Clapperboard, Dumbbell, Laptop } from 'lucide-react'
 
 // Todas las imágenes procesadas viven en src/assets (importadas desde la carpeta original).
 const files = import.meta.glob('../assets/**/*.webp', { eager: true, query: '?url', import: 'default' })
@@ -8,23 +11,26 @@ export const img = (name) => files[`../assets/${name}.webp`]
 export const site = {
   name: 'Lara Marco Simó',
   email: 'laramarcosimo@gmail.com',
-  phone: '+34 608 350 840',
+  phone: '608 350 840',
+  phoneIntl: '+34 608 350 840',
   whatsapp: 'https://wa.me/34608350840',
   city: 'Santa Cruz de Tenerife',
   linkedin: 'https://www.linkedin.com/in/lara-marco-simó-7317372aa',
   instagram: 'https://www.instagram.com/laramarcosimo_?igsh=NXdwN2g5ZWd6b2pq&utm_source=qr',
   instagramHandle: '@laramarcosimo_',
+  copyright: '© 2026 Lara Marco Simó. Todos los derechos reservados.',
 }
 
+// Menú de la web original: Currículum, Proyectos y Contacto (el logotipo lleva al inicio).
 export const navLinks = [
-  { id: 'inicio', label: 'Inicio' },
-  { id: 'sobre-mi', label: 'Sobre mí' },
-  { id: 'portafolio', label: 'Portafolio' },
-  { id: 'servicios', label: 'Servicios' },
-  { id: 'contacto', label: 'Contacto' },
+  { to: '/', label: 'Inicio' },
+  { to: '/curriculum', label: 'Currículum' },
+  { to: '/proyectos', label: 'Proyectos' },
+  { to: '/contacto', label: 'Contacto' },
 ]
 
-export const sectionIds = navLinks.map((l) => l.id)
+// Secciones de la página de inicio (paginación y scroll-spy)
+export const homeSections = ['inicio', 'sobre-mi', 'portafolio', 'habilidades', 'contacto']
 
 export const hero = {
   title: 'Creatividad Minimalista',
@@ -32,99 +38,105 @@ export const hero = {
 }
 
 export const about = {
-  kicker: 'Detrás del diseño',
-  title: 'Publicista y diseñadora en constante evolución',
-  paragraphs: [
-    'Con experiencia en edición y una profunda pasión por la creatividad, estoy entusiasmada por aportar mis habilidades y mi visión innovadora al equipo. Actualmente, curso el doble grado en diseño gráfico digital y publicidad, donde desarrollo proyectos que fusionan la estética visual con estrategias de comunicación efectivas.',
-    'Creo en la estrategia que nace de la sinceridad y en el diseño que cuenta historias reales.',
+  kicker: 'DETRÁS DEL DISEÑO',
+  title: 'Sobre Mí',
+  lead: 'Publicista y diseñadora en constante evolución.',
+  text: 'Creo en la estrategia que nace de la sinceridad y en el diseño que cuenta historias reales.',
+  bio: 'Con experiencia en edición y una profunda pasión por la creatividad, estoy entusiasmada por aportar mis habilidades y mi visión innovadora al equipo. Actualmente, curso el doble grado en diseño gráfico digital y publicidad, donde desarrollo proyectos que fusionan la estética visual con estrategias de comunicación efectivas.',
+  gallery: [1, 2, 3, 4].map((n) => ({ src: img(`about/gift${n}`), alt: `Diseño ${n}` })),
+}
+
+// ---------- Currículum ----------
+export const cv = {
+  subtitle: 'Doble grado en diseño gráfico digital y publicidad',
+  personal: [
+    { label: 'Nacimiento', value: '05/05/2003' },
+    { label: 'Nacionalidad', value: 'Española' },
+    { label: 'Carnet', value: 'Tipo B1' },
   ],
-  facts: [
-    'Doble grado en diseño gráfico digital y publicidad · Universidad Europea',
-    'Prácticas en Arco Comunicación (2025) · Redes sociales en Ageless Medicina Estética (2026)',
+  education: [
+    { title: 'Doble grado en diseño gráfico digital y publicidad', date: '2022 - Hoy', role: 'Universidad Europea | Santa Cruz de Tenerife' },
+    { title: 'Prácticas en Arco Comunicación', date: '2024', role: 'Agencia de Publicidad | Santa Cruz de Tenerife' },
+    { title: '1º Curso del grado en Tecnologías Interactivas', date: '2022', role: 'UPV | Valencia' },
+    { title: 'Título de Bachillerato', date: '2021', role: 'La Salle San Ildefonso | Santa Cruz de Tenerife' },
+    { title: 'Título de Educación Secundaria Obligatoria', date: '2019', role: 'Colegio Adonai | Santa Cruz de Tenerife' },
+  ],
+  experience: [
+    {
+      title: 'Ageless Medicina Estética',
+      href: 'https://www.instagram.com/ageless.medicinaestetica?igsh=MXEzYXduYnBnYjVzcQ%3D%3D&utm_source=qr',
+      date: '2026',
+      role: 'Gestión de Redes Sociales',
+      desc: 'Gestión y estrategia de redes sociales para clínica de medicina estética.',
+    },
+    {
+      title: 'Arco Comunicación',
+      href: 'https://arcocomunicacion.com/',
+      date: '2025',
+      role: 'Prácticas Profesionales | Agencia de Publicidad',
+      desc: 'Desarrollo de piezas gráficas y apoyo en la ejecución de campañas publicitarias creativas.',
+    },
+    {
+      title: 'Edición de podcast',
+      href: 'https://www.youtube.com/@DesdeMiExperienciaPodcast?app=desktop',
+      date: '2024',
+      role: 'Desde Mi Experiencia | Santa Cruz de Tenerife',
+      desc: 'Proyecto colaborativo asegurando una producción de audio de alta calidad y edición profesional.',
+    },
+  ],
+  interests: [
+    { icon: Clapperboard, label: 'Editar' },
+    { icon: BookOpen, label: 'Leer' },
+    { icon: Dumbbell, label: 'Hacer deporte' },
+    { icon: Laptop, label: 'Cursos Online' },
+  ],
+  strategic: [
+    { name: 'Planificación y Flujos de Trabajo', value: 85, desc: 'Optimización de tiempos y organización de proyectos.' },
+    { name: 'Conceptualización Visual', value: 75, desc: 'Transformo ideas en sistemas visuales con propósito.' },
+    { name: 'Adaptabilidad de Medios', value: 70, desc: 'Versatilidad entre diseño estático y formatos de vídeo.' },
   ],
 }
 
-export const projects = [
+// Habilidades (textos de las tarjetas de la web original)
+export const skills = [
+  { tool: 'photoshop', label: 'Photoshop', text: 'Retoque digital y composición de piezas visuales con narrativa.' },
+  { tool: 'illustrator', label: 'Illustrator', text: 'Diseño de identidad visual, logotipos y sistemas vectoriales escalables.' },
   {
-    id: 'marca-personal',
-    title: 'Marca Personal',
-    category: 'Identidad visual',
-    cover: img('marca-personal/portada'),
-    description:
-      'Mi identidad visual es el punto de encuentro entre quién soy y lo que hago. El logotipo nace de la fusión orgánica de mis iniciales (L, M y S), entrelazadas en un trazo que rinde homenaje a mis dos grandes pasiones: la profundidad de la lectura y la pasión por el diseño. Es un diseño que busca el equilibrio perfecto entre dinamismo y elegancia, donde cada línea fluye para representar una comunicación con propósito, alma y rigor técnico.',
-    palette: [
-      { name: 'Lavanda Pervinca', hex: '#9690E4' },
-      { name: 'Azul Medianoche Profundo', hex: '#192A56' },
-      { name: 'Azul Pastel Vibrante', hex: '#96C9FF' },
-    ],
-    typography: 'Quicksand',
-    tools: ['illustrator', 'photoshop', 'after-effects'],
-    gallery: ['libretas', 'boligrafos', 'tarjeta', 'carpeta', 'sobre', 'riendo', 'sentada', 'depie'].map((n) => ({
-      src: img(`marca-personal/${n}`),
-      alt: `Marca Personal — ${n}`,
-    })),
+    tool: 'indesign',
+    label: 'InDesign',
+    text: 'Conocimientos básicos en la creación de documentos, dossiers y maquetación de páginas, con enfoque en el orden y la claridad visual.',
   },
-  {
-    id: 'identidad-visual',
-    title: 'Identidad Visual',
-    category: 'Monograma · Web',
-    cover: img('identidad-visual/portada'),
-    description:
-      'Esta identidad nace de la integración de las iniciales del ingeniero, diseñadas bajo un concepto de interconectividad. El resultado es un monograma minimalista y estructurado que refleja la capacidad de resolver problemas complejos a través de soluciones limpias, aportando una base visual sólida y profesional a su marca personal.',
-    palette: [
-      { name: 'Negro', hex: '#000000' },
-      { name: 'Caribbean Green', hex: '#00C896' },
-      { name: 'Blanco', hex: '#FFFFFF' },
-    ],
-    typography: 'Fieldwork',
-    tools: ['illustrator', 'photoshop', 'after-effects'],
-    link: { href: 'https://jaimemartglez.vercel.app', label: 'Ver la web del proyecto' },
-    gallery: ['tarjeta', 'boligrafo', 'agenda', 'taza', 'web'].map((n) => ({
-      src: img(`identidad-visual/${n}`),
-      alt: `Identidad Visual — ${n}`,
-    })),
-  },
-  {
-    id: 'casa-ricardo',
-    title: 'Casa Ricardo',
-    category: 'Rediseño de marca · Packaging',
-    cover: img('casa-ricardo/portada'),
-    description:
-      'Durante mis prácticas trabajé en el rediseño de la identidad visual de Casa Ricardo, una tienda de chuches y frutos secos. El objetivo era modernizar el logotipo sin perder la esencia cercana y tradicional de la marca. Se mejoró la legibilidad, la composición y su adaptación a distintos formatos. El resultado fue una imagen más actual y limpia, manteniendo la personalidad reconocible del negocio.',
-    palette: [
-      { name: 'Rojo Casa Ricardo', hex: '#DB251E' },
-      { name: 'Azul Tradición', hex: '#0032A0' },
-      { name: 'Dorado Tostado', hex: '#DDAA55' },
-    ],
-    typography: 'Ella Roman · Depot New Condensed',
-    tools: ['illustrator', 'photoshop'],
-    gallery: [
-      ['logo', 'Logo nuevo'],
-      ['logo-viejo', 'Logo anterior'],
-      ['pegatinas', 'Pegatinas'],
-      ['packaging-delante', 'Packaging (frontal)'],
-      ['packaging-detras', 'Packaging (trasera)'],
-      ['bolsas', 'Bolsas'],
-      ['tarjeta', 'Tarjeta de visita'],
-      ['valla', 'Valla'],
-      ['mupi', 'MUPI'],
-    ].map(([n, alt]) => ({ src: img(`casa-ricardo/${n}`), alt: `Casa Ricardo — ${alt}` })),
-  },
-  {
-    id: 'proyecto-video',
-    title: 'SloMo × Lola Índigo',
-    category: 'Proyecto de vídeo',
-    cover: img('video/portada'),
-    description:
-      'Reinterpretación audiovisual nacida de la unión entre la música de Chanel y el universo visual de Lola Índigo para crear un nuevo videoclip.',
-    palette: [],
-    tools: ['premiere'],
-    video: videoLola,
-    gallery: [],
-  },
+  { tool: 'after-effects', label: 'After Effects', text: 'Motion Graphics y animación de elementos para dar vida al diseño estático.' },
+  { tool: 'premiere', label: 'Premiere', text: 'Montaje rítmico y narrativa audiovisual para contenidos.' },
+  { tool: 'ia', label: 'IA', text: 'Integrada para creación de mockups y eficiencia técnica, sin sustituir el proceso creativo original.' },
 ]
 
-// Tarjetas del carrusel (como en la referencia): mockups reales de cada proyecto; al abrirlas se muestra su ficha.
+export const toolLabels = {
+  illustrator: 'Illustrator',
+  photoshop: 'Photoshop',
+  indesign: 'InDesign',
+  'after-effects': 'After Effects',
+  premiere: 'Premiere',
+  ia: 'IA',
+}
+
+// ---------- Contacto ----------
+export const contactItems = [
+  { kind: 'mail', label: site.email, href: `mailto:${site.email}` },
+  { kind: 'phone', label: site.phoneIntl, href: site.whatsapp },
+  { kind: 'linkedin', label: 'LinkedIn', href: site.linkedin },
+  { kind: 'instagram', label: site.instagramHandle, href: site.instagram },
+]
+
+// ---------- Proyectos (listado y tarjetas del carrusel) ----------
+export const projects = [
+  { slug: 'marca-personal', number: '01', name: 'MARCA PERSONAL', cover: img('marca-personal/portada') },
+  { slug: 'identidad-visual', number: '02', name: 'Identidad Visual', cover: img('identidad-visual/portada') },
+  { slug: 'casa-ricardo', number: '03', name: 'CASA RICARDO', cover: img('casa-ricardo/portada') },
+  { slug: 'proyecto-video', number: '04', name: 'PROYECTO DE VIDEO', cover: img('video/portada') },
+]
+
+// Tarjetas del carrusel de la portada: mockups reales de cada proyecto; enlazan a su página.
 export const carouselCards = [
   ['marca-personal', 'marca-personal/libretas'],
   ['identidad-visual', 'identidad-visual/agenda'],
@@ -138,46 +150,4 @@ export const carouselCards = [
   ['proyecto-video', 'video/portada'],
   ['marca-personal', 'marca-personal/carpeta'],
   ['identidad-visual', 'identidad-visual/tarjeta'],
-].map(([projectId, image], i) => ({ id: `${projectId}-${i}`, projectId, src: img(image) }))
-
-export const toolLabels = {
-  illustrator: 'Illustrator',
-  photoshop: 'Photoshop',
-  indesign: 'InDesign',
-  'after-effects': 'After Effects',
-  premiere: 'Premiere',
-  ia: 'IA',
-}
-
-// Servicios construidos a partir de las habilidades y experiencia reales del CV.
-export const services = [
-  {
-    icon: PenTool,
-    title: 'Identidad visual',
-    text: 'Diseño de identidad visual, logotipos y sistemas vectoriales escalables.',
-    tools: ['illustrator'],
-  },
-  {
-    icon: LayoutTemplate,
-    title: 'Diseño gráfico y maquetación',
-    text: 'Retoque digital y composición de piezas visuales con narrativa; dossiers y documentos con orden y claridad visual.',
-    tools: ['photoshop', 'indesign'],
-  },
-  {
-    icon: Clapperboard,
-    title: 'Motion y vídeo',
-    text: 'Motion graphics para dar vida al diseño estático, y montaje rítmico con narrativa audiovisual.',
-    tools: ['after-effects', 'premiere'],
-  },
-  {
-    icon: Megaphone,
-    title: 'Estrategia y redes sociales',
-    text: 'Gestión y estrategia de redes sociales, y apoyo en campañas publicitarias creativas.',
-    tools: ['ia'],
-  },
-]
-
-export const contact = {
-  title: 'Contacto',
-  text: 'Si tienes un proyecto en mente o quieres saber más de mi trabajo, escríbeme.',
-}
+].map(([slug, image], i) => ({ id: `${slug}-${i}`, slug, src: img(image) }))

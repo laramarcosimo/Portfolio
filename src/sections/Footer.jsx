@@ -1,5 +1,5 @@
 import { AtSign, MessageCircle } from 'lucide-react'
-import { navLinks, site } from '../data/content'
+import { site } from '../data/content'
 
 // lucide-react ya no incluye iconos de marcas: SVG propios.
 const brandIcons = [
@@ -15,16 +15,18 @@ const brandIcons = [
   },
 ]
 
-const linkClass = 'grid h-9 w-9 place-items-center rounded-full text-white transition hover:bg-white/10 hover:text-sky'
+const iconClass = 'grid h-9 w-9 place-items-center rounded-full text-white transition hover:bg-white/10 hover:text-sky'
+const linkClass = 'underline-offset-4 hover:text-white hover:underline'
 
-export default function Footer() {
+/** Pie de la web original: contacto resumido, redes y copyright. `phone`: 'phone' (608 350 840) o 'phoneIntl' (+34 …). */
+export default function Footer({ phone = 'phone' }) {
   return (
     <footer id="site-footer" className="relative z-10 bg-navy text-white">
-      <div className="mx-auto flex max-w-3xl flex-col items-center justify-between gap-5 px-5 py-8 sm:px-8 md:flex-row">
+      <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 px-5 py-9 text-center sm:px-8">
         <ul className="flex gap-1">
           {brandIcons.map((s) => (
             <li key={s.label}>
-              <a href={s.href} target="_blank" rel="noreferrer" aria-label={s.label} className={linkClass}>
+              <a href={s.href} target="_blank" rel="noreferrer" aria-label={s.label} className={iconClass}>
                 <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true">
                   <path d={s.path} />
                 </svg>
@@ -32,27 +34,29 @@ export default function Footer() {
             </li>
           ))}
           <li>
-            <a href={site.whatsapp} target="_blank" rel="noreferrer" aria-label="WhatsApp" className={linkClass}>
+            <a href={site.whatsapp} target="_blank" rel="noreferrer" aria-label="WhatsApp" className={iconClass}>
               <MessageCircle size={19} />
             </a>
           </li>
           <li>
-            <a href={`mailto:${site.email}`} aria-label="Correo electrónico" className={linkClass}>
+            <a href={`mailto:${site.email}`} aria-label="Correo electrónico" className={iconClass}>
               <AtSign size={19} />
             </a>
           </li>
         </ul>
 
-        <nav aria-label="Pie de página" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-[11px] font-medium text-white/85">
-          {navLinks
-            .filter((l) => l.id !== 'servicios')
-            .map((l) => (
-              <a key={l.id} href={`#${l.id}`} className="hover:text-white">
-                {l.label}
-              </a>
-            ))}
-          <span>© {new Date().getFullYear()} {site.name}</span>
-        </nav>
+        <div className="space-y-1.5 text-xs font-medium text-white/85">
+          <p>
+            <a href={`mailto:${site.email}`} className={linkClass}>{site.email}</a> |{' '}
+            <a href={site.whatsapp} target="_blank" rel="noreferrer" className={linkClass}>{site[phone]}</a> | {site.city}
+          </p>
+          <p>
+            <a href={site.linkedin} target="_blank" rel="noreferrer" className={linkClass}>LinkedIn</a> |{' '}
+            <a href={site.instagram} target="_blank" rel="noreferrer" className={linkClass}>Instagram</a>
+          </p>
+        </div>
+        <hr className="w-full max-w-sm border-white/15" />
+        <p className="text-[11px] text-white/70">{site.copyright}</p>
       </div>
     </footer>
   )

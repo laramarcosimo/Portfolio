@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* Tipografías de los proyectos (Marca Personal: Quicksand · Identidad Visual: Fieldwork) */
+@font-face { font-family: "Quicksand"; font-weight: 300; font-display: swap; src: url("../assets/fonts/Quicksand-Light.ttf") format("truetype"); }
+@font-face { font-family: "Quicksand"; font-weight: 400; font-display: swap; src: url("../assets/fonts/Quicksand-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Quicksand"; font-weight: 500; font-display: swap; src: url("../assets/fonts/Quicksand-Medium.ttf") format("truetype"); }
+@font-face { font-family: "Quicksand"; font-weight: 600; font-display: swap; src: url("../assets/fonts/Quicksand-SemiBold.ttf") format("truetype"); }
+@font-face { font-family: "Quicksand"; font-weight: 700; font-display: swap; src: url("../assets/fonts/Quicksand-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Fieldwork Hum"; font-weight: 100; font-display: swap; src: url("../assets/fonts/Fieldwork-Hum-Hair.otf") format("opentype"); }
+@font-face { font-family: "Fieldwork Hum"; font-weight: 300; font-display: swap; src: url("../assets/fonts/Fieldwork-Hum-Light.otf") format("opentype"); }
+@font-face { font-family: "Fieldwork Hum"; font-weight: 400; font-display: swap; src: url("../assets/fonts/Fieldwork-Hum-Regular.otf") format("opentype"); }
+@font-face { font-family: "Fieldwork Geo"; font-weight: 600; font-display: swap; src: url("../assets/fonts/Fieldwork-Semi-Bold-Geo.otf") format("opentype"); }
+
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", ui-serif, Georgia, serif;
@@ -30,3 +41,10 @@
 
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Tarjetas que giran (Habilidades del currículum) */
+.flip { perspective: 900px; }
+.flip-inner { position: relative; transform-style: preserve-3d; transition: transform 0.6s; }
+.flip:hover .flip-inner, .flip:focus-within .flip-inner, .flip[data-flipped="true"] .flip-inner { transform: rotateY(180deg); }
+.flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-back { transform: rotateY(180deg); }

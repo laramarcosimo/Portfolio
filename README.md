@@ -1,22 +1,21 @@
-# Portafolio
+# Portafolio · Lara Marco Simó
 
-Portafolio personal de Lara Marco. React + Vite.
+React + Vite + Tailwind CSS + Framer Motion. Contenido de https://laramarcosimoportafolio.netlify.app/ (los textos se conservan tal cual).
+
+## Páginas
+
+- `/` — portada: Hero, Sobre Mí, Proyectos (carrusel), Habilidades y Contacto; cada bloque enlaza a su página
+- `/curriculum` — sobre mí, educación, experiencia, habilidades, intereses
+- `/proyectos` — listado; `/proyectos/:slug` — marca-personal, identidad-visual, casa-ricardo, proyecto-video
+- `/contacto`
 
 ## Scripts
 
-- `npm run dev` — servidor de desarrollo
-- `npm run build` — build de producción en `dist/`
-- `npm run preview` — previsualiza el build
-- `npm run lint` — oxlint
+- `npm run dev` · `npm run build` · `npm run preview` · `npm run lint`
 
 ## Estructura
 
-- `src/components` — piezas reutilizables
-- `src/sections` — secciones de página
-- `src/pages` — páginas
-- `src/hooks` — hooks propios
-- `src/data` — contenido (proyectos, CV…)
-- `src/styles` — estilos globales
-- `public` — estáticos
-
-La versión HTML/CSS/JS anterior se conserva en el tag `v1-portfolio-anterior`.
+- `src/data/content.js` y `src/data/projectPages.js` — todo el texto y las imágenes/vídeos
+- `src/components/RibbonWave.jsx` — cintas de la portada (zigzag con los giros fuera de pantalla)
+- `src/lib/ribbonGeometry.js` — geometría compartida de las cintas
+- `public/_redirects` — rutas de la SPA en Netlify
