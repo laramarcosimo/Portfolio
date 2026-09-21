@@ -60,7 +60,7 @@ export default function Projects() {
   return (
     <main ref={pageRef} className="relative isolate">
       {/* Solo en escritorio: un único juego de tres líneas nace arriba y baja guiando de un proyecto al siguiente */}
-      <FluidLines containerRef={pageRef} ids={PROJECT_IDS} build={projectsRoute} />
+      <FluidLines containerRef={pageRef} ids={PROJECT_IDS} build={projectsRoute} opacity={0.4} sync radius={30} />
       <h1 className="sr-only">Proyectos</h1>
 
       <div className="relative z-10 mx-auto max-w-4xl space-y-28 px-8 pb-28 pt-56">

@@ -14,7 +14,8 @@ import { RIBBON_COLORS, buildCurve, ribbonPath, ribbonWidth } from '../lib/ribbo
  */
 const NO_IDS = []
 
-export default function FluidLines({ containerRef, ids = NO_IDS, build, minReveal, className = '' }) {
+// opacity: transparencia del conjunto · sync: las tres líneas avanzan casi a la vez · radius: suavizado (mayor = más fluida)
+export default function FluidLines({ containerRef, ids = NO_IDS, build, minReveal, className = '', opacity = 1, sync = false, radius }) {
   const reduce = useReducedMotion()
   const paths = useRef([])
   const geo = useRef(null)
@@ -86,9 +87,9 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
       const width = ribbonWidth(W)
 
       geo.current = {
-        ...buildCurve(build(W, rects, H), narrow ? 14 : 18, 12),
-        tau: [150, 300, 480],
-        speed: [1500, 1200, 950], // px/s máximos de dibujado (la marino va delante)
+        ...buildCurve(build(W, rects, H), radius ?? (narrow ? 14 : 18), 12),
+        tau: sync ? [140, 170, 200] : [150, 300, 480],
+        speed: sync ? [1500, 1450, 1400] : [1500, 1200, 950], // px/s máximos de dibujado (la marino va delante)
         width,
         spacing: width * 2.6 + 6,
         birth: 420,
@@ -111,7 +112,7 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
       ro.disconnect()
       window.removeEventListener('load', measure)
     }
-  }, [containerRef, ids, build, minReveal, draw])
+  }, [containerRef, ids, build, minReveal, radius, sync, draw])
 
   return (
     <svg
@@ -119,6 +120,7 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
       height={box.h}
       viewBox={`0 0 ${box.w || 1} ${box.h || 1}`}
       aria-hidden="true"
+      style={{ opacity }}
       className={`pointer-events-none absolute left-0 top-0 z-0 overflow-hidden ${className}`}
     >
       {RIBBON_COLORS.map((c, i) => (

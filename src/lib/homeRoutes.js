@@ -25,11 +25,19 @@ export function projectsRoute(W, r) {
     [0.26 * W, Math.max(112, top - 70)],
     [L, top - 6],
   ]
+  const side = (i) => (i % 2 === 0 ? L : R) // alterna: izquierda, derecha, izquierda, derecha
+  const ease = (t) => t * t * (3 - 2 * t)
   rows.forEach((row, i) => {
-    const x = i % 2 === 0 ? L : R // alterna: izquierda, derecha, izquierda, derecha
-    pts.push([x, row.t + 20], [x, (row.t + row.b) / 2], [x, row.b - 20])
+    const x = side(i)
+    pts.push([x, row.t + 30], [x, row.b - 40])
     const next = rows[i + 1]
-    if (next) pts.push([W / 2, (row.b + next.t) / 2]) // cruce por el hueco entre proyectos
+    if (next) {
+      // Cruce al otro lado con una curva suave (arranque y llegada progresivos), sin quiebros
+      const y0 = row.b - 40
+      const y1 = next.t + 30
+      const x1 = side(i + 1)
+      for (const t of [0.2, 0.4, 0.6, 0.8]) pts.push([x + (x1 - x) * ease(t), y0 + (y1 - y0) * t])
+    }
   })
   const last = rows[rows.length - 1]
   pts.push([R + (W - R) * 0.6, last.b + 50], [1.1 * W, last.b + 110])
