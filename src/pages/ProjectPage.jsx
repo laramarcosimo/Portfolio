@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { useInView } from 'framer-motion'
-import { ArrowLeft, ExternalLink } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import ColorPanel from '../components/ColorPanel'
 import RibbonBanner from '../components/RibbonBanner'
 import TypeCatalog from '../components/TypeCatalog'
 import Reveal from '../components/Reveal'
-import { img, toolLabels } from '../data/content'
+import { img, projects, toolLabels } from '../data/content'
 import { projectFonts, projectPages } from '../data/projectPages'
 
 // Vídeo en bucle que se reproduce solo mientras está a la vista.
@@ -74,6 +74,43 @@ function ToolsFooter({ page }) {
         </div>
       )}
     </div>
+  )
+}
+
+// Navegación al final de cada proyecto: anterior / siguiente (según el orden del listado de proyectos)
+function ProjectNav({ slug }) {
+  const i = projects.findIndex((p) => p.slug === slug)
+  const prev = projects[i - 1]
+  const next = projects[i + 1]
+
+  // Función de renderizado (no un componente definido dentro del render)
+  const renderCard = (p, dir) => (
+    <Link
+      to={`/proyectos/${p.slug}`}
+      className={`group flex items-center gap-3 rounded-2xl border border-navy/10 p-2.5 transition hover:border-lilac hover:shadow-lg hover:shadow-slate-200/70 sm:gap-4 sm:p-3 ${
+        dir === 'next' ? 'flex-row-reverse text-right' : ''
+      }`}
+    >
+      <img src={p.cover} alt="" loading="lazy" className="aspect-[3/4] h-16 shrink-0 rounded-lg object-cover object-top ring-1 ring-slate-100 sm:h-20" />
+      <span className="min-w-0 flex-1">
+        <span className={`flex items-center gap-1 text-[11px] font-semibold text-navy/55 ${dir === 'next' ? 'justify-end' : ''}`}>
+          {dir === 'prev' && <ArrowLeft size={13} />}
+          {dir === 'prev' ? 'Proyecto anterior' : 'Proyecto siguiente'}
+          {dir === 'next' && <ArrowRight size={13} />}
+        </span>
+        <span className="mt-0.5 block truncate text-sm font-semibold tracking-tight text-navy group-hover:text-lilac sm:text-base">{p.name}</span>
+      </span>
+    </Link>
+  )
+
+  return (
+    <nav aria-label="Otros proyectos" className="mx-auto mt-16 max-w-5xl px-5 sm:px-8">
+      <div className="h-px w-full bg-gradient-to-r from-navy/20 via-sky/60 to-lilac/50" aria-hidden="true" />
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        {prev ? renderCard(prev, 'prev') : <span className="hidden sm:block" />}
+        {next ? renderCard(next, 'next') : <span className="hidden sm:block" />}
+      </div>
+    </nav>
   )
 }
 
@@ -217,6 +254,7 @@ export default function ProjectPage() {
         </>
       )}
 
+      <ProjectNav slug={slug} />
       <div className="pb-20" />
     </main>
   )

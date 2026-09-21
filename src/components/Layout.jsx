@@ -14,13 +14,12 @@ function ScrollToTop() {
 }
 
 export default function Layout() {
-  const { pathname } = useLocation()
   return (
     <>
       <ScrollToTop />
       <Navbar />
       <Outlet />
-      <Footer phone={pathname === '/contacto' ? 'phoneIntl' : 'phone'} />
+      <Footer />
     </>
   )
 }
