@@ -103,12 +103,27 @@ function ProjectNav({ slug }) {
     </Link>
   )
 
+  // En los extremos (no hay anterior o siguiente) se ofrece volver al listado de proyectos
+  const renderBack = (dir) => (
+    <Link
+      to="/proyectos"
+      className={`group flex min-h-[5.5rem] items-center gap-3 rounded-2xl border border-navy/10 px-4 transition hover:border-lilac hover:shadow-lg hover:shadow-slate-200/70 sm:gap-4 ${
+        dir === 'next' ? 'flex-row-reverse text-right' : ''
+      }`}
+    >
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-fog text-navy transition group-hover:bg-navy group-hover:text-white">
+        {dir === 'next' ? <ArrowRight size={18} /> : <ArrowLeft size={18} />}
+      </span>
+      <span className="text-sm font-semibold tracking-tight text-navy group-hover:text-lilac sm:text-base">Volver a Proyectos</span>
+    </Link>
+  )
+
   return (
     <nav aria-label="Otros proyectos" className="mx-auto mt-16 max-w-5xl px-5 sm:px-8">
       <div className="h-px w-full bg-gradient-to-r from-navy/20 via-sky/60 to-lilac/50" aria-hidden="true" />
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        {prev ? renderCard(prev, 'prev') : <span className="hidden sm:block" />}
-        {next ? renderCard(next, 'next') : <span className="hidden sm:block" />}
+        {prev ? renderCard(prev, 'prev') : renderBack('prev')}
+        {next ? renderCard(next, 'next') : renderBack('next')}
       </div>
     </nav>
   )
