@@ -1,18 +1,14 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal'
-import SectionDots from '../components/SectionDots'
 import { about, img, site } from '../data/content'
 
 const pill =
   'inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-navy/20 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-navy/30'
 
-export default function About({ active }) {
+export default function About() {
   return (
     <section id="sobre-mi" className="relative pb-72 pt-72 sm:pt-80">
-      <div className="absolute inset-0 -z-10 bg-white" aria-hidden="true" />
-      <SectionDots current={active} className="absolute inset-x-0 top-6 z-10" />
-
       <div id="about-content" className="relative z-10 mx-auto max-w-3xl px-5 sm:px-8">
         <div className="grid items-center gap-12 md:grid-cols-[15rem_1fr] md:gap-14">
           {/* Retrato real en blanco y negro, con el bloque lavanda desplazado detrás */}
@@ -59,9 +55,8 @@ export default function About({ active }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              style={{ rotate: i % 2 ? 2.5 : -2.5 }}
             >
-              <img src={g.src} alt={g.alt} loading="lazy" className="aspect-[3/4] w-full rounded-[3px] bg-fog object-cover shadow-md" />
+              <img src={g.src} alt={g.alt} loading="lazy" className="aspect-[3/4] w-full rounded-2xl bg-slate-50 object-cover shadow-lg shadow-slate-200/70" />
             </motion.li>
           ))}
         </ul>

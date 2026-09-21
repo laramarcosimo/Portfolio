@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { AtSign, Check, MessageCircle, Send } from 'lucide-react'
 import Button from '../components/Button'
+import FluidLines from '../components/FluidLines'
 import Reveal from '../components/Reveal'
-import SectionDots from '../components/SectionDots'
+import { contactRoute } from '../lib/homeRoutes'
 import { contactItems, site } from '../data/content'
 
 const field =
@@ -27,9 +28,10 @@ function ContactIcon({ kind }) {
   )
 }
 
-/** Bloque de contacto: los cuatro enlaces de la web original y un formulario. `band`: banda gris con el remolino de cintas (portada). */
-export default function Contact({ active, band = false }) {
+/** Contacto: los cuatro enlaces de la web original y un formulario. `band`: banda superior con líneas fluidas (portada). */
+export default function Contact({ band = false }) {
   const [sent, setSent] = useState(false)
+  const bandRef = useRef(null)
 
   // Sin backend: abre el cliente de correo con el mensaje ya redactado.
   const onSubmit = (e) => {
@@ -42,16 +44,10 @@ export default function Contact({ active, band = false }) {
   }
 
   return (
-    <section id="contacto" className="relative">
+    <section id="contacto" className="relative bg-white">
       {band && (
-        // Banda gris: aquí termina el recorrido de cintas, cortado a ras del borde inferior
-        <div id="contact-band" className="relative h-[300px] overflow-hidden sm:h-[380px]">
-          <div className="absolute inset-0 -z-10 bg-fog" aria-hidden="true" />
-          <SectionDots current={active} className="absolute inset-x-0 top-6 z-10" />
-          <span className="absolute left-[14%] top-[34%] h-4 w-4 rotate-45 bg-lilac/25" aria-hidden="true" />
-          <span className="absolute right-[15%] top-[44%] h-3 w-3 rotate-45 bg-lilac/25" aria-hidden="true" />
-          <span className="absolute -left-10 top-[40%] h-44 w-44 rounded-full bg-navy/[0.04]" aria-hidden="true" />
-          <span className="absolute right-[6%] top-[18%] h-10 w-10 rounded-full bg-navy/[0.05]" aria-hidden="true" />
+        <div ref={bandRef} id="contact-band" className="relative isolate h-[240px] overflow-hidden sm:h-[300px]">
+          <FluidLines containerRef={bandRef} build={contactRoute} />
         </div>
       )}
 

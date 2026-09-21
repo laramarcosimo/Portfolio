@@ -1,12 +1,9 @@
 import { motion } from 'framer-motion'
-import SectionDots from '../components/SectionDots'
 import { hero } from '../data/content'
 
-export default function Hero({ active }) {
+export default function Hero() {
   return (
     <section id="inicio" className="relative min-h-[calc(100svh-4rem)]">
-      <div className="absolute inset-0 -z-10 bg-fog" aria-hidden="true" />
-
       <div className="relative z-10 px-5 pt-16 text-center sm:pt-24">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
@@ -25,8 +22,6 @@ export default function Hero({ active }) {
           {hero.tagline}
         </motion.p>
       </div>
-
-      <SectionDots current={active} className="absolute inset-x-0 bottom-8 z-10" />
     </section>
   )
 }

@@ -1,27 +1,27 @@
 import { useRef } from 'react'
-import RibbonWave from '../components/RibbonWave'
+import FluidLines from '../components/FluidLines'
+import HorizontalProjects from '../components/HorizontalProjects'
 import Hero from '../sections/Hero'
 import About from '../sections/About'
-import Portfolio from '../sections/Portfolio'
-import Skills from '../sections/Skills'
 import Contact from '../sections/Contact'
-import useActiveSection from '../hooks/useActiveSection'
-import { homeSections } from '../data/content'
+import { HERO_ABOUT_IDS, heroAboutMin, heroAboutRoute } from '../lib/homeRoutes'
 
-/** Portada: cada bloque enlaza con su página (Currículum, Proyectos, Contacto) para ampliar la información. */
+/**
+ * Portada: presentación (Hero + Sobre Mí), proyectos destacados con scroll horizontal anclado y contacto.
+ * Fondo blanco puro; las líneas fluidas guían la mirada entre los bloques.
+ */
 export default function Home() {
-  const active = useActiveSection(homeSections)
-  const mainRef = useRef(null)
+  const topRef = useRef(null)
 
   return (
-    // Contenedor único: las cintas se pintan en un lienzo global que cruza todas las secciones
-    <main ref={mainRef} className="relative isolate">
-      <RibbonWave containerRef={mainRef} />
-      <Hero active={active} />
-      <About active={active} />
-      <Portfolio />
-      <Skills />
-      <Contact active={active} band />
+    <main className="bg-white">
+      <div ref={topRef} className="relative isolate">
+        <FluidLines containerRef={topRef} ids={HERO_ABOUT_IDS} build={heroAboutRoute} minReveal={heroAboutMin} />
+        <Hero />
+        <About />
+      </div>
+      <HorizontalProjects />
+      <Contact band />
     </main>
   )
 }

@@ -26,7 +26,7 @@ export default function RibbonBanner({ height = 170, className = '' }) {
     if (!el) return undefined
     const measure = () => {
       const W = el.getBoundingClientRect().width
-      const width = ribbonWidth(W) * 0.85
+      const width = ribbonWidth(W)
       const k = W < 700 ? 0.6 : 1
       const pts = [
         [-0.12 * W, height * 0.62],
@@ -35,7 +35,7 @@ export default function RibbonBanner({ height = 170, className = '' }) {
         [0.8 * W, height * (0.46 - 0.12 * k)],
         [1.12 * W, height * 0.42],
       ]
-      geo.current = { ...buildCurve(pts, 12), width, spacing: width + Math.max(2, width * 0.1), amp: W < 700 ? 6 : 10, lambda: 320 }
+      geo.current = { ...buildCurve(pts, 12), birth: 420, width, spacing: width * 2.6 + 6, amp: W < 700 ? 6 : 10, lambda: 320 }
       setW(W)
       draw(performance.now())
     }
@@ -46,7 +46,7 @@ export default function RibbonBanner({ height = 170, className = '' }) {
   }, [height, draw])
 
   return (
-    <div ref={ref} className={`relative overflow-hidden bg-fog ${className}`} style={{ height }} aria-hidden="true">
+    <div ref={ref} className={`relative overflow-hidden bg-white ${className}`} style={{ height }} aria-hidden="true">
       <svg width={w} height={height} viewBox={`0 0 ${w || 1} ${height}`} className="absolute inset-0">
         {RIBBON_COLORS.map((c, i) => (
           <path key={c} ref={(el) => (paths.current[i] = el)} fill={c} />

@@ -29,9 +29,6 @@ export const navLinks = [
   { to: '/contacto', label: 'Contacto' },
 ]
 
-// Secciones de la página de inicio (paginación y scroll-spy)
-export const homeSections = ['inicio', 'sobre-mi', 'portafolio', 'habilidades', 'contacto']
-
 export const hero = {
   title: 'Creatividad Minimalista',
   tagline: 'Aprender, crecer y evolucionar.',
@@ -136,18 +133,16 @@ export const projects = [
   { slug: 'proyecto-video', number: '04', name: 'PROYECTO DE VIDEO', cover: img('video/portada') },
 ]
 
-// Tarjetas del carrusel de la portada: mockups reales de cada proyecto; enlazan a su página.
-export const carouselCards = [
-  ['marca-personal', 'marca-personal/libretas'],
-  ['identidad-visual', 'identidad-visual/agenda'],
-  ['casa-ricardo', 'casa-ricardo/packaging-delante'],
-  ['marca-personal', 'marca-personal/tarjeta'],
-  ['identidad-visual', 'identidad-visual/web'],
-  ['casa-ricardo', 'casa-ricardo/valla'],
-  ['marca-personal', 'marca-personal/boligrafos'],
-  ['identidad-visual', 'identidad-visual/taza'],
-  ['casa-ricardo', 'casa-ricardo/pegatinas'],
-  ['proyecto-video', 'video/portada'],
-  ['marca-personal', 'marca-personal/carpeta'],
-  ['identidad-visual', 'identidad-visual/tarjeta'],
-].map(([slug, image], i) => ({ id: `${slug}-${i}`, slug, src: img(image) }))
+// Proyectos destacados de la portada (scroll horizontal): un mockup protagonista por proyecto.
+// La categoría se deduce del texto de cada página de proyecto (identidad visual, monograma, rediseño, videoclip).
+const featuredMeta = {
+  'marca-personal': { image: 'marca-personal/tarjeta', category: 'Identidad visual' },
+  'identidad-visual': { image: 'identidad-visual/web', category: 'Monograma y web' },
+  'casa-ricardo': { image: 'casa-ricardo/packaging-delante', category: 'Rediseño de identidad visual' },
+  'proyecto-video': { image: 'video/portada', category: 'Videoclip' },
+}
+export const featuredProjects = projects.map((p) => ({
+  ...p,
+  image: img(featuredMeta[p.slug].image),
+  category: featuredMeta[p.slug].category,
+}))

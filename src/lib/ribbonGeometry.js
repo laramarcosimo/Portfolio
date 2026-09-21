@@ -115,6 +115,7 @@ export function ribbonPath(g, r, time, scroll, sEnd = Infinity, reduce = false) 
   const off = (r - 1) * g.spacing
   const left = []
   const right = []
+  const birth = g.birth ?? 0 // longitud (px) de "nacimiento": el trazo empieza como un hilo y engorda
   for (let i = 0; i < g.base.length; i++) {
     const s = i * g.step
     if (s > sEnd) break
@@ -128,8 +129,9 @@ export function ribbonPath(g, r, time, scroll, sEnd = Infinity, reduce = false) 
     const ny = g.norm[i][1]
     const x = g.base[i][0] + nx * k
     const y = g.base[i][1] + ny * k
-    const t = sEnd === Infinity ? 1 : smoothstep(Math.min(1, Math.max(0, (sEnd - s) / TAPER)))
-    const hw = (g.width / 2) * Math.max(t, 0.02)
+    const tEnd = sEnd === Infinity ? 1 : smoothstep(Math.min(1, Math.max(0, (sEnd - s) / TAPER)))
+    const tStart = birth ? smoothstep(Math.min(1, s / birth)) : 1
+    const hw = (g.width / 2) * Math.max(Math.min(tEnd, tStart), 0.02)
     left.push([x + nx * hw, y + ny * hw])
     right.push([x - nx * hw, y - ny * hw])
   }
@@ -138,8 +140,8 @@ export function ribbonPath(g, r, time, scroll, sEnd = Infinity, reduce = false) 
   return `M${left[0][0].toFixed(1)} ${left[0][1].toFixed(1)}${curve(left)} L${right[0][0].toFixed(1)} ${right[0][1].toFixed(1)}${curve(right)}Z`
 }
 
-// Ancho de cada cinta para un contenedor de ancho W (≈ 2,47 % del ancho, entre 9,5 y 38 px).
-export const ribbonWidth = (W) => Math.max(9.5, Math.min(38, W * 0.0247))
+// Grosor de cada línea para un contenedor de ancho W: hilos finos y elegantes (3–7,5 px).
+export const ribbonWidth = (W) => Math.max(3, Math.min(7.5, W * 0.0048))
 
 /**
  * Zigzag con TODOS los giros fuera de pantalla.
