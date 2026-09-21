@@ -9,7 +9,7 @@ const pill =
 export default function About() {
   return (
     // En móvil menos aire vertical (las líneas ocupan esas zonas) y texto algo mayor para leer bien
-    <section id="sobre-mi" className="relative pb-24 pt-14 sm:pb-64 sm:pt-80">
+    <section id="sobre-mi" className="relative pb-28 pt-10 sm:pb-56 sm:pt-16">
       <div id="about-content" className="relative z-10 mx-auto max-w-3xl px-6 sm:px-8">
         <div className="grid items-center gap-10 md:grid-cols-[15rem_1fr] md:gap-14">
           {/* Retrato real en blanco y negro, con el bloque lavanda desplazado detrás */}
