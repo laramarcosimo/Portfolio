@@ -15,6 +15,16 @@ const alphabet = ['Aa', 'Bb', 'Cc', 'Dd', 'Ee', 'Ff', 'Gg', 'Hh', 'Ii', 'Jj', 'K
 
 const ph = (path, alt) => ({ src: img(path), alt })
 
+// Tipografía de cada página de proyecto: `body` para el texto y `heading` para los títulos.
+// Toda la web usa Quicksand salvo estas páginas, que usan la tipografía del propio proyecto.
+const Q = "'Quicksand', sans-serif"
+export const projectFonts = {
+  'marca-personal': { body: Q, heading: Q },
+  'identidad-visual': { body: "'Fieldwork Hum', 'Quicksand', sans-serif", heading: "'Fieldwork Geo', 'Quicksand', sans-serif" },
+  'casa-ricardo': { body: "'depot-new-condensed-web', 'Quicksand', sans-serif", heading: "'ella-roman', 'Quicksand', serif" },
+  'proyecto-video': { body: Q, heading: Q },
+}
+
 export const projectPages = {
   'marca-personal': {
     title: 'Marca Personal',

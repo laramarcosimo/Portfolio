@@ -12,9 +12,9 @@
 @font-face { font-family: "Fieldwork Geo"; font-weight: 600; font-display: swap; src: url("../assets/fonts/Fieldwork-Semi-Bold-Geo.otf") format("opentype"); }
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
-  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Quicksand", ui-sans-serif, system-ui, sans-serif;
   --color-navy: #192a56;
   --color-sky: #96c9ff;
   --color-lilac: #9690e4;

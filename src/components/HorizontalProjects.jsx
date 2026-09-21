@@ -6,33 +6,28 @@ import { featuredProjects } from '../data/content'
 
 const COLORS = ['#192a56', '#96c9ff', '#9690e4']
 
-// Tres hilos finos que derivan en sentido contrario al de las tarjetas (parallax con el scroll).
-function DriftLines({ progress }) {
-  const x = useTransform(progress, [0, 1], ['0%', '-42%'])
-  const draw = useTransform(progress, [0, 0.12], [0, 1])
-  const d = 'M0 120 C 260 40 480 210 780 130 S 1330 30 1640 120 S 2130 210 2400 110'
+// Las tres líneas onduladas de la marca: a la vez adorno y progreso. Se dibujan de izquierda a derecha
+// según avanza el scroll (cada una con distinta inercia) y flotan con un vaivén continuo.
+function ProgressLines({ progress }) {
+  const d = 'M0 34 C 120 6 240 62 380 34 S 640 6 780 34 S 1040 62 1200 30'
+  const springs = [progress[0], progress[1], progress[2]]
   return (
-    <motion.svg
-      viewBox="0 0 2400 260"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-      className="pointer-events-none absolute bottom-0 left-0 h-[16vh] w-[240%]"
-      style={{ x }}
-    >
+    <svg viewBox="0 0 1200 96" preserveAspectRatio="none" aria-hidden="true" className="absolute inset-x-[8vw] bottom-[4vh] z-10 h-[10vh] w-[84vw]">
       {COLORS.map((c, i) => (
-        <motion.path
-          key={c}
-          d={d}
-          transform={`translate(${i * -60} ${i * 22})`}
-          fill="none"
-          stroke={c}
-          strokeWidth={[3.5, 2.5, 3][i]}
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-          style={{ pathLength: draw }}
-        />
+        <motion.g key={c} animate={{ y: [0, i % 2 ? 5 : -5, 0] }} transition={{ duration: 5 + i * 1.3, repeat: Infinity, ease: 'easeInOut' }}>
+          <motion.path
+            d={d}
+            transform={`translate(0 ${i * 14})`}
+            fill="none"
+            stroke={c}
+            strokeWidth={[3.5, 3, 3.5][i]}
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            style={{ pathLength: springs[i] }}
+          />
+        </motion.g>
       ))}
-    </motion.svg>
+    </svg>
   )
 }
 
@@ -59,23 +54,27 @@ function ProjectCard({ p, cardW }) {
   )
 }
 
+const Heading = ({ className = '' }) => (
+  <h2 className={`text-4xl font-bold tracking-tight text-navy sm:text-5xl ${className}`}>Proyectos</h2>
+)
+
 /**
  * Proyectos con scroll horizontal anclado (sticky): al llegar a la sección la pantalla se queda
- * fija y la rueda desplaza las tarjetas hacia la izquierda; al terminar, la página continúa.
+ * fija y la rueda desplaza las portadas hacia la izquierda; al terminar, la página continúa.
  * Con "reducir movimiento" se muestra un carril horizontal desplazable normal.
  */
 export default function HorizontalProjects() {
   const reduce = useReducedMotion()
   const targetRef = useRef(null)
   const trackRef = useRef(null)
-  const [dims, setDims] = useState({ dist: 0, vh: 0, vw: 0 })
+  const [dims, setDims] = useState({ dist: 0, vh: 0 })
 
   // Recorrido horizontal = ancho del carril − ancho de pantalla; altura de la sección = recorrido + pantalla
   useLayoutEffect(() => {
     const measure = () => {
       const track = trackRef.current
       if (!track) return
-      setDims({ dist: Math.max(0, track.scrollWidth - window.innerWidth), vh: window.innerHeight, vw: window.innerWidth })
+      setDims({ dist: Math.max(0, track.scrollWidth - window.innerWidth), vh: window.innerHeight })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -87,7 +86,7 @@ export default function HorizontalProjects() {
     }
   }, [])
 
-  // Mide otra vez cuando cargan las imágenes (cambian la altura de las tarjetas, no el ancho, pero por seguridad)
+  // Vuelve a medir cuando terminan de cargar las imágenes
   useEffect(() => {
     const t = setTimeout(() => window.dispatchEvent(new Event('resize')), 600)
     return () => clearTimeout(t)
@@ -95,25 +94,19 @@ export default function HorizontalProjects() {
 
   const { scrollYProgress } = useScroll({ target: targetRef, offset: ['start start', 'end end'] })
   const smooth = useSpring(scrollYProgress, { stiffness: 110, damping: 26, mass: 0.4 })
+  // La marino va delante y las otras dos la siguen con más inercia
+  const lines = [
+    useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.4 }),
+    useSpring(scrollYProgress, { stiffness: 70, damping: 22, mass: 0.6 }),
+    useSpring(scrollYProgress, { stiffness: 38, damping: 18, mass: 0.8 }),
+  ]
   const x = useTransform(smooth, [0, 1], [0, -dims.dist])
-  // Las tres líneas de progreso rellenan con distinta inercia: la marino va delante y las otras la siguen
-  const bar0 = useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.4 })
-  const bar1 = useSpring(scrollYProgress, { stiffness: 70, damping: 22, mass: 0.6 })
-  const bar2 = useSpring(scrollYProgress, { stiffness: 38, damping: 18, mass: 0.8 })
-  const bars = [bar0, bar1, bar2]
 
   // Portadas pequeñas (3:4): limitadas también por el alto de pantalla
   const cardW = `min(56vw, 14rem, calc((100svh - 22rem) * 0.75))`
 
-  const heading = (
-    <div className="flex shrink-0 flex-col justify-center pr-6" style={{ width: 'min(70vw, 22rem)' }}>
-      <h2 className="font-serif text-5xl font-medium tracking-tight text-navy sm:text-6xl">Proyectos</h2>
-      <span className="mt-6 block h-px w-24 bg-gradient-to-r from-navy via-sky to-lilac" aria-hidden="true" />
-    </div>
-  )
-
   const end = (
-    <div className="flex shrink-0 items-center pr-[10vw]" style={{ width: 'min(70vw, 20rem)' }}>
+    <div className="flex shrink-0 items-center pr-[10vw]" style={{ width: 'min(70vw, 16rem)' }}>
       <Link
         to="/proyectos"
         className="inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-navy/20 transition hover:-translate-y-0.5"
@@ -127,8 +120,8 @@ export default function HorizontalProjects() {
   if (reduce) {
     return (
       <section id="portafolio" aria-label="Proyectos" className="py-24">
-        <div className="no-scrollbar flex snap-x gap-8 overflow-x-auto px-[8vw] py-6">
-          {heading}
+        <Heading className="px-[8vw]" />
+        <div className="no-scrollbar mt-8 flex snap-x gap-10 overflow-x-auto px-[8vw] py-6">
           {featuredProjects.map((p) => (
             <div key={p.slug} className="snap-start">
               <ProjectCard p={p} cardW={cardW} />
@@ -142,25 +135,18 @@ export default function HorizontalProjects() {
 
   return (
     <section id="portafolio" ref={targetRef} aria-label="Proyectos" className="relative bg-white" style={{ height: dims.dist ? dims.dist + dims.vh : '300vh' }}>
-      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden pb-[10vh] pt-16">
-        <DriftLines progress={smooth} />
+      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden pb-[12vh] pt-24">
+        {/* Título encima del carrusel */}
+        <Heading className="absolute left-[8vw] top-[calc(4rem+5vh)] z-10" />
 
         <motion.div ref={trackRef} className="relative z-10 flex items-center gap-14 pl-[8vw] pr-[6vw] sm:gap-24" style={{ x }}>
-          {heading}
           {featuredProjects.map((p) => (
             <ProjectCard key={p.slug} p={p} cardW={cardW} />
           ))}
           {end}
         </motion.div>
 
-        {/* Progreso: las tres líneas de la marca se rellenan a medida que avanzan los proyectos */}
-        <div className="absolute inset-x-[8vw] bottom-[6vh] z-10 space-y-1" aria-hidden="true">
-          {bars.map((b, i) => (
-            <div key={COLORS[i]} className="h-[3px] overflow-hidden rounded-full bg-slate-100">
-              <motion.div className="h-full origin-left rounded-full" style={{ scaleX: b, background: COLORS[i] }} />
-            </div>
-          ))}
-        </div>
+        <ProgressLines progress={lines} />
       </div>
     </section>
   )

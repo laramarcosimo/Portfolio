@@ -24,7 +24,7 @@ export default function Typewriter({ lines, className = '' }) {
       {lines.map((line, i) => {
         const Tag = i === 0 ? 'h3' : 'p'
         return (
-          <Tag key={line} className={`${i === 0 ? 'text-2xl font-bold sm:text-3xl' : 'mt-1 text-sm font-medium'} min-h-[1.4em] whitespace-pre`} aria-label={line}>
+          <Tag key={line} className={`${i === 0 ? 'font-serif text-2xl font-bold sm:text-3xl' : 'mt-1 text-sm font-medium'} min-h-[1.4em] whitespace-pre`} aria-label={line}>
             <span aria-hidden="true">{line.slice(0, Math.max(0, count - starts[i]))}</span>
           </Tag>
         )

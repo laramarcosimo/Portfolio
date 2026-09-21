@@ -7,7 +7,7 @@ import RibbonBanner from '../components/RibbonBanner'
 import TypeCatalog from '../components/TypeCatalog'
 import Reveal from '../components/Reveal'
 import { img, toolLabels } from '../data/content'
-import { projectPages } from '../data/projectPages'
+import { projectFonts, projectPages } from '../data/projectPages'
 
 // Vídeo en bucle que se reproduce solo mientras está a la vista.
 function LoopVideo({ src, className = '' }) {
@@ -94,8 +94,11 @@ export default function ProjectPage() {
 
   if (!page) return <Navigate to="/proyectos" replace />
 
+  // Las variables de fuente de Tailwind se redefinen solo dentro de esta página
+  const fonts = projectFonts[slug]
+
   return (
-    <main>
+    <main className="font-sans" style={{ '--font-sans': fonts.body, '--font-serif': fonts.heading, '--font-display': fonts.heading }}>
       <RibbonBanner height={150} />
 
       <div className="mx-auto max-w-5xl px-5 pt-8 sm:px-8">
