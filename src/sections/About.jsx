@@ -6,11 +6,11 @@ import { about, img, site } from '../data/content'
 
 export default function About({ active }) {
   return (
-    <section id="sobre-mi" className="relative pb-44 pt-72 sm:pt-80">
+    <section id="sobre-mi" className="relative pb-56 pt-72 sm:pt-80">
       <div className="absolute inset-0 -z-10 bg-white" aria-hidden="true" />
       <SectionDots current={active} className="absolute inset-x-0 top-6 z-10" />
 
-      <div className="relative z-10 mx-auto grid max-w-3xl items-center gap-12 px-5 sm:px-8 md:grid-cols-[15rem_1fr] md:gap-14">
+      <div id="about-content" className="relative z-10 mx-auto grid max-w-3xl items-center gap-12 px-5 sm:px-8 md:grid-cols-[15rem_1fr] md:gap-14">
         {/* Retrato real en blanco y negro, con el bloque lavanda desplazado detrás */}
         <motion.div
           id="about-photo"

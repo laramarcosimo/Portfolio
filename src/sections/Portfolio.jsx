@@ -92,7 +92,7 @@ export default function Portfolio() {
           ))}
         </div>
 
-        <div className="mt-24 text-center" aria-live="polite">
+        <div className="mt-40 text-center" aria-live="polite">
           <p className="text-sm font-semibold text-navy">
             {project.title} <span className="font-medium text-navy/55">· {project.category}</span>
           </p>

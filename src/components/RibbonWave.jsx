@@ -4,89 +4,121 @@ import { useAnimationFrame, useReducedMotion, useScroll } from 'framer-motion'
 /*
  * Hilo conductor de cintas: UN solo lienzo SVG global, del Hero a la banda de Contacto.
  *
- * 1. Se miden las secciones reales del DOM y se fijan puntos de paso (buildPoints).
- * 2. Una spline Catmull-Rom centrípeta los une, se suaviza la curvatura y se remuestrea a
- *    distancia uniforme (buildCurve): un único recorrido continuo, sin cortes ni quiebros.
+ * 1. Se miden las secciones reales del DOM y se fijan pocos puntos de paso (buildPoints),
+ *    con un recorrido distinto en escritorio y en móvil.
+ * 2. Una spline Catmull-Rom centrípeta los une y la curva se suaviza con fuerza y se
+ *    remuestrea a distancia uniforme (buildCurve): giros amplios, sin quiebros.
  * 3. Tres cintas paralelas (marino, cielo, lavanda), dibujadas como bandas planas rellenas
  *    cuyo grosor se afina hasta cero en la punta. Ondulan con olas que viajan por longitud
- *    de arco y se DIBUJAN al hacer scroll, con un destello luminoso en la punta.
+ *    de arco y se DIBUJAN al hacer scroll.
  * 4. El lienzo termina a ras de la banda de Contacto: ahí las cintas quedan cortadas en plano.
  */
 
 const COLORS = ['#192a56', '#96c9ff', '#9690e4']
-const TAPER = 150 // longitud (px) de afinado de la punta
-const IDS = ['inicio', 'sobre-mi', 'about-photo', 'portafolio', 'carousel', 'servicios', 'contact-band']
+const TAPER = 170 // longitud (px) de afinado de la punta
+const IDS = ['inicio', 'sobre-mi', 'about-photo', 'about-content', 'portafolio', 'carousel', 'servicios', 'contact-band']
 
 const rectIn = (el, origin) => {
   const r = el.getBoundingClientRect()
   return { l: r.left - origin.left, r: r.right - origin.left, t: r.top - origin.top, b: r.bottom - origin.top }
 }
 
+// Recorrido común de la banda de contacto: remolino que termina cortado en su borde inferior.
+const bandSwirl = (W, B) => [
+  [0.28 * W, B.t - 12],
+  [0.5 * W, B.t + 14],
+  [0.68 * W, B.t + 38],
+  [0.77 * W, B.t + 112],
+  [0.6 * W, B.t + 186],
+  [0.36 * W, B.t + 204],
+  [0.25 * W, B.t + 252],
+  [0.23 * W, B.b + 70],
+]
+
 // Puntos de paso [x, y] del recorrido, en píxeles del contenedor.
 function buildPoints(W, m) {
-  const { hero: H, about: A, photo: P, portfolio: F, carousel: Cr, services: S, band: B } = m
+  const { hero: H, about: A, photo: P, content: C, portfolio: F, carousel: Cr, services: S, band: B } = m
   const hh = H.b - H.t
   const ph = P.b - P.t
   const crh = Cr.b - Cr.t
   const sh = S.b - S.t
-  const narrow = W < 700
 
+  // MÓVIL: las cintas cruzan de lado a lado por las zonas vacías entre bloques y bajan pegadas
+  // a los márgenes (medio fuera de pantalla), así no pisan ningún texto.
+  if (W < 700) {
+    return [
+      [-0.06 * W, H.t + 0.6 * hh],
+      [0.3 * W, H.t + 0.68 * hh],
+      [0.64 * W, H.t + 0.58 * hh],
+      [1.0 * W, H.t + 0.5 * hh],
+      [1.03 * W, H.b - 30],
+      [1.0 * W, A.t + 40],
+      [0.7 * W, A.t + 105],
+      [0.36 * W, A.t + 140],
+      [0.05 * W, A.t + 200],
+      [0, P.t + 0.35 * ph],
+      [0, A.b - 190],
+      [0.12 * W, A.b - 100],
+      [0.45 * W, A.b - 66],
+      [0.8 * W, A.b - 46],
+      [1.0 * W, A.b + 10],
+      [1.0 * W, F.t + 40],
+      [0.7 * W, F.t + 92],
+      [0.36 * W, F.t + 108],
+      [0.06 * W, Cr.t + 0.1 * crh],
+      [0.4 * W, Cr.t + 0.36 * crh],
+      [0.8 * W, Cr.t + 0.52 * crh],
+      [1.0 * W, Cr.b - 12],
+      [0.7 * W, Cr.b + 40],
+      [0.4 * W, Cr.b + 56],
+      [0.1 * W, Cr.b + 42],
+      [0, Cr.b + 96],
+      [0, F.b + 20],
+      [0, S.t + 0.5 * sh],
+      [0.08 * W, S.b - 96],
+      [0.3 * W, S.b - 44],
+      ...bandSwirl(W, B),
+    ]
+  }
+
+  // ESCRITORIO
   return [
-    // HERO: cruce ondulado a todo lo ancho
+    // HERO: cruce ondulado a todo lo ancho y giro amplio fuera de pantalla
     [-0.06 * W, H.t + 0.6 * hh],
-    [0.24 * W, H.t + 0.66 * hh],
-    [0.5 * W, H.t + 0.72 * hh],
-    [0.78 * W, H.t + 0.56 * hh],
-    [1.06 * W, H.t + 0.44 * hh],
-    [1.12 * W, H.t + 0.8 * hh],
-    // SOBRE MÍ: barrido superior de derecha a izquierda y lazo alrededor de la foto
-    [0.93 * W, H.b + 0.04 * (A.b - A.t)],
-    [0.62 * W, A.t + 110],
-    [0.36 * W, A.t + 92],
-    ...(narrow
-      ? [
-          [0.1 * W, A.t + 140],
-          [0.03 * W, P.t + 0.35 * ph],
-          [0.03 * W, P.b + 40],
-          [0.05 * W, A.b - 24],
-          [0.12 * W, F.t + 50],
-          [0.22 * W, F.t + 100],
-        ]
-      : [
-          [Math.max(0.05 * W, P.l - 110), A.t + 150],
-          [P.l - 120, P.t + 0.2 * ph],
-          [P.l - 80, P.t + 0.68 * ph],
-          [P.l + 0.1 * (P.r - P.l), P.b + 62],
-          [0.55 * W, A.b - 46],
-          [0.84 * W, A.b - 70],
-          [0.94 * W, A.b + 10],
-          [0.92 * W, F.t + 70],
-          [0.62 * W, F.t + 44],
-          [0.3 * W, F.t + 64],
-          [0.18 * W, F.t + 128],
-        ]),
-    // PORTAFOLIO: "S" por detrás del carrusel y riel inferior que se afina hacia la izquierda
-    [0.27 * W, Cr.t + 0.12 * crh],
-    [0.56 * W, Cr.t + 0.3 * crh],
-    [0.8 * W, Cr.t + 0.42 * crh],
-    [0.9 * W, Cr.b - 10],
-    [0.72 * W, Cr.b + 34],
-    [0.45 * W, Cr.b + 54],
-    [0.2 * W, Cr.b + 32],
-    [-0.05 * W, Cr.b + 52],
+    [0.25 * W, H.t + 0.66 * hh],
+    [0.52 * W, H.t + 0.72 * hh],
+    [0.8 * W, H.t + 0.55 * hh],
+    [1.08 * W, H.t + 0.5 * hh],
+    [1.16 * W, H.b - 30],
+    // SOBRE MÍ: barrido superior de derecha a izquierda y lazo redondeado alrededor de la foto
+    [1.0 * W, A.t + 96],
+    [0.7 * W, A.t + 122],
+    [0.42 * W, A.t + 104],
+    [P.l - 60, A.t + 166],
+    [P.l - 128, P.t + 0.36 * ph],
+    [P.l - 96, P.b - 10],
+    [P.l + 0.2 * (P.r - P.l), C.b + 66],
+    [0.6 * W, C.b + 100],
+    [0.88 * W, C.b + 104],
+    [1.1 * W, A.b - 8],
+    [1.14 * W, A.b + 56],
+    [0.96 * W, F.t + 86],
+    [0.62 * W, F.t + 98],
+    [0.32 * W, F.t + 100],
+    [0.2 * W, Cr.t + 0.08 * crh],
+    [0.42 * W, Cr.t + 0.3 * crh],
+    [0.7 * W, Cr.t + 0.46 * crh],
+    [0.9 * W, Cr.b - 14],
+    [0.72 * W, Cr.b + 38],
+    [0.45 * W, Cr.b + 56],
+    [0.2 * W, Cr.b + 34],
+    [-0.04 * W, Cr.b + 60],
     // SERVICIOS: bajan por el margen izquierdo hacia la banda de contacto
-    [-0.07 * W, F.b + 20],
-    [0.02 * W, S.t + 0.6 * sh],
-    [0.1 * W, S.b - 50],
-    // BANDA DE CONTACTO: remolino que termina cortado a ras del borde inferior
-    [0.28 * W, B.t - 12],
-    [0.5 * W, B.t + 14],
-    [0.68 * W, B.t + 50],
-    [0.73 * W, B.t + 118],
-    [0.56 * W, B.t + 174],
-    [0.36 * W, B.t + 190],
-    [0.26 * W, B.t + 236],
-    [0.23 * W, B.b + 60],
+    [-0.08 * W, Cr.b + 130],
+    [-0.04 * W, F.b + 12],
+    [0.03 * W, S.t + 0.6 * sh],
+    [0.12 * W, S.b - 56],
+    ...bandSwirl(W, B),
   ]
 }
 
@@ -160,8 +192,9 @@ function resample(pts, step) {
   return out
 }
 
-function buildCurve(waypoints, step = 30) {
-  const base = resample(smooth(sampleSpline(waypoints, 8), 9, 4), step)
+// `radius`: semiventana de suavizado en muestras de 8 px (mayor = curvas más amplias).
+function buildCurve(waypoints, radius, step = 26) {
+  const base = resample(smooth(sampleSpline(waypoints, 8), radius, 5), step)
   const norm = base.map((_, i) => {
     const a = base[i - 1] ?? base[i]
     const b = base[i + 1] ?? base[i]
@@ -196,7 +229,6 @@ export default function RibbonWave({ containerRef }) {
   const reduce = useReducedMotion()
   const { scrollY } = useScroll()
   const paths = useRef([])
-  const glow = useRef(null)
   const geo = useRef(null)
   const [box, setBox] = useState({ w: 0, h: 0 })
 
@@ -207,7 +239,7 @@ export default function RibbonWave({ containerRef }) {
       const n = g.base.length
       const scroll = scrollY.get()
 
-      // Punto hasta el que se ha "dibujado" el recorrido (según el scroll; siempre incluye el hero)
+      // Hasta dónde está "dibujado" el recorrido según el scroll (siempre incluye el hero)
       const limit = reduce ? Infinity : Math.max(scroll + g.vh * 0.62, g.heroBottom + 40)
       let head = n - 1
       for (let i = 0; i < n; i++) {
@@ -219,27 +251,29 @@ export default function RibbonWave({ containerRef }) {
       const done = head >= n - 1
       const sHead = head * g.step
 
-      let tip = null
       for (let r = 0; r < 3; r++) {
         const off = (r - 1) * g.spacing
         const sEnd = done ? Infinity : sHead - r * 42
         const left = []
         const right = []
-        const mid = []
         for (let i = 0; i < n; i++) {
           const s = i * g.step
           if (s > sEnd) break
+          // Olas lentas que viajan por longitud de arco, con la fase arrastrada por el scroll
           const wave = reduce
             ? 0
-            : (Math.sin(s / 330 + time / 2600 + r * 0.9 + scroll / 700) + 0.5 * Math.sin(s / 540 - time / 3900 + r * 1.7)) * g.amp * 0.7
+            : (Math.sin(s / g.lambda + time / 3000 + r * 0.9 + scroll / 800) + 0.5 * Math.sin(s / (g.lambda * 1.7) - time / 4300 + r * 1.7)) *
+              g.amp *
+              0.7
           const k = off + wave
-          const x = g.base[i][0] + g.norm[i][0] * k
-          const y = g.base[i][1] + g.norm[i][1] * k
+          const nx = g.norm[i][0]
+          const ny = g.norm[i][1]
+          const x = g.base[i][0] + nx * k
+          const y = g.base[i][1] + ny * k
           const t = done ? 1 : smoothstep(Math.min(1, Math.max(0, (sEnd - s) / TAPER)))
           const hw = (g.width / 2) * Math.max(t, 0.02)
-          left.push([x + g.norm[i][0] * hw, y + g.norm[i][1] * hw])
-          right.push([x - g.norm[i][0] * hw, y - g.norm[i][1] * hw])
-          mid.push([x, y])
+          left.push([x + nx * hw, y + ny * hw])
+          right.push([x - nx * hw, y - ny * hw])
         }
         if (left.length < 2) {
           paths.current[r]?.setAttribute('d', '')
@@ -248,18 +282,6 @@ export default function RibbonWave({ containerRef }) {
         right.reverse()
         const d = `M${left[0][0].toFixed(1)} ${left[0][1].toFixed(1)}${curve(left)} L${right[0][0].toFixed(1)} ${right[0][1].toFixed(1)}${curve(right)}Z`
         paths.current[r]?.setAttribute('d', d)
-        if (r === 1) tip = mid[mid.length - 1]
-      }
-
-      // Destello luminoso en la punta mientras se dibuja
-      const el = glow.current
-      if (el) {
-        if (done || !tip) el.setAttribute('opacity', '0')
-        else {
-          el.setAttribute('opacity', '1')
-          el.setAttribute('cx', tip[0].toFixed(1))
-          el.setAttribute('cy', tip[1].toFixed(1))
-        }
       }
     },
     [reduce, scrollY],
@@ -275,15 +297,18 @@ export default function RibbonWave({ containerRef }) {
       const origin = container.getBoundingClientRect()
       const els = IDS.map((id) => document.getElementById(id))
       if (els.some((e) => !e)) return
-      const [hero, about, photo, portfolio, carousel, services, band] = els.map((e) => rectIn(e, origin))
+      const [hero, about, photo, content, portfolio, carousel, services, band] = els.map((e) => rectIn(e, origin))
       const W = origin.width
+      const narrow = W < 700
 
-      const width = Math.max(11, Math.min(40, W * 0.026))
+      // Grosor: ~5 % más fino que antes (2,47 % del ancho, entre 9,5 y 38 px)
+      const width = Math.max(9.5, Math.min(38, W * 0.0247))
       geo.current = {
-        ...buildCurve(buildPoints(W, { hero, about, photo, portfolio, carousel, services, band })),
+        ...buildCurve(buildPoints(W, { hero, about, photo, content, portfolio, carousel, services, band }), narrow ? 14 : 20),
         width,
         spacing: width + Math.max(2, width * 0.1),
-        amp: W < 700 ? 8 : 15,
+        amp: narrow ? 7 : 14,
+        lambda: narrow ? 260 : 380,
         vh: window.innerHeight,
         heroBottom: hero.b,
       }
@@ -310,17 +335,9 @@ export default function RibbonWave({ containerRef }) {
       aria-hidden="true"
       className="pointer-events-none absolute left-0 top-0 z-0 overflow-hidden"
     >
-      <defs>
-        <radialGradient id="ribbon-glow">
-          <stop offset="0" stopColor="#bdf0ff" stopOpacity="0.95" />
-          <stop offset="0.35" stopColor="#7fd8ff" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#7fd8ff" stopOpacity="0" />
-        </radialGradient>
-      </defs>
       {COLORS.map((c, i) => (
         <path key={c} ref={(el) => (paths.current[i] = el)} fill={c} />
       ))}
-      <circle ref={glow} r="46" fill="url(#ribbon-glow)" opacity="0" />
     </svg>
   )
 }
