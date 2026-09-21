@@ -1,9 +1,11 @@
-import { useSyncExternalStore } from 'react'
+import { useRef, useSyncExternalStore } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import FluidLines from '../components/FluidLines'
 import RibbonBanner from '../components/RibbonBanner'
 import { projects } from '../data/content'
+import { PROJECT_IDS, projectsRoute } from '../lib/homeRoutes'
 
 // ¿Pantalla de móvil? (menos de 768 px)
 const mq = '(max-width: 767px)'
@@ -20,6 +22,7 @@ const useIsMobile = () => useSyncExternalStore(subscribe, () => window.matchMedi
  */
 export default function Projects() {
   const mobile = useIsMobile()
+  const pageRef = useRef(null)
 
   if (mobile) {
     return (
@@ -55,11 +58,13 @@ export default function Projects() {
   }
 
   return (
-    <main>
+    <main ref={pageRef} className="relative isolate">
+      {/* Solo en escritorio: las tres líneas bajan guiando de un proyecto al siguiente */}
+      <FluidLines containerRef={pageRef} ids={PROJECT_IDS} build={projectsRoute} />
       <RibbonBanner height={190} />
       <h1 className="sr-only">Proyectos</h1>
 
-      <div className="mx-auto max-w-4xl space-y-28 px-8 py-28">
+      <div className="relative z-10 mx-auto max-w-4xl space-y-28 px-8 py-28">
         {projects.map((p, i) => (
           <motion.section
             key={p.slug}
