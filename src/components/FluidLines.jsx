@@ -21,27 +21,41 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
   const geo = useRef(null)
   const [box, setBox] = useState({ w: 0, h: 0 })
 
+  // Punta de cada línea (longitud de arco dibujada) y último instante, para suavizar con inercia
+  const heads = useRef([0, 0, 0])
+  const last = useRef(0)
+
   const draw = useCallback(
     (time) => {
       const g = geo.current
       if (!g) return
       const n = g.base.length
+      const total = (n - 1) * g.step
       const scroll = scrollY.get()
+      const dt = Math.min(64, Math.max(0, time - last.current))
+      last.current = time
 
-      // Hasta dónde está dibujado el recorrido según el scroll (coordenadas del contenedor)
-      const limit = reduce ? Infinity : Math.max(scroll + g.vh * 0.72 - g.pageTop, g.minY)
-      let head = n - 1
-      for (let i = 0; i < n; i++) {
-        if (g.maxY[i] > limit) {
-          head = i
-          break
+      // Objetivo continuo: longitud de arco hasta la que "toca" dibujar según el scroll (interpolada)
+      let target = total
+      if (!reduce) {
+        const limit = Math.max(scroll + g.vh * 0.72 - g.pageTop, g.minY)
+        for (let i = 0; i < n; i++) {
+          if (g.maxY[i] > limit) {
+            const prev = g.maxY[i - 1] ?? g.maxY[i] - 1
+            const f = (limit - prev) / (g.maxY[i] - prev || 1)
+            target = (i - 1 + Math.min(1, Math.max(0, f))) * g.step
+            break
+          }
         }
+        target = Math.max(0, target)
       }
-      const done = head >= n - 1
-      const sHead = head * g.step
 
       for (let r = 0; r < 3; r++) {
-        const sEnd = done ? Infinity : sHead - r * 60
+        // Cada línea persigue el objetivo con distinta inercia: la marino va delante y las otras la siguen
+        if (reduce) heads.current[r] = total
+        else heads.current[r] += (target - heads.current[r]) * (1 - Math.exp(-dt / g.tau[r]))
+        const h = heads.current[r]
+        const sEnd = h >= total - 1 ? Infinity : h
         paths.current[r]?.setAttribute('d', ribbonPath(g, r, time, scroll, sEnd, reduce))
       }
     },
@@ -69,7 +83,8 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
       const width = ribbonWidth(W)
 
       geo.current = {
-        ...buildCurve(build(W, rects, H), narrow ? 14 : 18),
+        ...buildCurve(build(W, rects, H), narrow ? 14 : 18, 12),
+        tau: [150, 300, 480],
         width,
         spacing: width * 2.6 + 6,
         birth: 420,
