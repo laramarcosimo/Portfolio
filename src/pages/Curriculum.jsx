@@ -67,16 +67,17 @@ export default function Curriculum() {
 
   return (
     <main>
-      <RibbonBanner height={190} />
-
-      <header className="mx-auto max-w-3xl px-5 pt-14 text-center sm:px-8">
+      <header className="mx-auto max-w-3xl px-5 pt-10 text-center sm:px-8 sm:pt-14">
         <img src={img('about/retrato')} alt={site.name} className="mx-auto h-32 w-32 rounded-full object-cover object-top shadow-lg ring-4 ring-white" />
         <h1 className="mt-5 font-serif text-4xl font-medium tracking-tight text-navy">{site.name}</h1>
         <p className="mt-2 text-sm font-medium text-navy/70">{cv.subtitle}</p>
       </header>
 
+      {/* Las líneas van justo debajo de la foto y el nombre, integradas con la cabecera */}
+      <RibbonBanner height={140} className="mt-4" />
+
       {/* Navegación interna en móvil: chips que se quedan fijos bajo la barra superior */}
-      <nav aria-label="Secciones del currículum" className="sticky top-16 z-40 mt-10 border-y border-navy/5 bg-white/90 backdrop-blur-md lg:hidden">
+      <nav aria-label="Secciones del currículum" className="sticky top-16 z-40 border-y border-navy/5 bg-white/90 backdrop-blur-md lg:hidden">
         <ul className="no-scrollbar mx-auto flex max-w-4xl gap-2 overflow-x-auto px-5 py-2.5">
           {nav.map(([id, label]) => (
             <li key={id} className="shrink-0">

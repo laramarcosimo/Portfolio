@@ -8,8 +8,9 @@ const COLORS = ['#192a56', '#96c9ff', '#9690e4']
 
 // Las tres líneas onduladas de la marca: a la vez adorno y progreso. Se dibujan de izquierda a derecha
 // según avanza el scroll (cada una con distinta inercia) y flotan con un vaivén continuo.
-function ProgressLines({ progress }) {
-  const d = 'M0 34 C 120 6 240 62 380 34 S 640 6 780 34 S 1040 62 1200 30'
+function ProgressLines({ progress, flat }) {
+  // En móvil el trazado es casi recto (la misma ondulación se vería mucho más pronunciada en un ancho estrecho)
+  const d = flat ? 'M0 34 C 300 28 600 40 900 34 S 1100 31 1200 34' : 'M0 34 C 120 6 240 62 380 34 S 640 6 780 34 S 1040 62 1200 30'
   const springs = [progress[0], progress[1], progress[2]]
   return (
     <svg viewBox="0 0 1200 96" preserveAspectRatio="none" aria-hidden="true" className="absolute inset-x-[8vw] bottom-[4vh] z-10 h-[10vh] w-[84vw]">
@@ -67,14 +68,14 @@ export default function HorizontalProjects() {
   const reduce = useReducedMotion()
   const targetRef = useRef(null)
   const trackRef = useRef(null)
-  const [dims, setDims] = useState({ dist: 0, vh: 0 })
+  const [dims, setDims] = useState({ dist: 0, vh: 0, vw: 1200 })
 
   // Recorrido horizontal = ancho del carril − ancho de pantalla; altura de la sección = recorrido + pantalla
   useLayoutEffect(() => {
     const measure = () => {
       const track = trackRef.current
       if (!track) return
-      setDims({ dist: Math.max(0, track.scrollWidth - window.innerWidth), vh: window.innerHeight })
+      setDims({ dist: Math.max(0, track.scrollWidth - window.innerWidth), vh: window.innerHeight, vw: window.innerWidth })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -164,7 +165,7 @@ export default function HorizontalProjects() {
           {end}
         </motion.div>
 
-        <ProgressLines progress={lines} />
+        <ProgressLines progress={lines} flat={dims.vw < 640} />
       </div>
     </section>
   )

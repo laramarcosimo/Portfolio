@@ -4,7 +4,7 @@ import { hero } from '../data/content'
 export default function Hero() {
   return (
     // En móvil el hero es más bajo (no una pantalla vacía) y el titular más grande y equilibrado
-    <section id="inicio" className="relative min-h-[64svh] sm:min-h-[calc(100svh-4rem)]">
+    <section id="inicio" className="relative pb-20 sm:min-h-[calc(100svh-4rem)] sm:pb-0">
       <div className="relative z-10 px-6 pt-20 text-center sm:pt-24">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
