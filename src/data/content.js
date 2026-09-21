@@ -133,16 +133,12 @@ export const projects = [
   { slug: 'proyecto-video', number: '04', name: 'PROYECTO DE VIDEO', cover: img('video/portada') },
 ]
 
-// Proyectos destacados de la portada (scroll horizontal): un mockup protagonista por proyecto.
+// Proyectos de la portada (scroll horizontal): la portada real de cada proyecto.
 // La categoría se deduce del texto de cada página de proyecto (identidad visual, monograma, rediseño, videoclip).
-const featuredMeta = {
-  'marca-personal': { image: 'marca-personal/tarjeta', category: 'Identidad visual' },
-  'identidad-visual': { image: 'identidad-visual/web', category: 'Monograma y web' },
-  'casa-ricardo': { image: 'casa-ricardo/packaging-delante', category: 'Rediseño de identidad visual' },
-  'proyecto-video': { image: 'video/portada', category: 'Videoclip' },
+const categories = {
+  'marca-personal': 'Identidad visual',
+  'identidad-visual': 'Monograma y web',
+  'casa-ricardo': 'Rediseño de identidad visual',
+  'proyecto-video': 'Videoclip',
 }
-export const featuredProjects = projects.map((p) => ({
-  ...p,
-  image: img(featuredMeta[p.slug].image),
-  category: featuredMeta[p.slug].category,
-}))
+export const featuredProjects = projects.map((p) => ({ ...p, category: categories[p.slug] }))

@@ -8,7 +8,7 @@ const pill =
 
 export default function About() {
   return (
-    <section id="sobre-mi" className="relative pb-72 pt-72 sm:pt-80">
+    <section id="sobre-mi" className="relative pb-64 pt-72 sm:pt-80">
       <div id="about-content" className="relative z-10 mx-auto max-w-3xl px-5 sm:px-8">
         <div className="grid items-center gap-12 md:grid-cols-[15rem_1fr] md:gap-14">
           {/* Retrato real en blanco y negro, con el bloque lavanda desplazado detrás */}
@@ -46,20 +46,6 @@ export default function About() {
           </div>
         </div>
 
-        {/* Galería "Detrás del diseño" de la web original */}
-        <ul className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {about.gallery.map((g, i) => (
-            <motion.li
-              key={g.src}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: i * 0.08 }}
-            >
-              <img src={g.src} alt={g.alt} loading="lazy" className="aspect-[3/4] w-full rounded-2xl bg-slate-50 object-cover shadow-lg shadow-slate-200/70" />
-            </motion.li>
-          ))}
-        </ul>
       </div>
     </section>
   )
