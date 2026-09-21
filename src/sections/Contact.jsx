@@ -1,4 +1,5 @@
-import { AtSign, MessageCircle } from 'lucide-react'
+import { AtSign } from 'lucide-react'
+import WhatsAppIcon from '../components/WhatsAppIcon'
 import Reveal from '../components/Reveal'
 import { contactItems } from '../data/content'
 
@@ -12,7 +13,7 @@ const brandPaths = {
 
 function ContactIcon({ kind }) {
   if (kind === 'mail') return <AtSign size={18} />
-  if (kind === 'phone') return <MessageCircle size={18} />
+  if (kind === 'phone') return <WhatsAppIcon size={18} />
   return (
     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
       <path d={brandPaths[kind]} />

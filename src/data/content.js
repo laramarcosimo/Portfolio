@@ -30,8 +30,7 @@ export const navLinks = [
 ]
 
 export const hero = {
-  title: 'Creatividad Minimalista',
-  tagline: 'Aprender, crecer y evolucionar.',
+  title: 'Aprender, crecer y evolucionar.',
 }
 
 export const about = {

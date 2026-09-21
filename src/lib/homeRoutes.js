@@ -23,6 +23,3 @@ export function heroAboutRoute(W, r) {
     { y: C.b + 112, amp: 34, drift: 48 }, // entre Sobre Mí y Proyectos
   ])
 }
-
-/** Siempre queda dibujado el primer barrido, aunque aún no se haya hecho scroll. */
-export const heroAboutMin = (r) => r['about-content'].t

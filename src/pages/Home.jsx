@@ -4,7 +4,7 @@ import HorizontalProjects from '../components/HorizontalProjects'
 import Hero from '../sections/Hero'
 import About from '../sections/About'
 import Contact from '../sections/Contact'
-import { HERO_ABOUT_IDS, heroAboutMin, heroAboutRoute } from '../lib/homeRoutes'
+import { HERO_ABOUT_IDS, heroAboutRoute } from '../lib/homeRoutes'
 
 /**
  * Portada: presentación (Hero + Sobre Mí), proyectos destacados con scroll horizontal anclado y contacto.
@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <main className="bg-white">
       <div ref={topRef} className="relative isolate">
-        <FluidLines containerRef={topRef} ids={HERO_ABOUT_IDS} build={heroAboutRoute} minReveal={heroAboutMin} />
+        <FluidLines containerRef={topRef} ids={HERO_ABOUT_IDS} build={heroAboutRoute} />
         <Hero />
         <About />
       </div>

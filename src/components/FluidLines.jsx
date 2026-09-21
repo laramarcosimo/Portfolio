@@ -52,7 +52,11 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
       for (let r = 0; r < 3; r++) {
         // Cada línea persigue el objetivo con distinta inercia: la marino va delante y las otras la siguen
         if (reduce) heads.current[r] = total
-        else heads.current[r] += (target - heads.current[r]) * (1 - Math.exp(-dt / g.tau[r]))
+        else if (time > 350) {
+          // Avance con inercia y con velocidad máxima: así, al cargar o al hacer scroll, la línea se ve "dibujarse"
+          const delta = (target - heads.current[r]) * (1 - Math.exp(-dt / g.tau[r]))
+          heads.current[r] += delta > 0 ? Math.min(delta, (g.speed[r] * dt) / 1000) : delta
+        }
         const h = heads.current[r]
         const sEnd = h >= total - 1 ? Infinity : h
         paths.current[r]?.setAttribute('d', ribbonPath(g, r, time, scroll, sEnd, reduce))
@@ -84,6 +88,7 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
       geo.current = {
         ...buildCurve(build(W, rects, H), narrow ? 14 : 18, 12),
         tau: [150, 300, 480],
+        speed: [1500, 1200, 950], // px/s máximos de dibujado (la marino va delante)
         width,
         spacing: width * 2.6 + 6,
         birth: 420,

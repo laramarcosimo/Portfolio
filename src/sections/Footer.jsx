@@ -1,4 +1,5 @@
-import { AtSign, MessageCircle } from 'lucide-react'
+import { AtSign } from 'lucide-react'
+import WhatsAppIcon from '../components/WhatsAppIcon'
 import { site } from '../data/content'
 
 // lucide-react ya no incluye iconos de marcas: SVG propios.
@@ -35,7 +36,7 @@ export default function Footer({ phone = 'phone' }) {
           ))}
           <li>
             <a href={site.whatsapp} target="_blank" rel="noreferrer" aria-label="WhatsApp" className={iconClass}>
-              <MessageCircle size={19} />
+              <WhatsAppIcon size={19} />
             </a>
           </li>
           <li>
