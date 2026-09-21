@@ -1,34 +1,66 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
+import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { featuredProjects } from '../data/content'
+import { RIBBON_COLORS, buildCurve, ribbonPath, ribbonWidth } from '../lib/ribbonGeometry'
 
-const COLORS = ['#192a56', '#96c9ff', '#9690e4']
+const LINES_H = 84
 
-// Las tres líneas onduladas de la marca: a la vez adorno y progreso. Se dibujan de izquierda a derecha
-// según avanza el scroll (cada una con distinta inercia) y flotan con un vaivén continuo.
-function ProgressLines({ progress, flat }) {
-  // En móvil el trazado es casi recto (la misma ondulación se vería mucho más pronunciada en un ancho estrecho)
-  const d = flat ? 'M0 34 C 300 28 600 40 900 34 S 1100 31 1200 34' : 'M0 34 C 120 6 240 62 380 34 S 640 6 780 34 S 1040 62 1200 30'
-  const springs = [progress[0], progress[1], progress[2]]
+// Las tres líneas de la marca: a la vez adorno y progreso. Usan el mismo motor que el resto de líneas de la
+// web (nacen como un hilo por el lateral izquierdo y terminan en punta afilada), se miden al ancho real de la
+// pantalla y se dibujan de izquierda a derecha según avanza el scroll, cada una con distinta inercia.
+function ProgressLines({ progress }) {
+  const reduce = useReducedMotion()
+  const ref = useRef(null)
+  const paths = useRef([])
+  const geo = useRef(null)
+  const [w, setW] = useState(0)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return undefined
+    const measure = () => {
+      const W = el.getBoundingClientRect().width
+      const narrow = W < 700
+      const mid = LINES_H / 2
+      const a = narrow ? 5 : 11 // ondulación de la curva base
+      const width = ribbonWidth(W)
+      const pts = [
+        [-0.06 * W, mid + a],
+        [0.22 * W, mid - a],
+        [0.5 * W, mid + a * 0.6],
+        [0.78 * W, mid - a * 0.8],
+        [1.06 * W, mid + a * 0.4],
+      ]
+      geo.current = { ...buildCurve(pts, 16, 12), width, spacing: width * 2.6 + 6, birth: 420, amp: narrow ? 4 : 8, lambda: narrow ? 300 : 430 }
+      setW(W)
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  useAnimationFrame((time) => {
+    const g = geo.current
+    if (!g) return
+    const total = (g.base.length - 1) * g.step
+    for (let r = 0; r < 3; r++) {
+      const p = reduce ? 1 : Math.min(1, Math.max(0, progress[r].get()))
+      const sEnd = p >= 0.995 ? Infinity : Math.max(2, p * total)
+      paths.current[r]?.setAttribute('d', p <= 0.002 ? '' : ribbonPath(g, r, time, 0, sEnd, reduce))
+    }
+  })
+
   return (
-    <svg viewBox="0 0 1200 96" preserveAspectRatio="none" aria-hidden="true" className="absolute inset-x-[8vw] bottom-[4vh] z-10 h-[10vh] w-[84vw]">
-      {COLORS.map((c, i) => (
-        <motion.g key={c} animate={{ y: [0, i % 2 ? 5 : -5, 0] }} transition={{ duration: 5 + i * 1.3, repeat: Infinity, ease: 'easeInOut' }}>
-          <motion.path
-            d={d}
-            transform={`translate(0 ${i * 14})`}
-            fill="none"
-            stroke={c}
-            strokeWidth={[3.5, 3, 3.5][i]}
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            style={{ pathLength: springs[i] }}
-          />
-        </motion.g>
-      ))}
-    </svg>
+    <div ref={ref} className="pointer-events-none absolute inset-x-0 bottom-[3svh] z-10" style={{ height: LINES_H }} aria-hidden="true">
+      <svg width={w} height={LINES_H} viewBox={`0 0 ${w || 1} ${LINES_H}`} className="absolute inset-0 overflow-hidden">
+        {RIBBON_COLORS.map((c, i) => (
+          <path key={c} ref={(el) => (paths.current[i] = el)} fill={c} />
+        ))}
+      </svg>
+    </div>
   )
 }
 
@@ -154,7 +186,7 @@ export default function HorizontalProjects() {
 
   return (
     <section id="portafolio" ref={targetRef} aria-label="Proyectos" className="relative bg-white" style={{ height: dims.dist ? dims.dist + dims.vh : '300vh' }}>
-      <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pb-[12svh] pt-24">
+      <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pb-[14svh] pt-24">
         {/* Título encima del carrusel */}
         <Heading className="absolute left-[8vw] top-[calc(4rem+4svh)] z-10" />
 
@@ -165,7 +197,7 @@ export default function HorizontalProjects() {
           {end}
         </motion.div>
 
-        <ProgressLines progress={lines} flat={dims.vw < 640} />
+        <ProgressLines progress={lines} />
       </div>
     </section>
   )
