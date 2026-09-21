@@ -1,14 +1,6 @@
-import { useRef, useState } from 'react'
-import { motion } from 'framer-motion'
-import { AtSign, Check, MessageCircle, Send } from 'lucide-react'
-import Button from '../components/Button'
-import FluidLines from '../components/FluidLines'
+import { AtSign, MessageCircle } from 'lucide-react'
 import Reveal from '../components/Reveal'
-import { contactRoute } from '../lib/homeRoutes'
-import { contactItems, site } from '../data/content'
-
-const field =
-  'mt-1 w-full rounded-[3px] border border-navy/20 bg-white px-3 py-2 text-[13px] text-navy placeholder:text-navy/35 transition focus:border-sky focus:outline-none focus:ring-4 focus:ring-sky/40'
+import { contactItems } from '../data/content'
 
 // Iconos de los enlaces de contacto (la web original: correo, WhatsApp, LinkedIn e Instagram)
 const brandPaths = {
@@ -28,85 +20,30 @@ function ContactIcon({ kind }) {
   )
 }
 
-/** Contacto: los cuatro enlaces de la web original y un formulario. `band`: banda superior con líneas fluidas (portada). */
-export default function Contact({ band = false }) {
-  const [sent, setSent] = useState(false)
-  const bandRef = useRef(null)
-
-  // Sin backend: abre el cliente de correo con el mensaje ya redactado.
-  const onSubmit = (e) => {
-    e.preventDefault()
-    const data = new FormData(e.currentTarget)
-    const subject = `Contacto desde el portafolio — ${data.get('name')}`
-    const body = `${data.get('message')}\n\n${data.get('name')} (${data.get('email')})`
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setSent(true)
-  }
-
+/** Contacto: los cuatro enlaces de la web original (correo, WhatsApp, LinkedIn e Instagram). */
+export default function Contact() {
   return (
-    <section id="contacto" className="relative bg-white">
-      {band && (
-        <div ref={bandRef} id="contact-band" className="relative isolate h-[240px] overflow-hidden sm:h-[300px]">
-          <FluidLines containerRef={bandRef} build={contactRoute} />
-        </div>
-      )}
-
-      <div className="relative z-10 bg-white">
-        <div className="mx-auto grid max-w-3xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-2 md:gap-14">
-          <Reveal>
-            <h2 className="text-3xl font-medium tracking-tight text-navy">Contacto</h2>
-            <ul className="mt-6 space-y-3">
-              {contactItems.map((c) => (
-                <li key={c.kind}>
-                  <a
-                    href={c.href}
-                    target={c.kind === 'mail' ? undefined : '_blank'}
-                    rel="noreferrer"
-                    className="flex items-center gap-3 text-[13px] font-semibold text-navy transition hover:text-lilac"
-                  >
-                    <span className="grid h-9 w-9 place-items-center rounded-full bg-sky/30">
-                      <ContactIcon kind={c.kind} />
-                    </span>
-                    {c.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <motion.form
-            onSubmit={onSubmit}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7 }}
-            className="space-y-3"
-          >
-            <label className="block text-xs font-medium text-navy">
-              Nombre <span className="text-red-500">*</span>
-              <input name="name" required autoComplete="name" placeholder="Tu nombre" className={field} />
-            </label>
-            <label className="block text-xs font-medium text-navy">
-              Email <span className="text-red-500">*</span>
-              <input name="email" type="email" required autoComplete="email" placeholder="tu@email.com" className={field} />
-            </label>
-            <label className="block text-xs font-medium text-navy">
-              Mensaje <span className="text-red-500">*</span>
-              <textarea name="message" required rows={3} placeholder="Mensaje" className={`${field} resize-none`} />
-            </label>
-            <div className="flex flex-wrap items-center gap-3">
-              <Button as="button" type="submit">
-                Enviar <Send size={14} />
-              </Button>
-              {sent && (
-                <p role="status" className="flex items-center gap-1.5 text-xs font-medium text-navy">
-                  <Check size={14} className="text-lilac" /> Se abrirá tu aplicación de correo.
-                </p>
-              )}
-            </div>
-          </motion.form>
-        </div>
-      </div>
+    <section id="contacto" className="relative bg-white py-16 sm:py-20">
+      <Reveal className="mx-auto max-w-3xl px-5 sm:px-8">
+        <h2 className="text-3xl font-medium tracking-tight text-navy">Contacto</h2>
+        <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+          {contactItems.map((c) => (
+            <li key={c.kind}>
+              <a
+                href={c.href}
+                target={c.kind === 'mail' ? undefined : '_blank'}
+                rel="noreferrer"
+                className="flex items-center gap-3 rounded-2xl border border-navy/10 px-4 py-3.5 text-[13px] font-semibold text-navy transition hover:border-lilac hover:text-lilac"
+              >
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-sky/30">
+                  <ContactIcon kind={c.kind} />
+                </span>
+                {c.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
     </section>
   )
 }

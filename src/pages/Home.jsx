@@ -21,7 +21,7 @@ export default function Home() {
         <About />
       </div>
       <HorizontalProjects />
-      <Contact band />
+      <Contact />
     </main>
   )
 }

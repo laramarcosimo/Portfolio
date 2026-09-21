@@ -22,11 +22,3 @@ export function heroAboutRoute(W, r) {
 /** Siempre queda dibujado el barrido del hero. */
 export const heroAboutMin = (r) => r.inicio.b + 40
 
-/** Recorrido de la banda de Contacto: dos barridos finos (altura `H` de la banda). */
-export function contactRoute(W, _r, H) {
-  const k = W < 700 ? 0.55 : 1
-  return zigzag(W, [
-    { y: H * 0.36, amp: 34 * k, drift: 46 * k },
-    { y: H * 0.74, amp: 28 * k, drift: -40 * k },
-  ])
-}
