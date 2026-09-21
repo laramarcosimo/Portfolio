@@ -6,7 +6,7 @@ export const PROJECT_IDS = ['proyecto-marca-personal', 'proyecto-identidad-visua
 /**
  * Las tres líneas bajan por la página de proyectos guiando de uno a otro: descienden por el margen
  * junto a cada proyecto (alternando izquierda/derecha, como el zigzag de la lista) y cruzan de un lado
- * al otro por el hueco entre proyectos. Nacen bajo el banner y salen por el lateral tras el último.
+ * al otro por el hueco entre proyectos. Nacen arriba a la derecha y salen por el lateral tras el último.
  */
 export function projectsRoute(W, r) {
   const rows = PROJECT_IDS.map((id) => r[id])
@@ -15,9 +15,15 @@ export function projectsRoute(W, r) {
   const L = m > 120 ? m / 2 : W * 0.02
   const R = W - L
 
+  // Un único recorrido continuo: nace en el lado derecho, arriba del todo, cruza en diagonal suave hacia el
+  // margen izquierdo (sin banner horizontal aparte) y desde ahí baja guiando de un proyecto al siguiente.
+  const top = rows[0].t
   const pts = [
-    [-0.08 * W, 230],
-    [L * 0.5, 262],
+    [1.1 * W, 36],
+    [0.8 * W, 70],
+    [0.52 * W, 88],
+    [0.26 * W, Math.max(112, top - 70)],
+    [L, top - 6],
   ]
   rows.forEach((row, i) => {
     const x = i % 2 === 0 ? L : R // alterna: izquierda, derecha, izquierda, derecha
