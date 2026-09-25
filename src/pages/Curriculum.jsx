@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Cake, Car, Flag, GraduationCap, Briefcase, RotateCw, Star, UserPen, Wrench } from 'lucide-react'
 import RibbonBanner from '../components/RibbonBanner'
@@ -14,13 +14,37 @@ const Heading = ({ icon: Icon, children }) => (
   </h2>
 )
 
+const FLIP_READ_MS = 6000
+
 function SkillCard({ tool, label, text, img }) {
   const [flipped, setFlipped] = useState(false)
+  const timerRef = useRef(null)
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+      timerRef.current = null
+    }
+  }
+
+  const revert = () => {
+    clearTimer()
+    setFlipped(false)
+  }
+
+  const reveal = () => {
+    clearTimer()
+    setFlipped(true)
+    timerRef.current = setTimeout(revert, FLIP_READ_MS)
+  }
+
+  useEffect(() => clearTimer, [])
+
   return (
     <div className="flip h-44" data-flipped={flipped}>
       <button
         type="button"
-        onClick={() => setFlipped((f) => !f)}
+        onClick={() => (flipped ? revert() : reveal())}
         aria-label={`${label}: ${text}`}
         aria-pressed={flipped}
         className="flip-inner block h-full w-full text-left"
