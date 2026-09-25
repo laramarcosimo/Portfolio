@@ -14,7 +14,7 @@ export const site = {
 
 export const navLinks = [
   { to: '/', label: 'Home' },
-  { to: '/curriculum', label: 'Résumé' },
+  { to: '/curriculum', label: 'Resume' },
   { to: '/proyectos', label: 'Projects' },
   { to: '/contacto', label: 'Contact' },
 ]
@@ -29,7 +29,7 @@ export const about = {
   gallery: [1, 2, 3, 4].map((n) => ({ src: img(`about/gift${n}`), alt: `Design ${n}` })),
 }
 
-// ---------- Résumé ----------
+// ---------- Resume ----------
 export const cv = {
   subtitle: 'Double degree in digital graphic design and advertising',
   personal: [
@@ -74,8 +74,8 @@ export const cv = {
     { icon: Laptop, label: 'Online Courses' },
   ],
   strategic: [
-    { name: 'Planning & Workflows', value: 85, desc: 'Optimizing timelines and organizing projects.' },
-    { name: 'Visual Conceptualization', value: 75, desc: 'Turning ideas into purposeful visual systems.' },
+    { name: 'Planning & Workflows', value: 85, desc: 'Optimising timelines and organising projects.' },
+    { name: 'Visual Conceptualisation', value: 75, desc: 'Turning ideas into purposeful visual systems.' },
     { name: 'Media Adaptability', value: 70, desc: 'Versatility between static design and video formats.' },
   ],
 }

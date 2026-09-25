@@ -122,7 +122,7 @@ export const projectPages = {
     title: 'Casa Ricardo',
     cover: { desktop: img('casa-ricardo/logo'), mobile: img('casa-ricardo/logo'), alt: 'Casa Ricardo cover', contain: true },
     explanation:
-      "During my internship I worked on redesigning the visual identity of Casa Ricardo, a candy and nut shop. The goal was to modernize the logo without losing the brand's close, traditional essence. Legibility, composition and adaptation to different formats were improved. The result was a more current, cleaner image while keeping the business's recognizable personality.",
+      "During my internship I worked on redesigning the visual identity of Casa Ricardo, a shop selling sweets and nuts. The goal was to modernise the logo without losing the brand's close, traditional essence. Legibility, composition and adaptation to different formats were improved. The result was a more current, cleaner image while keeping the business's recognisable personality.",
     comparison: [ph('casa-ricardo/logo', 'New Casa Ricardo Logo'), ph('casa-ricardo/logo-viejo', 'Old Casa Ricardo Logo')],
     colors: [
       {

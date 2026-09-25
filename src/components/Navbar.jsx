@@ -85,7 +85,7 @@ export default function Navbar() {
     <>
       <header className="sticky top-0 z-50 border-b border-ink/[0.06] bg-surface/80 backdrop-blur-md">
         <nav className="mx-auto flex h-16 max-w-4xl items-center justify-between px-5 sm:px-8" aria-label={t.navPrincipal}>
-          <Logo mono className="h-10" />
+          <Logo mono variant="auto" className="h-10" />
 
           <ul className="hidden items-center gap-8 md:flex">
             {navLinks.map((l) => (
