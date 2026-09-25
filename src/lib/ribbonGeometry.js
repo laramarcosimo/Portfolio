@@ -1,7 +1,7 @@
 // Geometría compartida de las cintas: spline suave → remuestreo → bandas rellenas con puntas afinadas.
 
 export const RIBBON_COLORS = ['#192a56', '#96c9ff', '#9690e4'] // marino, cielo, lavanda
-export const RIBBON_COLORS_DARK = ['#a8c7ff', '#d9f0ff', '#e2dcff'] // versiones más claras/saturadas para más contraste en fondo oscuro
+export const RIBBON_COLORS_DARK = ['#3f54a6', '#83bdfc', '#938eeb'] // mismo matiz que la paleta clara (marino/cielo/lavanda); el marino menos saturado para no verse eléctrico
 export const TAPER = 170 // longitud (px) de afinado de la punta
 
 // Spline Catmull-Rom centrípeta (sin lazos ni sobreimpulsos) muestreada cada ~`step` px.

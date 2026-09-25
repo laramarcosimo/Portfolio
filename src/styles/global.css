@@ -34,12 +34,13 @@
   --color-navy: #2a3f7a;
   --color-sky: #7fb8f5;
   --color-lilac: #ab9ff2;
-  --color-mist: #0b1330;
+  --color-mist: #14204a;
   --color-fog: #16224a;
   --color-ink: #e8ecfb;
   --color-surface: #101a3e;
   --color-edge: #2a3766;
-  --page-gradient: linear-gradient(165deg, #090d1f 0%, #0c1430 28%, #191338 58%, #090d1f 100%);
+  /* Mismo degradado que en claro, pero anclado al azul de marca (#192a56) en vez de partir de blanco */
+  --page-gradient: linear-gradient(165deg, #14204a 0%, #1d2f66 28%, #221c47 58%, #14204a 100%);
 }
 
 @layer base {
