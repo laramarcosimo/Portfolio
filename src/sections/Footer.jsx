@@ -27,7 +27,7 @@ const links = [
 /** Pie de página: las tres líneas de la marca, iconos de contacto y copyright, sobre fondo blanco como el resto de la web. */
 export default function Footer() {
   return (
-    <footer id="site-footer" className="relative z-10 bg-white">
+    <footer id="site-footer" className="relative z-10">
       <RibbonBanner height={84} />
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 px-5 pb-10 pt-4 text-center sm:px-8">
         <ul className="flex items-center gap-3">

@@ -14,7 +14,7 @@ export default function Home() {
   const topRef = useRef(null)
 
   return (
-    <main className="bg-white">
+    <main>
       <div ref={topRef} className="relative isolate">
         <FluidLines containerRef={topRef} ids={HERO_ABOUT_IDS} build={heroAboutRoute} />
         <Hero />

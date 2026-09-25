@@ -24,7 +24,7 @@ function ContactIcon({ kind }) {
 /** Contacto: los cuatro enlaces de la web original (correo, WhatsApp, LinkedIn e Instagram). */
 export default function Contact() {
   return (
-    <section id="contacto" className="relative bg-white py-16 sm:py-20">
+    <section id="contacto" className="relative py-16 sm:py-20">
       <Reveal className="mx-auto max-w-3xl px-5 sm:px-8">
         <h2 className="text-3xl font-medium tracking-tight text-navy">Contacto</h2>
         <ul className="mt-8 grid gap-4 sm:grid-cols-2">

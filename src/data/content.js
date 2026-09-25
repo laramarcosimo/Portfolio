@@ -29,13 +29,10 @@ export const navLinks = [
   { to: '/contacto', label: 'Contacto' },
 ]
 
-export const hero = {
-  title: 'Aprender, crecer y evolucionar.',
-}
-
 export const about = {
   kicker: 'DETRÁS DEL DISEÑO',
   title: 'Sobre Mí',
+  motto: 'Aprender, crecer y evolucionar.',
   lead: 'Publicista y diseñadora en constante evolución.',
   text: 'Creo en la estrategia que nace de la sinceridad y en el diseño que cuenta historias reales.',
   bio: 'Con experiencia en edición y una profunda pasión por la creatividad, estoy entusiasmada por aportar mis habilidades y mi visión innovadora al equipo. Actualmente, curso el doble grado en diseño gráfico digital y publicidad, donde desarrollo proyectos que fusionan la estética visual con estrategias de comunicación efectivas.',

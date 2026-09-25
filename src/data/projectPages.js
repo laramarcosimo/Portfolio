@@ -54,10 +54,8 @@ export const projectPages = {
         logos: [ph('marca-personal/logo-blanco', 'Logo Blanco'), ph('marca-personal/logo-azul', 'Logo Azul')],
       },
     ],
-    compactColors: true, // paleta en tarjetas pequeñas
     typography: {
       title: 'Quicksand',
-      centered: true, // "Aa" y abecedario centrados en el mismo eje
       chars: alphabet,
       extra: '1234567890!@#$%*',
       weights: [
@@ -68,6 +66,7 @@ export const projectPages = {
         { label: 'Light', weight: 300, family: "'Quicksand'" },
       ],
     },
+    photos: [ph('marca-personal/riendo', 'Riendo'), ph('marca-personal/sentada', 'Sentada'), ph('marca-personal/depie', 'De pie')],
     stationery: [
       { pair: [ph('marca-personal/libretas', 'Libretas'), ph('marca-personal/boligrafos', 'Bolígrafos')] },
       { main: ph('marca-personal/tarjeta', 'Tarjeta de Visita') },

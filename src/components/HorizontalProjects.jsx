@@ -185,7 +185,7 @@ export default function HorizontalProjects() {
   }
 
   return (
-    <section id="portafolio" ref={targetRef} aria-label="Proyectos" className="relative bg-white" style={{ height: dims.dist ? dims.dist + dims.vh : '300vh' }}>
+    <section id="portafolio" ref={targetRef} aria-label="Proyectos" className="relative" style={{ height: dims.dist ? dims.dist + dims.vh : '300vh' }}>
       <div className="sticky top-0 flex h-[100svh] w-full items-center overflow-hidden pb-[14svh] pt-24">
         {/* Título encima del carrusel */}
         <Heading className="absolute left-[8vw] top-[calc(4rem+4svh)] z-10" />

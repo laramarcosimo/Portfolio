@@ -4,7 +4,7 @@ import { useInView } from 'framer-motion'
 const prefersReduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /** Escribe las líneas una tras otra (efecto máquina de escribir) al entrar en pantalla. */
-export default function Typewriter({ lines, className = '', compact = false }) {
+export default function Typewriter({ lines, className = '' }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, amount: 0.5 })
   const [typed, setTyped] = useState(0)
@@ -24,15 +24,7 @@ export default function Typewriter({ lines, className = '', compact = false }) {
       {lines.map((line, i) => {
         const Tag = i === 0 ? 'h3' : 'p'
         return (
-          <Tag key={line} className={`${
-              i === 0
-                ? compact
-                  ? 'font-serif text-base font-bold leading-tight'
-                  : 'font-serif text-2xl font-bold sm:text-3xl'
-                : compact
-                  ? 'mt-0.5 text-[11px] font-medium'
-                  : 'mt-1 text-sm font-medium'
-            } min-h-[1.4em] whitespace-pre`} aria-label={line}>
+          <Tag key={line} className={`${i === 0 ? 'font-serif text-2xl font-bold sm:text-3xl' : 'mt-1 text-sm font-medium'} min-h-[1.4em] whitespace-pre`} aria-label={line}>
             <span aria-hidden="true">{line.slice(0, Math.max(0, count - starts[i]))}</span>
           </Tag>
         )

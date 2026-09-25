@@ -33,6 +33,7 @@ export default function About() {
             <Reveal>
               <p className="mb-2 text-[11px] font-semibold tracking-[0.16em] text-lilac">{about.kicker}</p>
               <h2 className="font-serif text-3xl font-medium leading-tight tracking-tight text-navy">{about.title}</h2>
+              <p className="mt-2 font-display text-lg font-semibold tracking-tight text-navy sm:text-xl">{about.motto}</p>
             </Reveal>
             <Reveal delay={0.1}>
               <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-navy/75 sm:text-[13px]">
