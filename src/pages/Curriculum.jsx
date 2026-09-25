@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Cake, Car, Flag, GraduationCap, Briefcase, Star, UserPen, Wrench } from 'lucide-react'
+import { Cake, Car, Flag, GraduationCap, Briefcase, RotateCw, Star, UserPen, Wrench } from 'lucide-react'
 import RibbonBanner from '../components/RibbonBanner'
 import useActiveSection from '../hooks/useActiveSection'
 import { useContent } from '../data/useContent'
@@ -27,6 +27,9 @@ function SkillCard({ tool, label, text, img }) {
       >
         <span className="flip-face grid place-items-center rounded-2xl bg-fog shadow-sm">
           <img src={img(`tools/${tool}`)} alt={`Logo ${label}`} className="h-16 w-16" />
+          <span className="absolute right-2.5 top-2.5 grid h-6 w-6 place-items-center rounded-full bg-surface text-ink/60 shadow-sm ring-1 ring-edge" aria-hidden="true">
+            <RotateCw size={12} />
+          </span>
         </span>
         <span className="flip-face flip-back flex items-center rounded-2xl bg-navy p-4 text-xs leading-relaxed text-white">“{text}”</span>
       </button>
