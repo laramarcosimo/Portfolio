@@ -1,7 +1,8 @@
 import { AtSign } from 'lucide-react'
 import RibbonBanner from '../components/RibbonBanner'
 import WhatsAppIcon from '../components/WhatsAppIcon'
-import { site } from '../data/content'
+import { useContent } from '../data/useContent'
+import { useUi } from '../i18n/ui'
 
 // lucide-react ya no incluye iconos de marcas: SVG propios.
 const brandPaths = {
@@ -16,16 +17,17 @@ const Brand = ({ kind }) => (
   </svg>
 )
 
-// Solo iconos (cada enlace lleva su nombre accesible para lectores de pantalla)
-const links = [
-  { label: 'Correo electrónico', href: `mailto:${site.email}`, icon: <AtSign size={19} /> },
-  { label: 'WhatsApp', href: site.whatsapp, icon: <WhatsAppIcon size={19} />, external: true },
-  { label: 'LinkedIn', href: site.linkedin, icon: <Brand kind="linkedin" />, external: true },
-  { label: 'Instagram', href: site.instagram, icon: <Brand kind="instagram" />, external: true },
-]
-
 /** Pie de página: las tres líneas de la marca, iconos de contacto y copyright, sobre fondo blanco como el resto de la web. */
 export default function Footer() {
+  const { site } = useContent()
+  const t = useUi()
+  // Solo iconos (cada enlace lleva su nombre accesible para lectores de pantalla)
+  const links = [
+    { label: t.correoElectronico, href: `mailto:${site.email}`, icon: <AtSign size={19} /> },
+    { label: 'WhatsApp', href: site.whatsapp, icon: <WhatsAppIcon size={19} />, external: true },
+    { label: 'LinkedIn', href: site.linkedin, icon: <Brand kind="linkedin" />, external: true },
+    { label: 'Instagram', href: site.instagram, icon: <Brand kind="instagram" />, external: true },
+  ]
   return (
     <footer id="site-footer" className="relative z-10">
       <RibbonBanner height={84} />
@@ -37,14 +39,14 @@ export default function Footer() {
                 href={l.href}
                 {...(l.external ? { target: '_blank', rel: 'noreferrer' } : {})}
                 aria-label={l.label}
-                className="grid h-11 w-11 place-items-center rounded-full border border-navy/15 text-navy transition hover:-translate-y-0.5 hover:border-navy hover:bg-navy hover:text-white"
+                className="grid h-11 w-11 place-items-center rounded-full border border-ink/15 text-ink transition hover:-translate-y-0.5 hover:border-navy hover:bg-navy hover:text-white"
               >
                 {l.icon}
               </a>
             </li>
           ))}
         </ul>
-        <p className="text-[11px] font-medium text-navy/55">{site.copyright}</p>
+        <p className="text-[11px] font-medium text-ink/55">{site.copyright}</p>
       </div>
     </footer>
   )

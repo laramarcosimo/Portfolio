@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAnimationFrame, useReducedMotion } from 'framer-motion'
-import { RIBBON_COLORS, buildCurve, ribbonPath, ribbonWidth } from '../lib/ribbonGeometry'
+import { RIBBON_COLORS, RIBBON_COLORS_DARK, buildCurve, ribbonPath, ribbonWidth } from '../lib/ribbonGeometry'
+import { useTheme } from '../theme/ThemeContext'
 
 /**
  * Líneas fluidas: tres hilos finos (marino, cielo, lavanda) que nacen como un trazo apenas
@@ -17,6 +18,8 @@ const NO_IDS = []
 // opacity: transparencia del conjunto · sync: las tres líneas avanzan casi a la vez · radius: suavizado (mayor = más fluida)
 export default function FluidLines({ containerRef, ids = NO_IDS, build, minReveal, className = '', opacity = 1, sync = false, radius }) {
   const reduce = useReducedMotion()
+  const { resolved } = useTheme()
+  const colors = resolved === 'dark' ? RIBBON_COLORS_DARK : RIBBON_COLORS
   const paths = useRef([])
   const geo = useRef(null)
   const [box, setBox] = useState({ w: 0, h: 0 })
@@ -123,7 +126,7 @@ export default function FluidLines({ containerRef, ids = NO_IDS, build, minRevea
       style={{ opacity }}
       className={`pointer-events-none absolute left-0 top-0 z-0 overflow-hidden ${className}`}
     >
-      {RIBBON_COLORS.map((c, i) => (
+      {colors.map((c, i) => (
         <path key={c} ref={(el) => (paths.current[i] = el)} fill={c} />
       ))}
     </svg>

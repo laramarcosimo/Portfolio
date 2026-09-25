@@ -6,8 +6,8 @@ import ColorPanel from '../components/ColorPanel'
 import RibbonBanner from '../components/RibbonBanner'
 import TypeCatalog from '../components/TypeCatalog'
 import Reveal from '../components/Reveal'
-import { img, projects, toolLabels } from '../data/content'
-import { projectFonts, projectPages } from '../data/projectPages'
+import { useContent, useProjectPages } from '../data/useContent'
+import { useUi } from '../i18n/ui'
 
 // Vídeo en bucle que se reproduce solo mientras está a la vista.
 function LoopVideo({ src, className = '' }) {
@@ -46,22 +46,22 @@ function Stationery({ rows }) {
   )
 }
 
-function ToolsFooter({ page }) {
+function ToolsFooter({ page, img, toolLabels, t }) {
   return (
-    <div className="mx-auto mt-20 flex max-w-4xl flex-wrap items-start justify-center gap-x-16 gap-y-8 border-t border-navy/10 px-5 pt-10 text-center sm:px-8">
+    <div className="mx-auto mt-20 flex max-w-4xl flex-wrap items-start justify-center gap-x-16 gap-y-8 border-t border-ink/10 px-5 pt-10 text-center sm:px-8">
       <div>
-        <p className="text-sm font-bold text-navy">Hecho con:</p>
+        <p className="text-sm font-bold text-ink">{t.hechoCon}</p>
         <div className="mt-3 flex justify-center gap-3">
-          {page.tools.map((t) => (
-            <img key={t} src={img(`tools/${t}`)} alt={toolLabels[t]} title={toolLabels[t]} className="h-10 w-10" />
+          {page.tools.map((tool) => (
+            <img key={tool} src={img(`tools/${tool}`)} alt={toolLabels[tool]} title={toolLabels[tool]} className="h-10 w-10" />
           ))}
         </div>
       </div>
       {page.webTools && (
         <div>
-          <p className="text-sm font-bold text-navy">
+          <p className="text-sm font-bold text-ink">
             <a href={page.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 underline decoration-sky decoration-2 underline-offset-4 hover:text-lilac">
-              Web hecha con: <ExternalLink size={13} />
+              {t.webHechaCon} <ExternalLink size={13} />
             </a>
           </p>
           <div className="mt-3 flex justify-center gap-3">
@@ -78,7 +78,7 @@ function ToolsFooter({ page }) {
 }
 
 // Navegación al final de cada proyecto: anterior / siguiente (según el orden del listado de proyectos)
-function ProjectNav({ slug }) {
+function ProjectNav({ slug, projects, t }) {
   const i = projects.findIndex((p) => p.slug === slug)
   const prev = projects[i - 1]
   const next = projects[i + 1]
@@ -87,18 +87,18 @@ function ProjectNav({ slug }) {
   const renderCard = (p, dir) => (
     <Link
       to={`/proyectos/${p.slug}`}
-      className={`group flex items-center gap-3 rounded-2xl border border-navy/10 p-2.5 transition hover:border-lilac hover:shadow-lg hover:shadow-slate-200/70 sm:gap-4 sm:p-3 ${
+      className={`group flex items-center gap-3 rounded-2xl border border-ink/10 p-2.5 transition hover:border-lilac hover:shadow-lg hover:shadow-edge/70 sm:gap-4 sm:p-3 ${
         dir === 'next' ? 'flex-row-reverse text-right' : ''
       }`}
     >
-      <img src={p.cover} alt="" loading="lazy" className="aspect-[3/4] h-16 shrink-0 rounded-lg object-cover object-top ring-1 ring-slate-100 sm:h-20" />
+      <img src={p.cover} alt="" loading="lazy" className="aspect-[3/4] h-16 shrink-0 rounded-lg object-cover object-top ring-1 ring-edge sm:h-20" />
       <span className="min-w-0 flex-1">
-        <span className={`flex items-center gap-1 text-[11px] font-semibold text-navy/55 ${dir === 'next' ? 'justify-end' : ''}`}>
+        <span className={`flex items-center gap-1 text-[11px] font-semibold text-ink/55 ${dir === 'next' ? 'justify-end' : ''}`}>
           {dir === 'prev' && <ArrowLeft size={13} />}
-          {dir === 'prev' ? 'Proyecto anterior' : 'Proyecto siguiente'}
+          {dir === 'prev' ? t.proyectoAnterior : t.proyectoSiguiente}
           {dir === 'next' && <ArrowRight size={13} />}
         </span>
-        <span className="mt-0.5 block truncate text-sm font-semibold tracking-tight text-navy group-hover:text-lilac sm:text-base">{p.name}</span>
+        <span className="mt-0.5 block truncate text-sm font-semibold tracking-tight text-ink group-hover:text-lilac sm:text-base">{p.name}</span>
       </span>
     </Link>
   )
@@ -107,20 +107,20 @@ function ProjectNav({ slug }) {
   const renderBack = (dir) => (
     <Link
       to="/proyectos"
-      className={`group flex min-h-[5.5rem] items-center gap-3 rounded-2xl border border-navy/10 px-4 transition hover:border-lilac hover:shadow-lg hover:shadow-slate-200/70 sm:gap-4 ${
+      className={`group flex min-h-[5.5rem] items-center gap-3 rounded-2xl border border-ink/10 px-4 transition hover:border-lilac hover:shadow-lg hover:shadow-edge/70 sm:gap-4 ${
         dir === 'next' ? 'flex-row-reverse text-right' : ''
       }`}
     >
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-fog text-navy transition group-hover:bg-navy group-hover:text-white">
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-fog text-ink transition group-hover:bg-navy group-hover:text-white">
         {dir === 'next' ? <ArrowRight size={18} /> : <ArrowLeft size={18} />}
       </span>
-      <span className="text-sm font-semibold tracking-tight text-navy group-hover:text-lilac sm:text-base">Volver a Proyectos</span>
+      <span className="text-sm font-semibold tracking-tight text-ink group-hover:text-lilac sm:text-base">{t.volverAProyectos}</span>
     </Link>
   )
 
   return (
-    <nav aria-label="Otros proyectos" className="mx-auto mt-16 max-w-5xl px-5 sm:px-8">
-      <div className="h-px w-full bg-gradient-to-r from-navy/20 via-sky/60 to-lilac/50" aria-hidden="true" />
+    <nav aria-label={t.otrosProyectos} className="mx-auto mt-16 max-w-5xl px-5 sm:px-8">
+      <div className="h-px w-full bg-gradient-to-r from-ink/20 via-sky/60 to-lilac/50" aria-hidden="true" />
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {prev ? renderCard(prev, 'prev') : renderBack('prev')}
         {next ? renderCard(next, 'next') : renderBack('next')}
@@ -132,6 +132,9 @@ function ProjectNav({ slug }) {
 /** Página de un proyecto: portada, explicación, vídeos, identidad de color, tipografía y mockups. */
 export default function ProjectPage() {
   const { slug } = useParams()
+  const { img, projects, toolLabels } = useContent()
+  const { projectPages, projectFonts } = useProjectPages()
+  const t = useUi()
   const page = projectPages[slug]
 
   // Casa Ricardo usa fuentes de Adobe Fonts (Typekit), como en la web original
@@ -154,27 +157,27 @@ export default function ProjectPage() {
       <RibbonBanner height={150} />
 
       <div className="mx-auto max-w-5xl px-5 pt-8 sm:px-8">
-        <Link to="/proyectos" className="inline-flex items-center gap-2 text-xs font-semibold text-navy hover:text-lilac" title="Volver a Proyectos">
+        <Link to="/proyectos" className="inline-flex items-center gap-2 text-xs font-semibold text-ink hover:text-lilac" title={t.volverAProyectos}>
           <span className="grid h-9 w-9 place-items-center rounded-full bg-fog">
             <ArrowLeft size={16} />
           </span>
-          Proyectos
+          {t.proyectos}
         </Link>
-        <h1 className="mt-4 font-serif text-3xl font-medium tracking-tight text-navy sm:text-4xl">{page.title}</h1>
+        <h1 className="mt-4 font-serif text-3xl font-medium tracking-tight text-ink sm:text-4xl">{page.title}</h1>
       </div>
 
       {/* Proyecto de vídeo */}
       {page.video && (
         <section className="mx-auto max-w-4xl px-5 py-14 sm:px-8">
           <Reveal>
-            <p className="max-w-2xl text-base leading-relaxed text-navy/85">
-              <strong className="text-navy">{page.intro.lead}</strong>
+            <p className="max-w-2xl text-base leading-relaxed text-ink/85">
+              <strong className="text-ink">{page.intro.lead}</strong>
               <br />
               {page.intro.text}
             </p>
           </Reveal>
           <video src={page.video} poster={page.poster} controls playsInline preload="metadata" className="mt-10 w-full rounded-[3px] bg-navy shadow-xl shadow-navy/20" />
-          <ToolsFooter page={page} />
+          <ToolsFooter page={page} img={img} toolLabels={toolLabels} t={t} />
         </section>
       )}
 
@@ -194,7 +197,7 @@ export default function ProjectPage() {
 
           {/* Explicación */}
           <Reveal className="mx-auto max-w-3xl px-5 py-14 sm:px-8">
-            <p className="text-base leading-relaxed text-navy/85">{page.explanation}</p>
+            <p className="text-base leading-relaxed text-ink/85">{page.explanation}</p>
           </Reveal>
 
           {/* Vídeos del logotipo */}
@@ -265,11 +268,11 @@ export default function ProjectPage() {
             <Stationery rows={page.stationery} />
           </div>
 
-          <ToolsFooter page={page} />
+          <ToolsFooter page={page} img={img} toolLabels={toolLabels} t={t} />
         </>
       )}
 
-      <ProjectNav slug={slug} />
+      <ProjectNav slug={slug} projects={projects} t={t} />
       <div className="pb-20" />
     </main>
   )

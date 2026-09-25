@@ -1,12 +1,15 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal'
-import { about, img, site } from '../data/content'
+import { useContent } from '../data/useContent'
+import { useUi } from '../i18n/ui'
 
 const pill =
   'inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-7 text-xs font-semibold text-white shadow-md shadow-navy/20 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-navy/30 sm:min-h-0 sm:px-6 sm:py-2.5'
 
 export default function About() {
+  const { about, img, site } = useContent()
+  const t = useUi()
   return (
     // En móvil menos aire vertical (las líneas ocupan esas zonas) y texto algo mayor para leer bien
     <section id="sobre-mi" className="relative pb-28 pt-10 sm:pb-56 sm:pt-16">
@@ -32,17 +35,17 @@ export default function About() {
           <div>
             <Reveal>
               <p className="mb-2 text-[11px] font-semibold tracking-[0.16em] text-lilac">{about.kicker}</p>
-              <h2 className="font-serif text-3xl font-medium leading-tight tracking-tight text-navy">{about.title}</h2>
-              <p className="mt-2 font-display text-lg font-semibold tracking-tight text-navy sm:text-xl">{about.motto}</p>
+              <h2 className="font-serif text-3xl font-medium leading-tight tracking-tight text-ink">{about.title}</h2>
+              <p className="mt-2 font-display text-lg font-semibold tracking-tight text-ink sm:text-xl">{about.motto}</p>
             </Reveal>
             <Reveal delay={0.1}>
-              <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-navy/75 sm:text-[13px]">
-                <p className="font-semibold text-navy">{about.lead}</p>
+              <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-ink/75 sm:text-[13px]">
+                <p className="font-semibold text-ink">{about.lead}</p>
                 <p>{about.text}</p>
                 <p>{about.bio}</p>
               </div>
               <Link to="/curriculum" className={`${pill} mt-7 sm:mt-6`}>
-                Currículum
+                {t.curriculumLabel}
               </Link>
             </Reveal>
           </div>

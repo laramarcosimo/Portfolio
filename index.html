@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Portafolio de Lara Marco Simó: publicista y diseñadora gráfica digital. Identidad visual, diseño, motion y estrategia." />
     <title>Lara Marco Simó — Portafolio</title>
+    <script>
+      (function () {
+        try {
+          var m = localStorage.getItem('theme-mode');
+          var resolved = m === 'light' || m === 'dark' ? m : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', resolved);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,7 +1,8 @@
 import { AtSign } from 'lucide-react'
 import WhatsAppIcon from '../components/WhatsAppIcon'
 import Reveal from '../components/Reveal'
-import { contactItems } from '../data/content'
+import { useContent } from '../data/useContent'
+import { useUi } from '../i18n/ui'
 
 // Iconos de los enlaces de contacto (la web original: correo, WhatsApp, LinkedIn e Instagram)
 const brandPaths = {
@@ -23,10 +24,12 @@ function ContactIcon({ kind }) {
 
 /** Contacto: los cuatro enlaces de la web original (correo, WhatsApp, LinkedIn e Instagram). */
 export default function Contact() {
+  const { contactItems } = useContent()
+  const t = useUi()
   return (
     <section id="contacto" className="relative py-16 sm:py-20">
       <Reveal className="mx-auto max-w-3xl px-5 sm:px-8">
-        <h2 className="text-3xl font-medium tracking-tight text-navy">Contacto</h2>
+        <h2 className="text-3xl font-medium tracking-tight text-ink">{t.contacto}</h2>
         <ul className="mt-8 grid gap-4 sm:grid-cols-2">
           {contactItems.map((c) => (
             <li key={c.kind}>
@@ -34,7 +37,7 @@ export default function Contact() {
                 href={c.href}
                 target={c.kind === 'mail' ? undefined : '_blank'}
                 rel="noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-navy/10 px-4 py-3.5 text-[13px] font-semibold text-navy transition hover:border-lilac hover:text-lilac"
+                className="flex items-center gap-3 rounded-2xl border border-ink/10 px-4 py-3.5 text-[13px] font-semibold text-ink transition hover:border-lilac hover:text-lilac"
               >
                 <span className="grid h-9 w-9 place-items-center rounded-full bg-sky/30">
                   <ContactIcon kind={c.kind} />

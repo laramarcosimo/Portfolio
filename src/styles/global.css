@@ -11,6 +11,8 @@
 @font-face { font-family: "Fieldwork Hum"; font-weight: 400; font-display: swap; src: url("../assets/fonts/Fieldwork-Hum-Regular.otf") format("opentype"); }
 @font-face { font-family: "Fieldwork Geo"; font-weight: 600; font-display: swap; src: url("../assets/fonts/Fieldwork-Semi-Bold-Geo.otf") format("opentype"); }
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @theme {
   --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Quicksand", ui-sans-serif, system-ui, sans-serif;
@@ -20,16 +22,35 @@
   --color-lilac: #9690e4;
   --color-mist: #f8fafc;
   --color-fog: #f3f4f6;
+  /* Tokens de tema: texto ("ink"), superficies tipo tarjeta y líneas finas, todos con variante oscura */
+  --color-ink: #192a56;
+  --color-surface: #ffffff;
+  --color-edge: #e2e8f0;
+  --page-gradient: linear-gradient(165deg, #f6f9fd 0%, #ddedff 28%, #e7e1fa 58%, #f6f9fd 100%);
+}
+
+/* Paleta oscura: mismos tokens, valores pensados para fondo casi negro-azulado */
+[data-theme="dark"] {
+  --color-navy: #2a3f7a;
+  --color-sky: #7fb8f5;
+  --color-lilac: #ab9ff2;
+  --color-mist: #0b1330;
+  --color-fog: #16224a;
+  --color-ink: #e8ecfb;
+  --color-surface: #101a3e;
+  --color-edge: #2a3766;
+  --page-gradient: linear-gradient(165deg, #090d1f 0%, #0c1430 28%, #191338 58%, #090d1f 100%);
 }
 
 @layer base {
   html { scroll-behavior: smooth; overflow-x: clip; }
   body {
-    background: linear-gradient(165deg, #f6f9fd 0%, #ddedff 28%, #e7e1fa 58%, #f6f9fd 100%) fixed;
-    color: var(--color-navy);
+    background: var(--page-gradient) fixed;
+    color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     overflow-x: clip;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   section[id] { scroll-margin-top: 4rem; }
   /* En móvil el currículum tiene además una barra de chips fija (4 rem + ~3,25 rem) */

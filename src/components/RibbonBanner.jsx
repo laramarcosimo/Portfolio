@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAnimationFrame, useReducedMotion } from 'framer-motion'
-import { RIBBON_COLORS, buildCurve, ribbonPath, ribbonWidth } from '../lib/ribbonGeometry'
+import { RIBBON_COLORS, RIBBON_COLORS_DARK, buildCurve, ribbonPath, ribbonWidth } from '../lib/ribbonGeometry'
+import { useTheme } from '../theme/ThemeContext'
 
 /** Banda decorativa de las páginas interiores: tres cintas que cruzan de borde a borde con giros fuera de pantalla. */
 export default function RibbonBanner({ height = 170, className = '' }) {
   const reduce = useReducedMotion()
+  const { resolved } = useTheme()
+  const colors = resolved === 'dark' ? RIBBON_COLORS_DARK : RIBBON_COLORS
   const ref = useRef(null)
   const paths = useRef([])
   const geo = useRef(null)
@@ -48,7 +51,7 @@ export default function RibbonBanner({ height = 170, className = '' }) {
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`} style={{ height }} aria-hidden="true">
       <svg width={w} height={height} viewBox={`0 0 ${w || 1} ${height}`} className="absolute inset-0">
-        {RIBBON_COLORS.map((c, i) => (
+        {colors.map((c, i) => (
           <path key={c} ref={(el) => (paths.current[i] = el)} fill={c} />
         ))}
       </svg>

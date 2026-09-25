@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useUi } from '../i18n/ui'
 
 /** Catálogo tipográfico: abecedario y muestra "Aa" que cambia con cada peso/variante. */
 export default function TypeCatalog({ title, chars, extra, weights, className = '' }) {
+  const t = useUi()
   const [active, setActive] = useState(0)
   const w = weights[active]
   const style = { fontFamily: w.family, fontWeight: w.weight }
@@ -11,36 +13,36 @@ export default function TypeCatalog({ title, chars, extra, weights, className = 
     <div className={`rounded-3xl bg-fog p-6 sm:p-8 ${className}`}>
       <div className="grid gap-8 sm:grid-cols-2">
         <div>
-          <h3 className="text-3xl text-navy sm:text-4xl" style={style}>
+          <h3 className="text-3xl text-ink sm:text-4xl" style={style}>
             {title}
           </h3>
-          <div className="mt-5 grid grid-cols-6 gap-x-2 gap-y-1 text-lg text-navy" style={style} aria-hidden="true">
+          <div className="mt-5 grid grid-cols-6 gap-x-2 gap-y-1 text-lg text-ink" style={style} aria-hidden="true">
             {chars.map((c) => (
               <span key={c}>{c}</span>
             ))}
           </div>
           {extras.map((e) => (
-            <p key={e} className="mt-2 text-lg text-navy" style={style} aria-hidden="true">
+            <p key={e} className="mt-2 text-lg text-ink" style={style} aria-hidden="true">
               {e}
             </p>
           ))}
         </div>
         <div className="flex flex-col justify-between gap-6">
-          <div className="flex flex-wrap gap-2" role="group" aria-label={`Variantes de ${title}`}>
+          <div className="flex flex-wrap gap-2" role="group" aria-label={t.variantesDe(title)}>
             {weights.map((v, i) => (
               <button
                 key={v.label}
                 onClick={() => setActive(i)}
                 aria-pressed={i === active}
                 className={`rounded-full px-4 py-1.5 text-xs font-semibold transition ${
-                  i === active ? 'bg-navy text-white' : 'bg-white text-navy hover:bg-sky/30'
+                  i === active ? 'bg-navy text-white' : 'bg-surface text-ink hover:bg-sky/30'
                 }`}
               >
                 {v.label}
               </button>
             ))}
           </div>
-          <p className="text-[7rem] leading-none text-navy sm:text-[9rem]" style={style} aria-hidden="true">
+          <p className="text-[7rem] leading-none text-ink sm:text-[9rem]" style={style} aria-hidden="true">
             Aa
           </p>
         </div>
