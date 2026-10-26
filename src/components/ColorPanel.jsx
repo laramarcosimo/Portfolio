@@ -1,19 +1,22 @@
-import Typewriter from './Typewriter'
+// "HEX     #9690E4" / "HEX: #000000" → ['HEX', '#9690E4']
+const parse = (line) => {
+  const m = line.match(/^(\w+):?\s+(.*)$/)
+  return m ? [m[1], m[2].replace(/\s*,\s*/g, ', ')] : ['', line]
+}
 
-/** Cuadro de color de la identidad: nombre + HEX/RGB/CMYK escritos a máquina y logotipos. */
+/** Muestra de color: bloque de color, nombre y HEX; RGB y CMYK como texto pequeño. */
 export default function ColorPanel({ color }) {
-  const text = color.dark ? 'text-navy' : 'text-white'
+  const values = Object.fromEntries(color.lines.map(parse))
   return (
-    <div
-      className={`relative flex min-h-[12.5rem] flex-col justify-between overflow-hidden p-6 sm:min-h-[18rem] sm:p-7 ${text} ${color.bordered ? 'ring-1 ring-navy/15 ring-inset' : ''}`}
-      style={{ background: color.bg }}
-    >
-      <Typewriter lines={[color.name, ...color.lines]} />
-      <div className="mt-6 flex flex-wrap items-center gap-4">
-        {color.logos.map((l) => (
-          <img key={l.src} src={l.src} alt={l.alt} className="h-14 w-auto max-w-[45%] object-contain" />
-        ))}
-      </div>
-    </div>
+    <figure>
+      <div className={`aspect-[4/3] w-full ${color.bordered ? 'ring-1 ring-inset ring-ink/15' : ''}`} style={{ background: color.bg }} />
+      <figcaption className="mt-3">
+        <p className="text-[15px] font-semibold text-ink">{color.name}</p>
+        <p className="mt-1 text-[15px] tabular-nums text-ink/75">{values.HEX}</p>
+        <p className="mt-1 text-xs tabular-nums text-ink/75">
+          RGB {values.RGB} · CMYK {values.CMYK}
+        </p>
+      </figcaption>
+    </figure>
   )
 }

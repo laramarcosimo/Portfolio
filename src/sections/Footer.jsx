@@ -1,4 +1,5 @@
 import { AtSign } from 'lucide-react'
+import { useLocation } from 'react-router-dom'
 import RibbonBanner from '../components/RibbonBanner'
 import WhatsAppIcon from '../components/WhatsAppIcon'
 import { useContent } from '../data/useContent'
@@ -21,6 +22,8 @@ const Brand = ({ kind }) => (
 export default function Footer() {
   const { site } = useContent()
   const t = useUi()
+  // En la portada las líneas ya recorren la página: no se repiten justo antes del pie
+  const { pathname } = useLocation()
   // Solo iconos (cada enlace lleva su nombre accesible para lectores de pantalla)
   const links = [
     { label: t.correoElectronico, href: `mailto:${site.email}`, icon: <AtSign size={19} /> },
@@ -30,7 +33,7 @@ export default function Footer() {
   ]
   return (
     <footer id="site-footer" className="relative z-10">
-      <RibbonBanner height={84} />
+      {pathname === '/' ? <div className="h-10" aria-hidden="true" /> : <RibbonBanner height={84} />}
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 px-5 pb-10 pt-4 text-center sm:px-8">
         <ul className="flex items-center gap-3">
           {links.map((l) => (
@@ -46,7 +49,7 @@ export default function Footer() {
             </li>
           ))}
         </ul>
-        <p className="text-[11px] font-medium text-ink/55">{site.copyright}</p>
+        <p className="text-xs font-medium text-ink/75">{site.copyright}</p>
       </div>
     </footer>
   )

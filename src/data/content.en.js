@@ -14,7 +14,7 @@ export const site = {
 
 export const navLinks = [
   { to: '/', label: 'Home' },
-  { to: '/curriculum', label: 'Resume' },
+  { to: '/curriculum', label: 'CV' },
   { to: '/proyectos', label: 'Projects' },
   { to: '/contacto', label: 'Contact' },
 ]
@@ -25,7 +25,7 @@ export const about = {
   motto: 'Learn, grow and evolve.',
   lead: 'Advertiser and designer in constant evolution.',
   text: 'I believe in strategy born from sincerity and in design that tells real stories.',
-  bio: 'With experience in editing and a deep passion for creativity, I am excited to bring my skills and innovative vision to the team. I am currently studying a double degree in digital graphic design and advertising, where I develop projects that fuse visual aesthetics with effective communication strategies.',
+  bio: 'Graphic designer and advertiser in training (double degree at Universidad Europea). I have worked at an agency producing graphic pieces for campaigns, and I edit audiovisual content. My projects combine visual identity, typography and colour with a clear communication strategy.',
   gallery: [1, 2, 3, 4].map((n) => ({ src: img(`about/gift${n}`), alt: `Design ${n}` })),
 }
 
@@ -33,16 +33,12 @@ export const about = {
 export const cv = {
   subtitle: 'Double degree in digital graphic design and advertising',
   personal: [
-    { label: 'Born', value: '05/05/2003' },
-    { label: 'Nationality', value: 'Spanish' },
-    { label: 'Licence', value: 'Type B1' },
+    { label: 'Location', value: 'Santa Cruz de Tenerife' },
+    { label: 'Licence', value: 'B' },
   ],
   education: [
     { title: 'Double degree in digital graphic design and advertising', date: '2022 - Present', role: 'Universidad Europea | Santa Cruz de Tenerife' },
-    { title: 'Internship at Arco Comunicación', date: '2024', role: 'Advertising Agency | Santa Cruz de Tenerife' },
     { title: '1st year of Interactive Technologies degree', date: '2022', role: 'UPV | Valencia' },
-    { title: 'High School Diploma', date: '2021', role: 'La Salle San Ildefonso | Santa Cruz de Tenerife' },
-    { title: 'Compulsory Secondary Education Diploma', date: '2019', role: 'Colegio Adonai | Santa Cruz de Tenerife' },
   ],
   experience: [
     {
@@ -60,7 +56,7 @@ export const cv = {
       desc: 'Development of graphic pieces and support executing creative advertising campaigns.',
     },
     {
-      title: 'Edición de podcast',
+      title: 'Podcast editing',
       href: 'https://www.youtube.com/@DesdeMiExperienciaPodcast?app=desktop',
       date: '2024',
       role: 'Desde Mi Experiencia | Santa Cruz de Tenerife',
@@ -113,10 +109,10 @@ export const contactItems = [
 
 // ---------- Projects (list and carousel cards) ----------
 export const projects = [
-  { slug: 'marca-personal', number: '01', name: 'PERSONAL BRAND', cover: img('marca-personal/portada') },
-  { slug: 'identidad-visual', number: '02', name: 'Visual Identity', cover: img('identidad-visual/portada') },
-  { slug: 'casa-ricardo', number: '03', name: 'CASA RICARDO', cover: img('casa-ricardo/portada') },
-  { slug: 'proyecto-video', number: '04', name: 'VIDEO PROJECT', cover: img('video/portada') },
+  { slug: 'marca-personal', number: '01', name: 'Personal Brand', cover: img('marca-personal/portada'), hero: img('marca-personal/libretas'), heroAlt: 'Personal brand notebooks in navy, lilac and sky blue', concept: 'A monogram interweaving the initials L, M and S.' },
+  { slug: 'identidad-visual', number: '02', name: 'Visual Identity', cover: img('identidad-visual/portada'), hero: img('identidad-visual/tarjeta'), heroAlt: 'Business cards with the JMG monogram', concept: "A minimalist monogram for an engineer's personal brand." },
+  { slug: 'casa-ricardo', number: '03', name: 'Casa Ricardo', cover: img('casa-ricardo/portada'), hero: img('casa-ricardo/packaging-delante'), heroAlt: 'Casa Ricardo nut packaging', concept: 'Redesigning the identity of a sweets and nuts shop.' },
+  { slug: 'proyecto-video', number: '04', name: 'Video Project', cover: img('video/portada'), hero: img('video/portada'), heroAlt: 'Cover of the SloMo × Lola Índigo music video', concept: "A music video pairing Chanel's ‘SloMo’ with Lola Índigo's dance." },
 ]
 
 const categories = {
@@ -125,4 +121,9 @@ const categories = {
   'casa-ricardo': 'Visual identity redesign',
   'proyecto-video': 'Music video',
 }
+// Grupo de la página de Proyectos: las identidades juntas, el vídeo aparte
+export const projectGroups = [
+  { id: 'identidad', label: 'Visual identity', slugs: ['marca-personal', 'identidad-visual', 'casa-ricardo'] },
+  { id: 'audiovisual', label: 'Audiovisual', slugs: ['proyecto-video'] },
+]
 export const featuredProjects = projects.map((p) => ({ ...p, category: categories[p.slug] }))

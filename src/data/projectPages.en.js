@@ -22,8 +22,12 @@ export const projectPages = {
   'marca-personal': {
     title: 'Personal Brand',
     cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/portada'), alt: 'Personal Brand cover' },
-    explanation:
-      'My visual identity is the meeting point between who I am and what I do. The logo is born from the organic fusion of my initials (L, M and S), interwoven in a stroke that pays homage to my two great passions: the depth of reading and my passion for design. It is a design that seeks the perfect balance between dynamism and elegance, where every line flows to represent communication with purpose, soul and technical rigor.',
+    context: 'Personal project',
+    story: [
+      { key: 'partida', text: "My visual identity is the meeting point between who I am and what I do." },
+      { key: 'concepto', text: "The logo is born from the organic fusion of my initials (L, M and S), interwoven in a stroke that pays homage to my two great passions: the depth of reading and my passion for design." },
+      { key: 'resultado', text: "It is a design that seeks the perfect balance between dynamism and elegance, where every line flows to represent communication with purpose, soul and technical rigor." },
+    ],
     videos: { single: marcaExplicacion, wide: marcaFondo, pair: [marcaLogoBlanco, marcaLogoAzul] },
     colors: [
       {
@@ -59,7 +63,6 @@ export const projectPages = {
         { label: 'Light', weight: 300, family: "'Quicksand'" },
       ],
     },
-    photos: [ph('marca-personal/riendo', 'Laughing'), ph('marca-personal/sentada', 'Sitting'), ph('marca-personal/depie', 'Standing')],
     stationery: [
       { pair: [ph('marca-personal/libretas', 'Notebooks'), ph('marca-personal/boligrafos', 'Pens')] },
       { main: ph('marca-personal/tarjeta', 'Business Card') },
@@ -71,8 +74,11 @@ export const projectPages = {
   'identidad-visual': {
     title: 'Visual Identity',
     cover: { desktop: img('identidad-visual/portada-interior'), mobile: img('identidad-visual/portada-interior'), alt: 'Visual Identity inner cover' },
-    explanation:
-      "This identity is born from the integration of the engineer's initials, designed under a concept of interconnectivity. The result is a minimalist, structured monogram that reflects the ability to solve complex problems through clean solutions, giving his personal brand a solid, professional visual foundation.",
+    context: 'Commission · Personal brand for an engineer',
+    story: [
+      { key: 'concepto', text: "This identity is born from the integration of the engineer's initials, designed under a concept of interconnectivity." },
+      { key: 'resultado', text: "The result is a minimalist, structured monogram that reflects the ability to solve complex problems through clean solutions, giving his personal brand a solid, professional visual foundation." },
+    ],
     videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro], pairTones: ['#000', '#fff'] },
     colors: [
       {
@@ -121,8 +127,12 @@ export const projectPages = {
   'casa-ricardo': {
     title: 'Casa Ricardo',
     cover: { desktop: img('casa-ricardo/logo'), mobile: img('casa-ricardo/logo'), alt: 'Casa Ricardo cover', contain: true },
-    explanation:
-      "During my internship I worked on redesigning the visual identity of Casa Ricardo, a shop selling sweets and nuts. The goal was to modernise the logo without losing the brand's close, traditional essence. Legibility, composition and adaptation to different formats were improved. The result was a more current, cleaner image while keeping the business's recognisable personality.",
+    context: 'Internship',
+    story: [
+      { key: 'reto', text: "During my internship I worked on redesigning the visual identity of Casa Ricardo, a shop selling sweets and nuts. The goal was to modernise the logo without losing the brand's close, traditional essence." },
+      { key: 'proceso', text: "Legibility, composition and adaptation to different formats were improved." },
+      { key: 'resultado', text: "The result was a more current, cleaner image while keeping the business's recognisable personality." },
+    ],
     comparison: [ph('casa-ricardo/logo', 'New Casa Ricardo Logo'), ph('casa-ricardo/logo-viejo', 'Old Casa Ricardo Logo')],
     colors: [
       {
@@ -177,6 +187,7 @@ export const projectPages = {
 
   'proyecto-video': {
     title: 'Video Project',
+    context: 'Audiovisual project',
     intro: { lead: 'SloMo × Lola Índigo.', text: "Audiovisual reinterpretation born from the union of Chanel's music and Lola Índigo's visual universe to create a new music video." },
     video: videoLola,
     poster: img('video/portada'),

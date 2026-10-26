@@ -1,54 +1,32 @@
-import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import Reveal from '../components/Reveal'
 import { useContent } from '../data/useContent'
 import { useUi } from '../i18n/ui'
 
-const pill =
-  'inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-7 text-xs font-semibold text-white shadow-md shadow-navy/20 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-navy/30 sm:min-h-0 sm:px-6 sm:py-2.5'
-
+/** Sobre mí con presencia: retrato grande (con el bloque lavanda desplazado detrás) y texto breve y concreto. */
 export default function About() {
   const { about, img, site } = useContent()
   const t = useUi()
   return (
-    // En móvil menos aire vertical (las líneas ocupan esas zonas) y texto algo mayor para leer bien
-    <section id="sobre-mi" className="relative pb-28 pt-10 sm:pb-56 sm:pt-16">
-      <div id="about-content" className="relative z-10 mx-auto max-w-3xl px-6 sm:px-8">
-        <div className="grid items-center gap-10 md:grid-cols-[15rem_1fr] md:gap-14">
-          {/* Retrato real en blanco y negro, con el bloque lavanda desplazado detrás */}
-          <motion.div
-            id="about-photo"
-            initial={{ opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8 }}
-            className="relative mx-auto w-full max-w-[13rem] md:max-w-[15rem]"
+    <section id="sobre-mi" className="relative z-10 mx-auto max-w-6xl px-4 pb-24 pt-20 sm:px-8 sm:pb-44 sm:pt-28">
+      <div id="about-content" className="grid items-center gap-10 md:grid-cols-[2fr_3fr] md:gap-16">
+        <div className="relative mx-auto w-[70%] max-w-[22rem] md:mx-0 md:w-full md:max-w-none">
+          <div className="absolute -bottom-4 -right-4 h-full w-full rounded-[2rem] bg-lilac/30" aria-hidden="true" />
+          <img
+            src={img('about/retrato')}
+            alt={`${site.name}`}
+            loading="lazy"
+            className="relative aspect-[4/5] w-full rounded-[2rem] object-cover object-top grayscale"
+          />
+        </div>
+        <div className="max-w-[52ch]">
+          <h2 className="headline text-4xl text-ink sm:text-5xl lg:text-6xl">{about.title}</h2>
+          <p className="mt-6 text-lg leading-relaxed text-ink sm:text-xl">{t.sobreMiCorto}</p>
+          <Link
+            to="/curriculum"
+            className="mt-8 inline-block text-[15px] font-semibold text-ink underline decoration-lilac decoration-2 underline-offset-[6px] transition-colors hover:text-lilac-ink sm:text-base"
           >
-            <div className="absolute -bottom-3 -right-3 h-full w-full bg-lilac/30" aria-hidden="true" />
-            <img
-              src={img('about/retrato')}
-              alt={`Retrato de ${site.name}`}
-              className="relative aspect-[4/5] w-full object-cover object-top grayscale"
-            />
-          </motion.div>
-
-          <div>
-            <Reveal>
-              <p className="mb-2 text-[11px] font-semibold tracking-[0.16em] text-lilac">{about.kicker}</p>
-              <h2 className="font-serif text-3xl font-medium leading-tight tracking-tight text-ink">{about.title}</h2>
-              <p className="mt-2 font-display text-lg font-semibold tracking-tight text-ink sm:text-xl">{about.motto}</p>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-ink/75 sm:text-[13px]">
-                <p className="font-semibold text-ink">{about.lead}</p>
-                <p>{about.text}</p>
-                <p>{about.bio}</p>
-              </div>
-              <Link to="/curriculum" className={`${pill} mt-7 sm:mt-6`}>
-                {t.curriculumLabel}
-              </Link>
-            </Reveal>
-          </div>
+            {t.verCurriculum} →
+          </Link>
         </div>
       </div>
     </section>

@@ -1,96 +1,64 @@
-import { useRef, useSyncExternalStore } from 'react'
-import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import FluidLines from '../components/FluidLines'
+import { useState } from 'react'
+import ProjectCard from '../components/ProjectCard'
+import Reveal from '../components/Reveal'
 import RibbonBanner from '../components/RibbonBanner'
 import { useContent } from '../data/useContent'
 import { useUi } from '../i18n/ui'
-import { PROJECT_IDS, projectsRoute } from '../lib/homeRoutes'
-
-// ¿Pantalla de móvil? (menos de 768 px)
-const mq = '(max-width: 767px)'
-const subscribe = (cb) => {
-  const m = window.matchMedia(mq)
-  m.addEventListener('change', cb)
-  return () => m.removeEventListener('change', cb)
-}
-const useIsMobile = () => useSyncExternalStore(subscribe, () => window.matchMedia(mq).matches, () => false)
 
 /**
- * Listado de proyectos de la web original: número, nombre y portada; cada uno abre su página.
- * En móvil las cuatro portadas se muestran a la vez en una cuadrícula 2×2 que cabe en la pantalla.
+ * Proyectos: titular breve y una sección por categoría (Identidad visual, Audiovisual),
+ * cada una con su cuadrícula de portadas. Unos chips permiten ver solo una categoría.
  */
 export default function Projects() {
-  const { projects } = useContent()
+  const { featuredProjects, projectGroups } = useContent()
   const t = useUi()
-  const mobile = useIsMobile()
-  const pageRef = useRef(null)
+  const [filter, setFilter] = useState('all')
+  const groups = projectGroups
+    .filter((g) => filter === 'all' || g.id === filter)
+    .map((g) => ({ ...g, items: g.slugs.map((s) => featuredProjects.find((p) => p.slug === s)) }))
 
-  if (mobile) {
-    return (
-      <main>
-        <RibbonBanner height={84} />
-        <h1 className="sr-only">{t.proyectos}</h1>
-
-        {/* Una portada tras otra. La altura de cada fila se calcula con el alto de pantalla
-            ((pantalla − barra − banner − márgenes) / 4) para que las cuatro quepan siempre de una vez. */}
-        <ul className="mx-auto flex max-w-md flex-col gap-3 px-6 pb-6 pt-5">
-          {projects.map((p, i) => (
-            <motion.li key={p.slug} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: i * 0.08 }}>
-              <Link to={`/proyectos/${p.slug}`} aria-label={t.verNombre(p.name)} className="group flex items-center gap-5">
-                <img
-                  src={p.cover}
-                  alt={t.portadaDe(p.name)}
-                  style={{ height: 'min(9.5rem, calc((100svh - 12rem) / 4 - 0.75rem))' }}
-                  className="aspect-[3/4] shrink-0 rounded-lg object-cover object-top shadow-md shadow-edge/80 ring-1 ring-edge transition group-active:scale-[0.97]"
-                />
-                <div className="min-w-0">
-                  <p className="text-[11px] font-semibold tracking-[0.18em] text-lilac">{p.number}</p>
-                  <h2 className="mt-0.5 text-base font-semibold leading-tight tracking-tight text-ink">{p.name}</h2>
-                  <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-ink/60">
-                    {t.ver.toUpperCase()} <ArrowRight size={12} />
-                  </span>
-                </div>
-              </Link>
-            </motion.li>
-          ))}
-        </ul>
-      </main>
-    )
-  }
+  const chips = [{ id: 'all', label: t.todos }, ...projectGroups.map((g) => ({ id: g.id, label: g.label }))]
 
   return (
-    <main ref={pageRef} className="relative isolate">
-      {/* Solo en escritorio: un único juego de tres líneas nace arriba y baja guiando de un proyecto al siguiente */}
-      <FluidLines containerRef={pageRef} ids={PROJECT_IDS} build={projectsRoute} opacity={0.4} sync radius={30} />
-      <h1 className="sr-only">{t.proyectos}</h1>
+    <main className="pb-20 sm:pb-28">
+      <RibbonBanner height={84} />
+      <header className="mx-auto max-w-6xl px-4 pb-8 pt-10 sm:px-8 sm:pb-10 sm:pt-14">
+        <h1 className="headline text-5xl text-ink sm:text-7xl">{t.proyectos}</h1>
+        <p className="mt-5 max-w-[44ch] text-lg leading-relaxed text-ink/75 sm:text-xl">{t.proyectosClaim}</p>
+        <div role="group" aria-label={t.filtrar} className="mt-8 flex flex-wrap gap-2">
+          {chips.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              aria-pressed={filter === c.id}
+              onClick={() => setFilter(c.id)}
+              className={`min-h-10 rounded-full border px-4 text-sm font-semibold transition-colors ${
+                filter === c.id ? 'border-navy bg-navy text-white' : 'border-ink/20 text-ink hover:border-lilac-ink hover:text-lilac-ink'
+              }`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+      </header>
 
-      <div className="relative z-10 mx-auto max-w-4xl space-y-28 px-8 pb-28 pt-56">
-        {projects.map((p, i) => (
-          <motion.section
-            key={p.slug}
-            id={`proyecto-${p.slug}`}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.7 }}
-            className={`grid grid-cols-2 items-center gap-14 ${i % 2 ? '[&>*:first-child]:order-2' : ''}`}
-          >
-            <div className={i % 2 ? 'text-left' : 'text-right'}>
-              <span className="text-5xl font-light text-lilac">{p.number}</span>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight text-ink">{p.name}</h2>
-              <Link
-                to={`/proyectos/${p.slug}`}
-                className="mt-5 inline-flex items-center gap-2 rounded-full bg-navy px-7 py-2.5 text-xs font-semibold text-white shadow-md shadow-navy/20 transition hover:-translate-y-0.5"
-              >
-                {t.ver.toUpperCase()} <ArrowRight size={14} />
-              </Link>
+      <div className="mx-auto max-w-6xl space-y-20 px-4 sm:space-y-28 sm:px-8">
+        {groups.map((g) => (
+          <section key={g.id} aria-labelledby={`cat-${g.id}`}>
+            <div className="flex items-baseline justify-between gap-4 border-t border-ink/15 pt-5">
+              <h2 id={`cat-${g.id}`} className="headline text-2xl text-ink sm:text-4xl">{g.label}</h2>
+              <p className="eyebrow shrink-0 text-ink/75">{t.nProyectos(g.items.length)}</p>
             </div>
-            <Link to={`/proyectos/${p.slug}`} aria-label={t.verNombre(p.name)} className="group block overflow-hidden rounded-[3px] shadow-lg shadow-navy/15">
-              <img src={p.cover} alt={p.name} loading="lazy" className="w-full transition duration-500 group-hover:scale-[1.03]" />
-            </Link>
-          </motion.section>
+            <ul className="mt-8 grid gap-x-8 gap-y-14 sm:mt-10 sm:grid-cols-2 sm:gap-x-10">
+              {g.items.map((p) => (
+                <li key={p.slug}>
+                  <Reveal>
+                    <ProjectCard project={p} />
+                  </Reveal>
+                </li>
+              ))}
+            </ul>
+          </section>
         ))}
       </div>
     </main>

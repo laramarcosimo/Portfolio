@@ -1,13 +1,16 @@
 import { useEffect, useRef } from 'react'
-import { useInView } from 'framer-motion'
-import { ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react'
+import { MotionConfig, useInView } from 'framer-motion'
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import ColorPanel from '../components/ColorPanel'
-import RibbonBanner from '../components/RibbonBanner'
 import TypeCatalog from '../components/TypeCatalog'
 import Reveal from '../components/Reveal'
 import { useContent, useProjectPages } from '../data/useContent'
 import { useUi } from '../i18n/ui'
+
+const WRAP = 'mx-auto w-full max-w-6xl px-4 sm:px-8'
+// Imágenes de trabajo: a sangre en móvil, en un contenedor ancho en escritorio
+const WIDE = 'mx-auto w-full max-w-7xl sm:px-8'
 
 // Vídeo en bucle que se reproduce solo mientras está a la vista.
 function LoopVideo({ src, className = '' }) {
@@ -19,120 +22,98 @@ function LoopVideo({ src, className = '' }) {
     if (inView) v.play().catch(() => {})
     else v.pause()
   }, [inView])
-  return <video ref={ref} src={src} muted loop playsInline preload="metadata" className={className} />
+  return <video ref={ref} src={src} muted loop playsInline preload="metadata" className={`block w-full ${className}`} />
 }
 
-const Photo = ({ g, className = '' }) => <img src={g.src} alt={g.alt} loading="lazy" className={`w-full ${className}`} />
+const Photo = ({ g, className = '' }) => <img src={g.src} alt={g.alt} loading="lazy" className={`block h-auto w-full bg-fog ${className}`} />
 
-function Stationery({ rows }) {
+/** Bloque con etiqueta a la izquierda (escritorio) y contenido a la derecha. */
+function Section({ label, children, wide = false, className = '' }) {
   return (
-    <div className="mx-auto max-w-5xl space-y-4 px-5 sm:px-8">
-      {rows.map((row, i) =>
-        row.pair ? (
-          <div key={i} className="grid gap-4 sm:grid-cols-2">
-            {row.pair.map((g) => (
-              <Photo key={g.src} g={g} className="rounded-[3px] bg-fog object-cover" />
-            ))}
-          </div>
-        ) : row.href ? (
-          <a key={i} href={row.href} target="_blank" rel="noreferrer" className="block">
-            <Photo g={row.main} className="rounded-[3px] bg-fog" />
-          </a>
-        ) : (
-          <Photo key={i} g={row.main} className="rounded-[3px] bg-fog" />
-        ),
-      )}
-    </div>
-  )
-}
-
-function ToolsFooter({ page, img, toolLabels, t }) {
-  return (
-    <div className="mx-auto mt-20 flex max-w-4xl flex-wrap items-start justify-center gap-x-16 gap-y-8 border-t border-ink/10 px-5 pt-10 text-center sm:px-8">
-      <div>
-        <p className="text-sm font-bold text-ink">{t.hechoCon}</p>
-        <div className="mt-3 flex justify-center gap-3">
-          {page.tools.map((tool) => (
-            <img key={tool} src={img(`tools/${tool}`)} alt={toolLabels[tool]} title={toolLabels[tool]} className="h-10 w-10" />
-          ))}
-        </div>
+    <section className={`mt-20 sm:mt-28 ${className}`} aria-label={label}>
+      <div className={WRAP}>
+        <h2 className="mb-6 border-t border-ink/15 pt-4 eyebrow text-ink/75 sm:mb-8">{label}</h2>
       </div>
-      {page.webTools && (
-        <div>
-          <p className="text-sm font-bold text-ink">
-            <a href={page.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 underline decoration-sky decoration-2 underline-offset-4 hover:text-lilac">
-              {t.webHechaCon} <ExternalLink size={13} />
+      <div className={wide ? WIDE : WRAP}>{children}</div>
+    </section>
+  )
+}
+
+function Applications({ rows }) {
+  return (
+    <div className="space-y-3 sm:space-y-6">
+      {rows.map((row, i) => (
+        <Reveal key={i}>
+          {row.pair ? (
+            <div className="grid items-start gap-3 sm:grid-cols-2 sm:gap-6">
+              {row.pair.map((g) => (
+                <Photo key={g.src} g={g} />
+              ))}
+            </div>
+          ) : row.href ? (
+            <a href={row.href} target="_blank" rel="noreferrer" className="group block">
+              <Photo g={row.main} className="transition duration-500 group-hover:opacity-90" />
             </a>
-          </p>
-          <div className="mt-3 flex justify-center gap-3">
-            {page.webTools.map((t) => (
-              <span key={t} className="grid h-10 w-10 place-items-center rounded-lg bg-navy text-xs font-bold text-white">
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+          ) : (
+            <Photo g={row.main} />
+          )}
+        </Reveal>
+      ))}
     </div>
   )
 }
 
-// Navegación al final de cada proyecto: anterior / siguiente (según el orden del listado de proyectos)
+// Quita de las aplicaciones la imagen que ya se usa como portada; una pareja que se queda con una sola pasa a ancho completo.
+function withoutHero(rows, heroSrc) {
+  return rows
+    .map((row) => {
+      if (row.pair) {
+        const rest = row.pair.filter((g) => g.src !== heroSrc)
+        return rest.length === 2 ? row : rest.length === 1 ? { main: rest[0] } : null
+      }
+      return row.main?.src === heroSrc ? null : row
+    })
+    .filter(Boolean)
+}
+
 function ProjectNav({ slug, projects, t }) {
   const i = projects.findIndex((p) => p.slug === slug)
   const prev = projects[i - 1]
   const next = projects[i + 1]
 
-  // Función de renderizado (no un componente definido dentro del render)
-  const renderCard = (p, dir) => (
-    <Link
-      to={`/proyectos/${p.slug}`}
-      className={`group flex items-center gap-3 rounded-2xl border border-ink/10 p-2.5 transition hover:border-lilac hover:shadow-lg hover:shadow-edge/70 sm:gap-4 sm:p-3 ${
-        dir === 'next' ? 'flex-row-reverse text-right' : ''
-      }`}
-    >
-      <img src={p.cover} alt="" loading="lazy" className="aspect-[3/4] h-16 shrink-0 rounded-lg object-cover object-top ring-1 ring-edge sm:h-20" />
-      <span className="min-w-0 flex-1">
-        <span className={`flex items-center gap-1 text-[11px] font-semibold text-ink/55 ${dir === 'next' ? 'justify-end' : ''}`}>
-          {dir === 'prev' && <ArrowLeft size={13} />}
-          {dir === 'prev' ? t.proyectoAnterior : t.proyectoSiguiente}
-          {dir === 'next' && <ArrowRight size={13} />}
+  const renderItem = (p, dir) => {
+    const isNext = dir === 'next'
+    const label = p ? (isNext ? t.proyectoSiguiente : t.proyectoAnterior) : t.volverAProyectos
+    return (
+      <Link to={p ? `/proyectos/${p.slug}` : '/proyectos'} className={`group flex flex-col gap-3 py-8 sm:py-10 ${isNext ? 'sm:items-end sm:text-right' : ''}`}>
+        <span className={`flex items-center gap-2 eyebrow text-ink/75 ${isNext ? 'sm:flex-row-reverse' : ''}`}>
+          {isNext ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
+          {label}
         </span>
-        <span className="mt-0.5 block truncate text-sm font-semibold tracking-tight text-ink group-hover:text-lilac sm:text-base">{p.name}</span>
-      </span>
-    </Link>
-  )
-
-  // En los extremos (no hay anterior o siguiente) se ofrece volver al listado de proyectos
-  const renderBack = (dir) => (
-    <Link
-      to="/proyectos"
-      className={`group flex min-h-[5.5rem] items-center gap-3 rounded-2xl border border-ink/10 px-4 transition hover:border-lilac hover:shadow-lg hover:shadow-edge/70 sm:gap-4 ${
-        dir === 'next' ? 'flex-row-reverse text-right' : ''
-      }`}
-    >
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-fog text-ink transition group-hover:bg-navy group-hover:text-white">
-        {dir === 'next' ? <ArrowRight size={18} /> : <ArrowLeft size={18} />}
-      </span>
-      <span className="text-sm font-semibold tracking-tight text-ink group-hover:text-lilac sm:text-base">{t.volverAProyectos}</span>
-    </Link>
-  )
+        {p && (
+          <span className="flex items-baseline gap-3 font-sans text-2xl font-semibold tracking-tight text-ink transition-colors group-hover:text-lilac-ink sm:text-4xl">
+            <span className="text-sm tabular-nums text-lilac-ink">{p.number}</span>
+            {p.name}
+          </span>
+        )}
+      </Link>
+    )
+  }
 
   return (
-    <nav aria-label={t.otrosProyectos} className="mx-auto mt-16 max-w-5xl px-5 sm:px-8">
-      <div className="h-px w-full bg-gradient-to-r from-ink/20 via-sky/60 to-lilac/50" aria-hidden="true" />
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        {prev ? renderCard(prev, 'prev') : renderBack('prev')}
-        {next ? renderCard(next, 'next') : renderBack('next')}
+    <nav aria-label={t.otrosProyectos} className={`${WRAP} mt-28 sm:mt-36`} style={{ '--font-sans': "'Quicksand', sans-serif" }}>
+      <div className="grid divide-y divide-ink/15 border-y border-ink/15 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+        <div className="sm:pr-8">{renderItem(prev, 'prev')}</div>
+        <div className="sm:pl-8">{renderItem(next, 'next')}</div>
       </div>
     </nav>
   )
 }
 
-/** Página de un proyecto: portada, explicación, vídeos, identidad de color, tipografía y mockups. */
+/** Página de un proyecto: cabecera, una imagen grande, el caso, aplicaciones a gran tamaño y el sistema (color y tipografía). */
 export default function ProjectPage() {
   const { slug } = useParams()
-  const { img, projects, toolLabels } = useContent()
+  const { projects, featuredProjects, toolLabels } = useContent()
   const { projectPages, projectFonts } = useProjectPages()
   const t = useUi()
   const page = projectPages[slug]
@@ -149,131 +130,157 @@ export default function ProjectPage() {
 
   if (!page) return <Navigate to="/proyectos" replace />
 
-  // Las variables de fuente de Tailwind se redefinen solo dentro de esta página
   const fonts = projectFonts[slug]
+  const project = featuredProjects.find((p) => p.slug === slug)
+
+  const meta = [
+    { label: t.categoria, value: project?.category },
+    page.context && { label: t.contexto, value: page.context },
+    { label: t.herramientas, value: page.tools.map((tool) => toolLabels[tool]).join(', ') },
+    page.webTools && {
+      label: t.webHechaCon.replace(/:$/, ''),
+      value: (
+        <a href={page.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline decoration-lilac decoration-2 underline-offset-4 hover:text-lilac-ink">
+          {page.webTools.join(' · ')} <ArrowUpRight size={14} />
+        </a>
+      ),
+    },
+  ].filter(Boolean)
 
   return (
-    <main className="font-sans" style={{ '--font-sans': fonts.body, '--font-serif': fonts.heading, '--font-display': fonts.heading }}>
-      <RibbonBanner height={150} />
-
-      <div className="mx-auto max-w-5xl px-5 pt-8 sm:px-8">
-        <Link to="/proyectos" className="inline-flex items-center gap-2 text-xs font-semibold text-ink hover:text-lilac" title={t.volverAProyectos}>
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-fog">
-            <ArrowLeft size={16} />
-          </span>
-          {t.proyectos}
-        </Link>
-        <h1 className="mt-4 font-serif text-3xl font-medium tracking-tight text-ink sm:text-4xl">{page.title}</h1>
-      </div>
-
-      {/* Proyecto de vídeo */}
-      {page.video && (
-        <section className="mx-auto max-w-4xl px-5 py-14 sm:px-8">
-          <Reveal>
-            <p className="max-w-2xl text-base leading-relaxed text-ink/85">
-              <strong className="text-ink">{page.intro.lead}</strong>
-              <br />
-              {page.intro.text}
-            </p>
-          </Reveal>
-          <video src={page.video} poster={page.poster} controls playsInline preload="metadata" className="mt-10 w-full rounded-[3px] bg-navy shadow-xl shadow-navy/20" />
-          <ToolsFooter page={page} img={img} toolLabels={toolLabels} t={t} />
-        </section>
-      )}
-
-      {!page.video && (
-        <>
-          {/* Portada */}
-          <section className="mx-auto mt-8 max-w-5xl px-5 sm:px-8">
-            <picture>
-              <source media="(max-width: 768px)" srcSet={page.cover.mobile} />
-              <img
-                src={page.cover.desktop}
-                alt={page.cover.alt}
-                className={`w-full rounded-[3px] ${page.cover.contain ? 'bg-fog object-contain p-10 sm:p-16' : ''}`}
-              />
-            </picture>
-          </section>
-
-          {/* Explicación */}
-          <Reveal className="mx-auto max-w-3xl px-5 py-14 sm:px-8">
-            <p className="text-base leading-relaxed text-ink/85">{page.explanation}</p>
-          </Reveal>
-
-          {/* Vídeos del logotipo */}
-          {page.videos?.single && (
-            <div className="mx-auto max-w-4xl px-5 sm:px-8">
-              <LoopVideo src={page.videos.single} className="w-full rounded-[3px]" />
+    <MotionConfig reducedMotion="user">
+      <main className="font-sans" style={{ '--font-sans': fonts.body, '--font-serif': fonts.heading, '--font-display': fonts.heading }}>
+        {/* Cabecera */}
+        <header className={`${WRAP} pt-10 sm:pt-16`}>
+          <Link to="/proyectos" className="inline-flex items-center gap-2 font-[Quicksand] eyebrow text-ink/75 transition-colors hover:text-lilac-ink">
+            <ArrowLeft size={14} />
+            {t.proyectos}
+          </Link>
+          <div className="mt-12 grid gap-x-3 sm:mt-16 sm:grid-cols-[4.5rem_1fr]">
+            {project && <p className="font-[Quicksand] text-base font-semibold tabular-nums text-lilac-ink">{project.number}</p>}
+            <div>
+              <h1 className="max-w-4xl font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-ink sm:text-7xl lg:text-8xl">{project?.name ?? page.title}</h1>
+              {project?.concept && <p className="mt-5 max-w-[40ch] text-lg leading-snug text-ink/75 sm:text-2xl">{project.concept}</p>}
+              <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4 font-[Quicksand] sm:mt-12">
+                {meta.map((m) => (
+                  <div key={m.label}>
+                    <dt className="eyebrow text-ink/75">{m.label}</dt>
+                    <dd className="mt-1 text-[15px] text-ink">{m.value}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
-          )}
-          {page.videos?.wide && <LoopVideo src={page.videos.wide} className="mt-8 w-full" />}
-          {page.videos?.pair && (
-            <div className="mx-auto mt-8 grid max-w-5xl gap-4 px-5 sm:grid-cols-2 sm:px-8">
-              {page.videos.pair.map((v, i) => (
-                <div key={v} className="overflow-hidden rounded-[3px]" style={{ background: page.videos.pairTones?.[i] }}>
-                  <LoopVideo src={v} className="w-full" />
+          </div>
+        </header>
+
+        {page.video ? (
+          <>
+            <div className={`${WIDE} mt-12 sm:mt-16`}>
+              <video src={page.video} poster={page.poster} controls playsInline preload="metadata" className="block aspect-video w-full bg-navy object-contain" />
+            </div>
+            <Section label={t.elProyecto}>
+              <div className="max-w-[60ch] sm:ml-[5.25rem]">
+                <p className="text-xl font-medium leading-snug text-ink sm:text-2xl">{page.intro.lead}</p>
+                <p className="mt-5 text-base leading-relaxed text-ink/75 sm:text-lg">{page.intro.text}</p>
+              </div>
+            </Section>
+          </>
+        ) : (
+          <>
+            {/* Una sola imagen grande del trabajo */}
+            <div className={`${WIDE} mt-12 sm:mt-16`}>
+              <img src={project.hero} alt={project.heroAlt} className="block h-auto w-full bg-fog" />
+            </div>
+
+            {/* El caso */}
+            <Section label={t.elProyecto}>
+              {page.story ? (
+                <dl className="divide-y divide-ink/15">
+                  {page.story.map((b) => (
+                    <div key={b.key} className="grid gap-2 py-6 first:pt-0 sm:grid-cols-[12rem_1fr] sm:gap-8 sm:py-8">
+                      <dt className="font-[Quicksand] text-[15px] font-semibold text-lilac-ink">{t.story[b.key]}</dt>
+                      <dd className="max-w-[60ch] text-lg leading-relaxed text-ink sm:text-xl">{b.text}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p className="max-w-[60ch] text-lg leading-relaxed text-ink sm:text-xl">{page.explanation}</p>
+              )}
+            </Section>
+
+            {/* Comparación de logotipos (Casa Ricardo) */}
+            {page.comparison && (
+              <Section label={t.evolucionLogo} wide>
+                <div className="grid gap-3 sm:grid-cols-2 sm:gap-6">
+                  {page.comparison.map((g) => (
+                    <figure key={g.src} className="grid aspect-[4/3] place-items-center bg-white p-8 sm:p-14">
+                      <img src={g.src} alt={g.alt} loading="lazy" className="max-h-full w-auto max-w-full object-contain" />
+                    </figure>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              </Section>
+            )}
 
-          {/* Comparación de logotipos (Casa Ricardo) */}
-          {page.comparison && (
-            <div className="mx-auto grid max-w-5xl gap-4 px-5 pt-4 sm:grid-cols-2 sm:px-8">
-              {page.comparison.map((g) => (
-                <div key={g.src} className="grid place-items-center rounded-[3px] bg-fog p-10">
-                  <img src={g.src} alt={g.alt} className="max-h-48 w-auto object-contain" />
+            {/* Aplicaciones, a gran tamaño */}
+            <Section label={t.aplicaciones} wide>
+              {page.stickers && (
+                <Reveal className="mb-3 sm:mb-6">
+                  <Photo g={page.stickers} />
+                </Reveal>
+              )}
+              <Applications rows={withoutHero(page.stationery, project.hero)} />
+            </Section>
+
+            {/* Vídeos del logotipo */}
+            {page.videos && (
+              <Section label={t.movimiento} wide>
+                <div className="space-y-3 sm:space-y-6">
+                  {page.videos.single && (
+                    <div className="overflow-hidden bg-fog">
+                      <LoopVideo src={page.videos.single} />
+                    </div>
+                  )}
+                  {page.videos.wide && (
+                    <div className="overflow-hidden bg-fog">
+                      <LoopVideo src={page.videos.wide} />
+                    </div>
+                  )}
+                  {page.videos.pair && (
+                    <div className="grid gap-3 sm:grid-cols-2 sm:gap-6">
+                      {page.videos.pair.map((v, i) => (
+                        <div key={v} className="overflow-hidden ring-1 ring-inset ring-ink/10" style={{ background: page.videos.pairTones?.[i] }}>
+                          <LoopVideo src={v} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
+              </Section>
+            )}
 
-          {/* Identidad de color */}
-          <section className="mx-auto mt-14 grid max-w-5xl px-5 sm:px-8 md:grid-cols-3" aria-label="Paleta de color">
-            {page.colors.map((c) => (
-              <ColorPanel key={c.name} color={c} />
-            ))}
-          </section>
-
-          {/* Tipografía */}
-          <section className="mx-auto mt-14 max-w-5xl px-5 sm:px-8" aria-label="Tipografía">
-            {page.typography && <TypeCatalog {...page.typography} />}
-            {page.typographyPair && (
-              <div className="grid gap-4 md:grid-cols-2">
-                {page.typographyPair.map((t) => (
-                  <TypeCatalog key={t.title} {...t} />
+            {/* Sistema: color y tipografía, en formato compacto */}
+            <Section label={t.color}>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-8 font-[Quicksand] sm:grid-cols-3 sm:gap-x-6">
+                {page.colors.map((c) => (
+                  <ColorPanel key={c.name} color={c} />
                 ))}
               </div>
-            )}
-          </section>
+            </Section>
 
-          {/* Fotos (Marca Personal) */}
-          {page.photos && (
-            <div className="mx-auto mt-14 grid max-w-5xl grid-cols-3 gap-2 px-5 sm:gap-4 sm:px-8">
-              {page.photos.map((g) => (
-                <Photo key={g.src} g={g} className="aspect-[3/4] rounded-[3px] object-cover" />
-              ))}
-            </div>
-          )}
+            <Section label={t.tipografia}>
+              <div className="grid gap-12 sm:grid-cols-2">
+                {page.typography && <TypeCatalog {...page.typography} />}
+                {page.typographyPair?.map((ty) => (
+                  <TypeCatalog key={ty.title} {...ty} />
+                ))}
+              </div>
+            </Section>
+          </>
+        )}
 
-          {/* Pegatinas (Casa Ricardo) */}
-          {page.stickers && (
-            <div className="mx-auto mt-14 max-w-5xl px-5 sm:px-8">
-              <Photo g={page.stickers} className="rounded-[3px] bg-fog" />
-            </div>
-          )}
-
-          {/* Mockups */}
-          <div className="mt-14">
-            <Stationery rows={page.stationery} />
-          </div>
-
-          <ToolsFooter page={page} img={img} toolLabels={toolLabels} t={t} />
-        </>
-      )}
-
-      <ProjectNav slug={slug} projects={projects} t={t} />
-      <div className="pb-20" />
-    </main>
+        <ProjectNav slug={slug} projects={projects} t={t} />
+        <div className="pb-24" />
+      </main>
+    </MotionConfig>
   )
 }

@@ -35,7 +35,7 @@ export const about = {
   motto: 'Aprender, crecer y evolucionar.',
   lead: 'Publicista y diseñadora en constante evolución.',
   text: 'Creo en la estrategia que nace de la sinceridad y en el diseño que cuenta historias reales.',
-  bio: 'Con experiencia en edición y una profunda pasión por la creatividad, estoy entusiasmada por aportar mis habilidades y mi visión innovadora al equipo. Actualmente, curso el doble grado en diseño gráfico digital y publicidad, donde desarrollo proyectos que fusionan la estética visual con estrategias de comunicación efectivas.',
+  bio: 'Diseñadora gráfica y publicista en formación (doble grado en Universidad Europea). He trabajado en agencia desarrollando piezas gráficas para campañas y edito contenido audiovisual. Mis proyectos combinan identidad visual, tipografía y color con una estrategia de comunicación clara.',
   gallery: [1, 2, 3, 4].map((n) => ({ src: img(`about/gift${n}`), alt: `Diseño ${n}` })),
 }
 
@@ -43,16 +43,12 @@ export const about = {
 export const cv = {
   subtitle: 'Doble grado en diseño gráfico digital y publicidad',
   personal: [
-    { label: 'Nacimiento', value: '05/05/2003' },
-    { label: 'Nacionalidad', value: 'Española' },
-    { label: 'Carnet', value: 'Tipo B1' },
+    { label: 'Ubicación', value: 'Santa Cruz de Tenerife' },
+    { label: 'Carnet', value: 'B' },
   ],
   education: [
     { title: 'Doble grado en diseño gráfico digital y publicidad', date: '2022 - Hoy', role: 'Universidad Europea | Santa Cruz de Tenerife' },
-    { title: 'Prácticas en Arco Comunicación', date: '2024', role: 'Agencia de Publicidad | Santa Cruz de Tenerife' },
     { title: '1º Curso del grado en Tecnologías Interactivas', date: '2022', role: 'UPV | Valencia' },
-    { title: 'Título de Bachillerato', date: '2021', role: 'La Salle San Ildefonso | Santa Cruz de Tenerife' },
-    { title: 'Título de Educación Secundaria Obligatoria', date: '2019', role: 'Colegio Adonai | Santa Cruz de Tenerife' },
   ],
   experience: [
     {
@@ -123,18 +119,22 @@ export const contactItems = [
 
 // ---------- Proyectos (listado y tarjetas del carrusel) ----------
 export const projects = [
-  { slug: 'marca-personal', number: '01', name: 'MARCA PERSONAL', cover: img('marca-personal/portada') },
-  { slug: 'identidad-visual', number: '02', name: 'Identidad Visual', cover: img('identidad-visual/portada') },
-  { slug: 'casa-ricardo', number: '03', name: 'CASA RICARDO', cover: img('casa-ricardo/portada') },
-  { slug: 'proyecto-video', number: '04', name: 'PROYECTO DE VIDEO', cover: img('video/portada') },
+  { slug: 'marca-personal', number: '01', name: 'Marca Personal', cover: img('marca-personal/portada'), hero: img('marca-personal/libretas'), heroAlt: 'Libretas de la marca personal en marino, lavanda y azul cielo', concept: 'Un monograma que entrelaza las iniciales L, M y S.' },
+  { slug: 'identidad-visual', number: '02', name: 'Identidad Visual', cover: img('identidad-visual/portada'), hero: img('identidad-visual/tarjeta'), heroAlt: 'Tarjetas de visita con el monograma JMG', concept: 'Monograma minimalista para la marca personal de un ingeniero.' },
+  { slug: 'casa-ricardo', number: '03', name: 'Casa Ricardo', cover: img('casa-ricardo/portada'), hero: img('casa-ricardo/packaging-delante'), heroAlt: 'Packaging de frutos secos Casa Ricardo', concept: 'Rediseño de la identidad de una tienda de chuches y frutos secos.' },
+  { slug: 'proyecto-video', number: '04', name: 'Proyecto de Vídeo', cover: img('video/portada'), hero: img('video/portada'), heroAlt: 'Portada del videoclip SloMo × Lola Índigo', concept: 'Videoclip que une «SloMo» de Chanel con el baile de Lola Índigo.' },
 ]
 
-// Proyectos de la portada (scroll horizontal): la portada real de cada proyecto.
-// La categoría se deduce del texto de cada página de proyecto (identidad visual, monograma, rediseño, videoclip).
+// Disciplina de cada proyecto (deducida del texto de cada página de proyecto)
 const categories = {
   'marca-personal': 'Identidad visual',
   'identidad-visual': 'Monograma y web',
   'casa-ricardo': 'Rediseño de identidad visual',
   'proyecto-video': 'Videoclip',
 }
+// Grupo de la página de Proyectos: las identidades juntas, el vídeo aparte
+export const projectGroups = [
+  { id: 'identidad', label: 'Identidad visual', slugs: ['marca-personal', 'identidad-visual', 'casa-ricardo'] },
+  { id: 'audiovisual', label: 'Audiovisual', slugs: ['proyecto-video'] },
+]
 export const featuredProjects = projects.map((p) => ({ ...p, category: categories[p.slug] }))

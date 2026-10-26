@@ -29,8 +29,12 @@ export const projectPages = {
   'marca-personal': {
     title: 'Marca Personal',
     cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/portada'), alt: 'Portada Marca Personal' },
-    explanation:
-      'Mi identidad visual es el punto de encuentro entre quién soy y lo que hago. El logotipo nace de la fusión orgánica de mis iniciales (L, M y S), entrelazadas en un trazo que rinde homenaje a mis dos grandes pasiones: la profundidad de la lectura y la pasión por el diseño. Es un diseño que busca el equilibrio perfecto entre dinamismo y elegancia, donde cada línea fluye para representar una comunicación con propósito, alma y rigor técnico.',
+    context: 'Proyecto personal',
+    story: [
+      { key: 'partida', text: "Mi identidad visual es el punto de encuentro entre quién soy y lo que hago." },
+      { key: 'concepto', text: "El logotipo nace de la fusión orgánica de mis iniciales (L, M y S), entrelazadas en un trazo que rinde homenaje a mis dos grandes pasiones: la profundidad de la lectura y la pasión por el diseño." },
+      { key: 'resultado', text: "Es un diseño que busca el equilibrio perfecto entre dinamismo y elegancia, donde cada línea fluye para representar una comunicación con propósito, alma y rigor técnico." },
+    ],
     videos: { single: marcaExplicacion, wide: marcaFondo, pair: [marcaLogoBlanco, marcaLogoAzul] },
     colors: [
       {
@@ -66,7 +70,6 @@ export const projectPages = {
         { label: 'Light', weight: 300, family: "'Quicksand'" },
       ],
     },
-    photos: [ph('marca-personal/riendo', 'Riendo'), ph('marca-personal/sentada', 'Sentada'), ph('marca-personal/depie', 'De pie')],
     stationery: [
       { pair: [ph('marca-personal/libretas', 'Libretas'), ph('marca-personal/boligrafos', 'Bolígrafos')] },
       { main: ph('marca-personal/tarjeta', 'Tarjeta de Visita') },
@@ -78,8 +81,11 @@ export const projectPages = {
   'identidad-visual': {
     title: 'Identidad Visual',
     cover: { desktop: img('identidad-visual/portada-interior'), mobile: img('identidad-visual/portada-interior'), alt: 'Portada Interior Identidad Visual' },
-    explanation:
-      'Esta identidad nace de la integración de las iniciales del ingeniero, diseñadas bajo un concepto de interconectividad. El resultado es un monograma minimalista y estructurado que refleja la capacidad de resolver problemas complejos a través de soluciones limpias, aportando una base visual sólida y profesional a su marca personal.',
+    context: 'Encargo · Marca personal de un ingeniero',
+    story: [
+      { key: 'concepto', text: "Esta identidad nace de la integración de las iniciales del ingeniero, diseñadas bajo un concepto de interconectividad." },
+      { key: 'resultado', text: "El resultado es un monograma minimalista y estructurado que refleja la capacidad de resolver problemas complejos a través de soluciones limpias, aportando una base visual sólida y profesional a su marca personal." },
+    ],
     videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro], pairTones: ['#000', '#fff'] },
     colors: [
       {
@@ -128,8 +134,12 @@ export const projectPages = {
   'casa-ricardo': {
     title: 'Casa Ricardo',
     cover: { desktop: img('casa-ricardo/logo'), mobile: img('casa-ricardo/logo'), alt: 'Portada Casa Ricardo', contain: true },
-    explanation:
-      'Durante mis prácticas trabajé en el rediseño de la identidad visual de Casa Ricardo, una tienda de chuches y frutos secos. El objetivo era modernizar el logotipo sin perder la esencia cercana y tradicional de la marca. Se mejoró la legibilidad, la composición y su adaptación a distintos formatos. El resultado fue una imagen más actual y limpia, manteniendo la personalidad reconocible del negocio.',
+    context: 'Prácticas',
+    story: [
+      { key: 'reto', text: "Durante mis prácticas trabajé en el rediseño de la identidad visual de Casa Ricardo, una tienda de chuches y frutos secos. El objetivo era modernizar el logotipo sin perder la esencia cercana y tradicional de la marca." },
+      { key: 'proceso', text: "Se mejoró la legibilidad, la composición y su adaptación a distintos formatos." },
+      { key: 'resultado', text: "El resultado fue una imagen más actual y limpia, manteniendo la personalidad reconocible del negocio." },
+    ],
     comparison: [ph('casa-ricardo/logo', 'Logo Nuevo Casa Ricardo'), ph('casa-ricardo/logo-viejo', 'Logo Viejo Casa Ricardo')],
     colors: [
       {
@@ -184,6 +194,7 @@ export const projectPages = {
 
   'proyecto-video': {
     title: 'Proyecto Video',
+    context: 'Proyecto audiovisual',
     intro: { lead: 'SloMo × Lola Índigo.', text: 'Reinterpretación audiovisual nacida de la unión entre la música de Chanel y el universo visual de Lola Índigo para crear un nuevo videoclip.' },
     video: videoLola,
     poster: img('video/portada'),

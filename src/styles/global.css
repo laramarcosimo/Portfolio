@@ -20,13 +20,14 @@
   --color-navy: #192a56;
   --color-sky: #96c9ff;
   --color-lilac: #9690e4;
+  --color-lilac-ink: #5b54c2; /* lila para texto pequeño: ≥4.5:1 sobre fondos claros */
   --color-mist: #f8fafc;
   --color-fog: #f3f4f6;
   /* Tokens de tema: texto ("ink"), superficies tipo tarjeta y líneas finas, todos con variante oscura */
   --color-ink: #192a56;
   --color-surface: #ffffff;
   --color-edge: #e2e8f0;
-  --page-gradient: linear-gradient(165deg, #f6f9fd 0%, #ddedff 28%, #e7e1fa 58%, #f6f9fd 100%);
+  --color-page: #faf8f4; /* fondo plano: blanco roto cálido */
 }
 
 /* Paleta oscura: mismos tokens, valores pensados para fondo casi negro-azulado */
@@ -34,19 +35,21 @@
   --color-navy: #2a3f7a;
   --color-sky: #7fb8f5;
   --color-lilac: #ab9ff2;
+  --color-lilac-ink: #b8aef6;
   --color-mist: #14204a;
   --color-fog: #16224a;
   --color-ink: #e8ecfb;
   --color-surface: #101a3e;
   --color-edge: #2a3766;
-  /* Mismo degradado que en claro, pero anclado al azul de marca (#192a56) en vez de partir de blanco */
-  --page-gradient: linear-gradient(165deg, #14204a 0%, #1d2f66 28%, #221c47 58%, #14204a 100%);
+  --color-page: #111a3d; /* fondo plano anclado al marino de marca */
 }
 
 @layer base {
-  html { scroll-behavior: smooth; overflow-x: clip; }
+  /* El lienzo raíz también lleva el fondo del tema: nunca asoma otro color (p. ej. oscuro del sistema) bajo la página */
+  html { scroll-behavior: smooth; overflow-x: clip; background: var(--color-page); color-scheme: light; }
+  html[data-theme="dark"] { color-scheme: dark; }
   body {
-    background: var(--page-gradient) fixed;
+    background: var(--color-page);
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -54,14 +57,16 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   section[id] { scroll-margin-top: 4rem; }
-  /* En móvil el currículum tiene además una barra de chips fija (4 rem + ~3,25 rem) */
-  @media (max-width: 1023px) { section[id] { scroll-margin-top: 7.5rem; } }
   :focus-visible { outline: 2px solid var(--color-sky); outline-offset: 3px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* Escala tipográfica en tres niveles: display (titulares), cuerpo (Quicksand 15–18px) y pie (eyebrow, 12px) */
+@utility headline { font-weight: 600; letter-spacing: -0.035em; line-height: 1.02; }
+@utility eyebrow { font-size: 0.75rem; line-height: 1rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
 
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -72,3 +77,18 @@
 .flip[data-flipped="true"] .flip-inner { transform: rotateY(180deg); }
 .flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .flip-back { transform: rotateY(180deg); }
+
+/* Currículum: monograma en blanco sobre fondo oscuro */
+[data-theme="dark"] .cv-mono { filter: brightness(0) invert(1); }
+
+/* Impresión del currículum: solo la hoja, sin navegación ni pie */
+@media print {
+  @page { margin: 10mm; }
+  header.sticky, #site-footer, .no-print { display: none !important; }
+  html, body { background: #fff !important; }
+  .cv-page { max-width: none !important; padding: 0 !important; }
+  .cv-sheet { box-shadow: none !important; border-radius: 0 !important; --tw-ring-shadow: 0 0 #0000 !important; }
+  .cv-sheet > .grid { grid-template-columns: 15rem 1fr !important; }
+  .cv-tools { display: none; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
