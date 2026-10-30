@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { Menu, Monitor, Moon, Sun, X } from 'lucide-react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { Menu, Monitor, Moon, Settings2, Sun, X } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useContent } from '../data/useContent'
 import { useTheme } from '../theme/ThemeContext'
@@ -45,8 +45,18 @@ function LanguageToggle() {
   )
 }
 
+const DESKTOP = '(min-width: 768px)'
+const subscribeDesktop = (cb) => {
+  const mq = window.matchMedia(DESKTOP)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+const isDesktopNow = () => window.matchMedia(DESKTOP).matches
+
 export default function Navbar() {
   const { navLinks } = useContent()
+  const desktop = useSyncExternalStore(subscribeDesktop, isDesktopNow)
+  const RibbonBody = desktop ? 'div' : 'nav'
   const t = useUi()
   // El menú está abierto solo mientras la página no cambie (así se cierra solo al navegar, sin efectos)
   const { pathname } = useLocation()
@@ -58,16 +68,21 @@ export default function Navbar() {
 
   const ribbonRef = useRef(null)
   const toggleRef = useRef(null)
-  const firstLinkRef = useRef(null)
   const close = () => {
     setOpenAt(null)
     toggleRef.current?.focus({ preventScroll: true })
   }
 
-  // Al abrir, el foco pasa al primer enlace; Escape cierra y Tab da la vuelta dentro de la cinta
+  // Al abrir, el foco pasa al primer control; Escape o un clic fuera cierran y Tab da la vuelta dentro de la cinta
   useEffect(() => {
     if (!open) return undefined
-    firstLinkRef.current?.focus({ preventScroll: true })
+    ribbonRef.current.querySelector('.ribbon-body a[href], .ribbon-body button')?.focus({ preventScroll: true })
+    const onOutside = (e) => {
+      if (ribbonRef.current.contains(e.target)) return
+      const inside = ribbonRef.current.contains(document.activeElement)
+      setOpenAt(null)
+      if (inside) toggleRef.current?.focus({ preventScroll: true })
+    }
     const onKey = (e) => {
       if (e.key === 'Escape') {
         setOpenAt(null)
@@ -85,7 +100,11 @@ export default function Navbar() {
       }
     }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    document.addEventListener('pointerdown', onOutside)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.removeEventListener('pointerdown', onOutside)
+    }
   }, [open])
 
   return (
@@ -93,7 +112,7 @@ export default function Navbar() {
       <header
         className="sticky top-0 z-50 bg-page"
       >
-        <nav className="flex h-16 items-center justify-between px-4 sm:px-8" aria-label={t.navPrincipal}>
+        <nav className="flex h-16 items-center justify-between px-4 sm:px-8 md:pr-24" aria-label={t.navPrincipal}>
           <Logo mono variant="auto" className="h-9" />
 
           <ul className="hidden items-center gap-10 md:flex">
@@ -102,7 +121,7 @@ export default function Navbar() {
                 <NavLink
                   to={l.to}
                   end={l.to === '/'}
-                  className={`eyebrow quiet-mark inline-flex min-h-11 items-center transition-colors duration-300 hover:text-ink ${isActive(l.to) ? 'is-active text-ink' : 'text-ink/75'}`}
+                  className={`eyebrow quiet-mark inline-flex min-h-11 min-w-6 items-center transition-colors duration-300 hover:text-ink ${isActive(l.to) ? 'is-active text-ink' : 'text-ink/75'}`}
                 >
                   {l.label}
                 </NavLink>
@@ -110,50 +129,46 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div className="hidden items-center gap-3 md:flex">
-            <LanguageToggle />
-            <ThemeToggle />
-          </div>
-
         </nav>
       </header>
 
-      {/* Móvil: un marcapáginas que cuelga arriba a la derecha; al pulsarlo, la misma cinta crece y descubre el menú */}
+      {/* Un marcapáginas que cuelga arriba a la derecha; al pulsarlo, la misma cinta crece. En móvil lleva el menú; en escritorio, idioma y tema */}
       <div className="ribbon-scrim md:hidden" data-open={open} aria-hidden="true" onClick={close} />
-      <div ref={ribbonRef} className="ribbon md:hidden" data-open={open}>
+      <div ref={ribbonRef} className="ribbon" data-open={open}>
         <button
           ref={toggleRef}
           type="button"
           className="ribbon-toggle"
           onClick={() => setOpen(!open)}
           aria-expanded={open}
-          aria-controls="mobile-menu"
-          aria-label={open ? t.cerrarMenu : t.abrirMenu}
+          aria-controls="ribbon-body"
+          aria-label={desktop ? (open ? t.cerrarAjustes : t.abrirAjustes) : open ? t.cerrarMenu : t.abrirMenu}
         >
-          {open ? <X size={22} strokeWidth={1.75} aria-hidden="true" /> : <Menu size={22} strokeWidth={1.75} aria-hidden="true" />}
+          {open ? <X size={22} strokeWidth={1.75} aria-hidden="true" /> : desktop ? <Settings2 size={22} strokeWidth={1.75} aria-hidden="true" /> : <Menu size={22} strokeWidth={1.75} aria-hidden="true" />}
         </button>
-        <nav id="mobile-menu" aria-label={t.menuMovil} className="ribbon-body" inert={!open}>
-          <ul>
-            {navLinks.map((l, i) => (
-              <li key={l.to}>
-                <NavLink
-                  ref={i === 0 ? firstLinkRef : undefined}
-                  to={l.to}
-                  end={l.to === '/'}
-                  aria-current={isActive(l.to) ? 'page' : undefined}
-                  onClick={() => setOpenAt(null)}
-                  className={`ribbon-link quiet-mark ${isActive(l.to) ? 'is-active' : ''}`}
-                >
-                  {l.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+        <RibbonBody id="ribbon-body" aria-label={desktop ? t.ajustes : t.menuMovil} {...(desktop && { role: 'group' })} className="ribbon-body" inert={!open}>
+          {!desktop && (
+            <ul>
+              {navLinks.map((l) => (
+                <li key={l.to}>
+                  <NavLink
+                    to={l.to}
+                    end={l.to === '/'}
+                    aria-current={isActive(l.to) ? 'page' : undefined}
+                    onClick={() => setOpenAt(null)}
+                    className={`ribbon-link quiet-mark ${isActive(l.to) ? 'is-active' : ''}`}
+                  >
+                    {l.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          )}
           <div className="ribbon-controls">
             <LanguageToggle />
             <ThemeToggle />
           </div>
-        </nav>
+        </RibbonBody>
       </div>
     </>
   )

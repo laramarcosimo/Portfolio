@@ -1,4 +1,4 @@
-/** Logotipos reales de LinkedIn e Instagram (lucide-react ya no incluye marcas). WhatsApp vive en WhatsAppIcon. */
+/** Logotipos reales de Gmail, LinkedIn e Instagram (lucide-react ya no incluye marcas). WhatsApp vive en WhatsAppIcon. */
 export function LinkedInIcon({ size = 18, className = '' }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true" className={className}>
@@ -13,6 +13,14 @@ export function InstagramIcon({ size = 18, className = '' }) {
       <rect x="2" y="2" width="20" height="20" rx="5.5" />
       <circle cx="12" cy="12" r="4.5" />
       <circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
+export function GmailIcon({ size = 18, className = '' }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
     </svg>
   )
 }

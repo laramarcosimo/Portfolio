@@ -1,47 +1,57 @@
+import { FileText } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { InstagramIcon, LinkedInIcon } from '../components/BrandIcons'
 import Logo from '../components/Logo'
-import WaveBand from '../components/WaveBand'
-import WhatsAppIcon from '../components/WhatsAppIcon'
+import { useContactRoutes } from '../components/useContactRoutes'
 import { useContent } from '../data/useContent'
 import { useUi } from '../i18n/ui'
 
-/** Pie único: la banda de ondas a todo el ancho y, sobre las tres columnas de las carpetas, dos filas alineadas. */
+const TONES = { mail: 'navy', wa: 'sky', li: 'lilac', ig: 'navy' }
+
+function Card({ Icon, name, detail }) {
+  return (
+    <>
+      <span className="folder-waves" aria-hidden="true" />
+      <Icon size={22} strokeWidth={1.75} aria-hidden="true" />
+      <span className="footer-card-name">{name}</span>
+      <span className="footer-card-detail">{detail}</span>
+    </>
+  )
+}
+
+/** Pie: quién firma, en pequeño, y las vías de contacto como pestañas de carpeta que nacen del borde inferior. */
 export default function Footer() {
   const { site } = useContent()
   const t = useUi()
-  const social = [
-    { label: 'LinkedIn', href: site.linkedin, Icon: LinkedInIcon },
-    { label: 'Instagram', href: site.instagram, Icon: InstagramIcon },
-    { label: 'WhatsApp', href: site.whatsapp, Icon: WhatsAppIcon },
-  ]
+  const routes = useContactRoutes()
   return (
-    <footer id="site-footer" className="relative z-10 pt-6">
-      <WaveBand />
-      <div className="footer-grid px-4 pb-6 pt-6 sm:px-8">
+    <footer id="site-footer" className="footer">
+      <div className="footer-id">
         <div className="flex items-center gap-3">
-          <Logo mono variant="auto" className="h-10" />
+          <Logo mono variant="auto" className="h-9" />
           <p className="text-sm leading-snug">
             <span className="block font-bold text-ink">{site.name}</span>
             <span className="block font-medium text-ink/80">{t.rolLinea}</span>
           </p>
         </div>
-        <a href={`mailto:${site.email}`} className="footer-mail">{site.email}</a>
-        <ul className="-ml-3 flex items-center gap-1 md:ml-0 md:-mr-3 md:justify-end">
-          {social.map(({ label, href, Icon }) => (
-            <li key={label}>
-              <a href={href} target="_blank" rel="noreferrer" aria-label={label} title={label} className="footer-icon">
-                <Icon size={20} />
-              </a>
-            </li>
-          ))}
-        </ul>
-        <p className="order-last text-xs font-medium text-ink/80 md:order-none">{site.copyright}</p>
-        <p className="text-sm font-medium text-ink/80">{t.heroUbicacion}</p>
-        <div className="md:text-right">
-          <Link to="/curriculum" className="text-link">{t.verCurriculum}</Link>
-        </div>
+        <p className="footer-legal">
+          <span>{t.heroUbicacion}</span>
+          <span>{site.copyright}</span>
+        </p>
       </div>
+      <ul className="footer-cards">
+        {routes.map(({ key, Icon, name, detail, href, external }) => (
+          <li key={key}>
+            <a href={href} aria-label={`${name}: ${detail}`} {...(external && { target: '_blank', rel: 'noreferrer' })} className={`footer-card folder--${TONES[key]}`}>
+              <Card Icon={Icon} name={name} detail={detail} />
+            </a>
+          </li>
+        ))}
+        <li>
+          <Link to="/curriculum" aria-label={t.verCurriculum} className="footer-card folder--sky">
+            <Card Icon={FileText} name={t.curriculumLabel} detail={t.verCurriculum} />
+          </Link>
+        </li>
+      </ul>
     </footer>
   )
 }

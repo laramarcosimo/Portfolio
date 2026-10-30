@@ -37,13 +37,15 @@ function ScrollToTop() {
 }
 
 export default function Layout() {
+  const { pathname } = useLocation()
+  const isContact = pathname.replace(/\/$/, '') === '/contacto' // el cartel ya es el contacto
   return (
     <MotionConfig reducedMotion="user">
       <ScrollToTop />
       <DocumentMeta />
       <Navbar />
       <Outlet />
-      <Footer />
+      {!isContact && <Footer />}
     </MotionConfig>
   )
 }
