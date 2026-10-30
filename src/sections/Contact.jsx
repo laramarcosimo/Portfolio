@@ -1,38 +1,56 @@
+import { FileText } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { InstagramIcon, LinkedInIcon } from '../components/BrandIcons'
+import WhatsAppIcon from '../components/WhatsAppIcon'
 import { useContent } from '../data/useContent'
 import { useUi } from '../i18n/ui'
+import { DUR, EASE_EXPO } from '../lib/motion'
 
-/** Contacto: los cuatro enlaces de la web original (correo, WhatsApp, LinkedIn e Instagram) como filas de texto. */
+/**
+ * Contacto: un cartel marino, igual en ambos temas. La palabra es el cartel, el correo su primera línea;
+ * las vías de contacto son pestañas de carpeta, en sus colores, que nacen del borde inferior.
+ */
 export default function Contact() {
-  const { contactItems } = useContent()
+  const { site, contactItems } = useContent()
   const t = useUi()
-  const names = { mail: t.correoElectronico, phone: 'WhatsApp', linkedin: 'LinkedIn', instagram: 'Instagram' }
+  const reduce = useReducedMotion()
+  const [user, domain] = site.email.split('@')
+  const by = Object.fromEntries(contactItems.map((c) => [c.kind, c]))
+  const routes = [
+    { key: 'wa', tone: 'sky', Icon: WhatsAppIcon, name: 'WhatsApp', detail: by.phone.label, href: by.phone.href },
+    { key: 'li', tone: 'lilac', Icon: LinkedInIcon, name: 'LinkedIn', detail: site.name, href: by.linkedin.href },
+    { key: 'ig', tone: 'ivory', Icon: InstagramIcon, name: 'Instagram', detail: site.instagramHandle, href: by.instagram.href },
+  ]
+  const rise = (delay) => (reduce ? {} : { initial: { opacity: 0, y: 28 }, animate: { opacity: 1, y: 0 }, transition: { duration: DUR.slow, delay, ease: EASE_EXPO } })
+
   return (
-    <section id="contacto" className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-8 sm:pb-32 sm:pt-24">
-      <h1 className="headline text-5xl text-ink sm:text-7xl">{t.contacto}</h1>
-      <p className="mt-5 max-w-[56ch] text-lg leading-relaxed text-ink/75 sm:text-xl">{t.contactoIntro}</p>
-      <Link
-        to="/curriculum"
-        className="mt-6 inline-block text-[15px] font-semibold text-ink underline decoration-lilac decoration-2 underline-offset-[6px] transition-colors hover:text-lilac-ink sm:text-base"
-      >
-        {t.contactoCv} →
-      </Link>
-      <ul className="mt-12 border-t border-ink/15 sm:mt-14">
-        {contactItems.map((c) => (
-          <li key={c.kind} className="border-b border-ink/15">
-            <a
-              href={c.href}
-              target={c.kind === 'mail' ? undefined : '_blank'}
-              rel="noreferrer"
-              className="group grid gap-1 py-6 sm:grid-cols-[12rem_1fr] sm:items-baseline sm:gap-8 sm:py-8"
-            >
-              <span className="eyebrow text-ink/75">{names[c.kind]}</span>
-              <span className="break-words text-2xl font-semibold tracking-tight text-ink transition-colors group-hover:text-lilac-ink sm:text-4xl">
-                {c.label}
-              </span>
+    <section id="contacto" className="contact-stage">
+      <span className="folder-waves contact-waves" aria-hidden="true" />
+      <motion.h1 {...rise(0)} className="contact-title">{t.contacto}</motion.h1>
+      <div className="contact-line">
+        <motion.a {...rise(0.08)} href={`mailto:${site.email}`} className="contact-mail" aria-label={`${t.correoElectronico}: ${site.email}`}>
+          {user}<span className="contact-mail-at">@{domain}</span>
+        </motion.a>
+        <p className="text-base font-medium text-ivory/90 sm:text-lg">{t.heroUbicacion}</p>
+      </div>
+      <ul className="contact-routes">
+        {routes.map(({ key, tone, Icon, name, detail, href }, i) => (
+          <motion.li key={key} {...rise(0.15 + i * 0.08)}>
+            <a href={href} target="_blank" rel="noreferrer" className={`contact-route contact-route--${tone}`}>
+              <Icon size={28} />
+              <span className="contact-route-name">{name}</span>
+              <span className="contact-route-detail">{detail}</span>
             </a>
-          </li>
+          </motion.li>
         ))}
+        <motion.li {...rise(0.39)}>
+          <Link to="/curriculum" className="contact-route contact-route--navy">
+            <FileText size={28} strokeWidth={1.75} aria-hidden="true" />
+            <span className="contact-route-name">{t.curriculumLabel}</span>
+            <span className="contact-route-detail">{t.contactoCv}</span>
+          </Link>
+        </motion.li>
       </ul>
     </section>
   )

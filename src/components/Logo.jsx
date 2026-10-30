@@ -13,12 +13,12 @@ export default function Logo({ variant = 'azul', mono = false, className = 'h-10
   const isDark = variant === 'auto' ? resolved === 'dark' : variant === 'blanco'
   const src = mono ? img('brand/monograma') : img(`brand/logo-${isDark ? 'blanco' : 'azul'}`)
   return (
-    <Link to="/" aria-label={`${site.name} — inicio`} className="inline-block">
+    <Link to="/" aria-label={`${site.name} — inicio`} className="-my-1 inline-flex min-h-11 min-w-11 items-center">
       <img
         src={src}
         alt={site.name}
         className={`w-auto ${className}`}
-        style={mono && isDark ? { filter: 'brightness(0) invert(1)' } : undefined}
+        style={mono ? { filter: isDark ? 'brightness(0) invert(1)' : 'none' } : undefined}
       />
     </Link>
   )

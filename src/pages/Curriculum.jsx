@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { AtSign, Briefcase, Car, Mail, MapPin, Phone, Printer, RotateCw } from 'lucide-react'
+import { Car, Mail, MapPin, Phone, Printer, RotateCw } from 'lucide-react'
+import { InstagramIcon, LinkedInIcon } from '../components/BrandIcons'
 import RibbonBanner from '../components/RibbonBanner'
 import { useContent } from '../data/useContent'
 import { useUi } from '../i18n/ui'
 
-/* Marcador de sección: pastilla lavanda + título en versalitas */
+/* Marcador de sección: filete lavanda + título en versalitas */
 const Heading = ({ children, as: Tag = 'h2' }) => (
   <Tag className="flex items-center gap-3 eyebrow text-ink">
-    <span className="h-2.5 w-6 rounded-full bg-lilac" aria-hidden="true" />
+    <span className="h-px w-6 bg-lilac" aria-hidden="true" />
     {children}
   </Tag>
 )
@@ -44,14 +45,14 @@ function SkillCard({ tool, label, text, img }) {
         aria-pressed={flipped}
         className="flip-inner block h-full w-full text-left"
       >
-        <span className="flip-face flex flex-col items-center justify-center gap-2 rounded-2xl bg-fog ring-1 ring-edge">
+        <span className="flip-face flex flex-col items-center justify-center gap-2 bg-fog ring-1 ring-edge">
           <img src={img(`tools/${tool}`)} alt="" className="h-11 w-11" />
           <span className="text-[13px] font-semibold text-ink">{label}</span>
-          <span className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full bg-surface text-ink/75 shadow-sm ring-1 ring-edge" aria-hidden="true">
+          <span className="absolute right-2 top-2 grid h-6 w-6 place-items-center bg-surface text-ink/75 ring-1 ring-edge" aria-hidden="true">
             <RotateCw size={12} />
           </span>
         </span>
-        <span className="flip-face flip-back flex items-center rounded-2xl bg-navy p-3.5 text-xs leading-relaxed text-white">{text}</span>
+        <span className="flip-face flip-back flex items-center bg-brand p-3.5 text-xs leading-relaxed text-white">{text}</span>
       </button>
     </div>
   )
@@ -61,11 +62,11 @@ function SkillCard({ tool, label, text, img }) {
 function Entry({ date, title, href, role, desc }) {
   return (
     <li className="relative pb-7 pl-6 last:pb-0">
-      <span className="absolute left-0 top-1.5 h-2.5 w-2.5 rounded-full bg-lilac ring-4 ring-surface" aria-hidden="true" />
-      <p className="text-xs font-semibold tabular-nums text-lilac-ink">{date}</p>
+      <span className="absolute left-[1px] top-1.5 h-[7px] w-[7px] bg-lilac ring-4 ring-surface" aria-hidden="true" />
+      <p className="text-xs font-semibold tabular-nums text-ink/75">{date}</p>
       <h3 className="mt-1 text-base font-bold leading-snug text-ink">
         {href ? (
-          <a href={href} target="_blank" rel="noreferrer" className="underline decoration-lilac decoration-2 underline-offset-4 hover:text-lilac-ink">
+          <a href={href} target="_blank" rel="noreferrer" className="underline decoration-lilac decoration-2 underline-offset-4 hover:text-ink">
             {title}
           </a>
         ) : (
@@ -95,8 +96,8 @@ export default function Curriculum() {
   const contact = [
     { icon: Mail, label: site.email, href: `mailto:${site.email}` },
     { icon: Phone, label: site.phoneIntl, href: `tel:${site.phoneIntl.replace(/\s/g, '')}` },
-    { icon: Briefcase, label: 'LinkedIn', href: site.linkedin },
-    { icon: AtSign, label: site.instagramHandle, href: site.instagram },
+    { icon: LinkedInIcon, label: 'LinkedIn', href: site.linkedin },
+    { icon: InstagramIcon, label: site.instagramHandle, href: site.instagram },
   ]
 
   return (
@@ -105,38 +106,38 @@ export default function Curriculum() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-ink/25 px-5 text-sm font-semibold text-ink transition-colors hover:border-lilac-ink hover:text-lilac-ink"
+          className="inline-flex min-h-11 items-center gap-2 border border-ink/25 px-5 text-sm font-semibold text-ink transition-colors hover:border-ink hover:text-ink"
         >
           <Printer size={16} aria-hidden="true" /> {t.imprimir}
         </button>
       </div>
 
-      <article className="cv-sheet overflow-hidden rounded-[1.75rem] bg-surface shadow-xl shadow-navy/10 ring-1 ring-edge">
+      <article className="cv-sheet overflow-hidden bg-surface ring-1 ring-edge">
         <RibbonBanner height={64} />
 
         <div className="grid md:grid-cols-[17rem_1fr]">
           {/* Barra lateral */}
-          <aside className="bg-lilac/10 px-6 py-8 sm:px-8 md:py-10">
+          <aside className="bg-ink/[0.03] px-6 py-8 sm:px-8 md:py-10">
             <img
               src={img('about/retrato')}
               alt={site.name}
-              className="h-28 w-28 rounded-full object-cover object-top ring-4 ring-lilac/40 md:h-36 md:w-36"
+              className="bw h-28 w-28 object-cover object-top md:h-36 md:w-36"
             />
             <h1 className="headline mt-6 text-3xl text-ink sm:text-4xl">{site.name}</h1>
-            <p className="mt-2 text-[15px] font-semibold text-lilac-ink">{t.rolLinea}</p>
+            <p className="mt-2 text-[15px] font-semibold text-ink/75">{t.rolLinea}</p>
 
             <section className="mt-8">
               <Heading>{t.contactoCvTitulo}</Heading>
-              <ul className="mt-4 space-y-2.5 text-[14px]">
+              <ul className="mt-2 text-[14px] print:mt-4 print:space-y-2.5">
                 {contact.map(({ icon: Icon, label, href }) => (
                   <li key={href}>
                     <a
                       href={href}
                       target={href.startsWith('http') ? '_blank' : undefined}
                       rel="noreferrer"
-                      className="flex items-center gap-2.5 break-all text-ink hover:text-lilac-ink"
+                      className="flex min-h-11 items-center gap-2.5 break-all text-ink hover:text-ink print:min-h-0"
                     >
-                      <Icon size={15} className="shrink-0 text-lilac-ink" aria-hidden="true" /> {label}
+                      <Icon size={15} className="shrink-0 text-ink/75" aria-hidden="true" /> {label}
                     </a>
                   </li>
                 ))}
@@ -147,10 +148,10 @@ export default function Curriculum() {
               <Heading>{t.datos}</Heading>
               <ul className="mt-4 space-y-2.5 text-[14px] text-ink">
                 <li className="flex items-center gap-2.5">
-                  <MapPin size={15} className="shrink-0 text-lilac-ink" aria-hidden="true" /> {loc.value}
+                  <MapPin size={15} className="shrink-0 text-ink/75" aria-hidden="true" /> {loc.value}
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <Car size={15} className="shrink-0 text-lilac-ink" aria-hidden="true" /> {t.carnet}: {lic.value}
+                  <Car size={15} className="shrink-0 text-ink/75" aria-hidden="true" /> {t.carnet}: {lic.value}
                 </li>
               </ul>
             </section>
@@ -159,7 +160,7 @@ export default function Curriculum() {
               <Heading>{t.software}</Heading>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {skills.map((s) => (
-                  <li key={s.tool} className="flex items-center gap-1.5 rounded-full bg-surface py-1 pl-1 pr-3 text-[13px] font-medium text-ink ring-1 ring-edge">
+                  <li key={s.tool} className="flex items-center gap-1.5 bg-surface py-1 pl-1 pr-3 text-[13px] font-medium text-ink ring-1 ring-edge">
                     <img src={img(`tools/${s.tool}`)} alt="" className="h-5 w-5" />
                     {s.label}
                   </li>

@@ -121,9 +121,10 @@ const categories = {
   'casa-ricardo': 'Visual identity redesign',
   'proyecto-video': 'Music video',
 }
-// Grupo de la página de Proyectos: las identidades juntas, el vídeo aparte
+// Project folders: one per category, each in a brand colour
 export const projectGroups = [
-  { id: 'identidad', label: 'Visual identity', slugs: ['marca-personal', 'identidad-visual', 'casa-ricardo'] },
-  { id: 'audiovisual', label: 'Audiovisual', slugs: ['proyecto-video'] },
+  { id: 'identidad', label: 'Visual identity', color: 'navy', slugs: ['marca-personal', 'identidad-visual'] },
+  { id: 'rediseno', label: 'Brand redesign', color: 'lilac', slugs: ['casa-ricardo'] },
+  { id: 'audiovisual', label: 'Audiovisual', color: 'sky', slugs: ['proyecto-video'] },
 ]
 export const featuredProjects = projects.map((p) => ({ ...p, category: categories[p.slug] }))

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAnimationFrame, useReducedMotion } from 'framer-motion'
-import { RIBBON_COLORS, RIBBON_COLORS_DARK, buildCurve, ribbonPath, ribbonWidth } from '../lib/ribbonGeometry'
+import { RIBBON_COLORS, RIBBON_COLORS_DARK, buildCurve, ribbonPath } from '../lib/ribbonGeometry'
 import { useTheme } from '../theme/ThemeContext'
 
-/** Banda decorativa de las páginas interiores: tres cintas que cruzan de borde a borde con giros fuera de pantalla. */
+/** Banda decorativa de las páginas interiores: tres hilos que cruzan de borde a borde con giros fuera de pantalla. */
 export default function RibbonBanner({ height = 170, className = '' }) {
   const reduce = useReducedMotion()
   const { resolved } = useTheme()
@@ -29,7 +29,7 @@ export default function RibbonBanner({ height = 170, className = '' }) {
     if (!el) return undefined
     const measure = () => {
       const W = el.getBoundingClientRect().width
-      const width = ribbonWidth(W)
+      const width = 1.25
       const k = W < 700 ? 0.6 : 1
       const pts = [
         [-0.12 * W, height * 0.62],
@@ -38,7 +38,7 @@ export default function RibbonBanner({ height = 170, className = '' }) {
         [0.8 * W, height * (0.46 - 0.12 * k)],
         [1.12 * W, height * 0.42],
       ]
-      geo.current = { ...buildCurve(pts, 12), birth: 420, width, spacing: width * 2.6 + 6, amp: W < 700 ? 6 : 10, lambda: 320 }
+      geo.current = { ...buildCurve(pts, 12), birth: 0, width, spacing: 7, amp: W < 700 ? 3 : 5, lambda: 320 }
       setW(W)
       draw(performance.now())
     }

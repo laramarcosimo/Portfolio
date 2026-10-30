@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 import { Menu, Monitor, Moon, Sun, X } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useContent } from '../data/useContent'
@@ -8,41 +7,28 @@ import { useLanguage } from '../i18n/LanguageContext'
 import { useUi } from '../i18n/ui'
 import Logo from './Logo'
 
-const THEME_OPTIONS = [
-  { mode: 'light', label: 'Claro', icon: Sun },
-  { mode: 'dark', label: 'Oscuro', icon: Moon },
-  { mode: 'system', label: 'Sistema', icon: Monitor },
-]
+const THEMES = [['light', Sun], ['dark', Moon], ['system', Monitor]]
 
-/** Interruptor de tema (claro/oscuro/sistema): tres botones icono, el activo resaltado. */
-function ThemeToggle({ className = '' }) {
-  const { mode, setMode, resolved } = useTheme()
+/** Tema: las tres opciones a la vista; la activa, rellena. */
+function ThemeToggle() {
+  const { mode, setMode } = useTheme()
+  const t = useUi()
   return (
-    <div role="group" aria-label={`Tema: ${resolved === 'dark' ? 'oscuro' : 'claro'}`} className={`inline-flex items-center gap-0.5 ${className}`}>
-      {THEME_OPTIONS.map(({ mode: m, label, icon: Icon }) => (
-        <button
-          key={m}
-          type="button"
-          onClick={() => setMode(m)}
-          aria-pressed={mode === m}
-          aria-label={`Tema ${label.toLowerCase()}`}
-          title={`Tema ${label.toLowerCase()}`}
-          className={`grid h-8 w-8 place-items-center rounded-full transition-colors ${
-            mode === m ? 'bg-ink/10 text-ink' : 'text-ink/75 hover:text-ink'
-          }`}
-        >
-          <Icon size={14} strokeWidth={2} />
+    <div role="group" aria-label={t.tema} className="theme-switch">
+      {THEMES.map(([m, Icon]) => (
+        <button key={m} type="button" onClick={() => setMode(m)} aria-pressed={mode === m} aria-label={`${t.tema}: ${t.temaModo[m]}`} title={`${t.tema}: ${t.temaModo[m]}`}>
+          <Icon size={16} strokeWidth={1.75} aria-hidden="true" />
         </button>
       ))}
     </div>
   )
 }
 
-/** Selector de idioma (ES/EN): dos botones de texto, el activo resaltado, a juego con ThemeToggle. */
-function LanguageToggle({ className = '' }) {
+/** Idioma: dos palabras de texto, la activa con una marca fina. */
+function LanguageToggle() {
   const { lang, setLang } = useLanguage()
   return (
-    <div role="group" aria-label="Idioma / Language" className={`inline-flex items-center gap-0.5 ${className}`}>
+    <div role="group" aria-label="Idioma / Language" className="inline-flex items-center gap-3">
       {['es', 'en'].map((l) => (
         <button
           key={l}
@@ -50,10 +36,7 @@ function LanguageToggle({ className = '' }) {
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
           aria-label={l === 'es' ? 'Español' : 'English'}
-          title={l === 'es' ? 'Español' : 'English'}
-          className={`grid h-8 w-8 place-items-center text-xs font-semibold uppercase transition-colors ${
-            lang === l ? 'text-ink underline decoration-lilac decoration-2 underline-offset-4' : 'text-ink/75 hover:text-ink'
-          }`}
+          className={`caps quiet-mark min-h-11 min-w-6 transition-colors duration-300 ${lang === l ? 'is-active text-ink' : 'text-ink/75 hover:text-ink'}`}
         >
           {l}
         </button>
@@ -73,34 +56,55 @@ export default function Navbar() {
   // "/proyectos/xyz" cuenta como Proyectos
   const isActive = (to) => (to === '/' ? pathname === '/' : pathname.startsWith(to))
 
-  // Con el menú abierto, Escape lo cierra
+  const ribbonRef = useRef(null)
+  const toggleRef = useRef(null)
+  const firstLinkRef = useRef(null)
+  const close = () => {
+    setOpenAt(null)
+    toggleRef.current?.focus({ preventScroll: true })
+  }
+
+  // Al abrir, el foco pasa al primer enlace; Escape cierra y Tab da la vuelta dentro de la cinta
   useEffect(() => {
     if (!open) return undefined
-    const onKey = (e) => e.key === 'Escape' && setOpenAt(null)
+    firstLinkRef.current?.focus({ preventScroll: true })
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setOpenAt(null)
+        toggleRef.current?.focus({ preventScroll: true })
+      }
+      if (e.key !== 'Tab') return
+      const items = [...ribbonRef.current.querySelectorAll('a[href], button')]
+      const [first, last] = [items[0], items[items.length - 1]]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-page/90 backdrop-blur-md">
-        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-8" aria-label={t.navPrincipal}>
-          <Logo mono variant="auto" className="h-10" />
+      <header
+        className="sticky top-0 z-50 bg-page"
+      >
+        <nav className="flex h-16 items-center justify-between px-4 sm:px-8" aria-label={t.navPrincipal}>
+          <Logo mono variant="auto" className="h-9" />
 
-          <ul className="hidden items-center gap-8 md:flex">
+          <ul className="hidden items-center gap-10 md:flex">
             {navLinks.map((l) => (
               <li key={l.to}>
                 <NavLink
                   to={l.to}
                   end={l.to === '/'}
-                  className={`relative py-1.5 text-sm font-medium transition-colors hover:text-ink ${
-                    isActive(l.to) ? 'text-ink' : 'text-ink/75'
-                  }`}
+                  className={`eyebrow quiet-mark inline-flex min-h-11 items-center transition-colors duration-300 hover:text-ink ${isActive(l.to) ? 'is-active text-ink' : 'text-ink/75'}`}
                 >
                   {l.label}
-                  {isActive(l.to) && (
-                    <motion.span layoutId="nav-underline" className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-lilac" />
-                  )}
                 </NavLink>
               </li>
             ))}
@@ -111,81 +115,46 @@ export default function Navbar() {
             <ThemeToggle />
           </div>
 
-          <button
-            className="relative -mr-2 grid h-11 w-11 place-items-center rounded-full text-ink transition-colors hover:bg-ink/5 md:hidden"
-            onClick={() => setOpen(!open)}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? t.cerrarMenu : t.abrirMenu}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={open ? 'x' : 'menu'}
-                initial={{ rotate: -60, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 60, opacity: 0 }}
-                transition={{ duration: 0.15 }}
-                className="grid place-items-center"
-              >
-                {open ? <X size={21} /> : <Menu size={21} />}
-              </motion.span>
-            </AnimatePresence>
-          </button>
         </nav>
       </header>
 
-      {/* Menú compacto: una tarjeta pequeña anclada al botón, sin tapar la página */}
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.button
-              aria-label={t.cerrarMenu}
-              tabIndex={-1}
-              onClick={() => setOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-x-0 bottom-0 top-16 z-40 cursor-default bg-ink/10 md:hidden"
-            />
-            <motion.nav
-              id="mobile-menu"
-              aria-label={t.menuMovil}
-              initial={{ opacity: 0, scale: 0.94, y: -8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: -8 }}
-              transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-              style={{ transformOrigin: 'top right' }}
-              className="fixed right-4 top-[4.25rem] z-50 w-[min(15rem,calc(100vw-2rem))] rounded-2xl bg-surface p-1.5 shadow-xl shadow-navy/15 ring-1 ring-ink/5 md:hidden"
-            >
-              <ul>
-                {navLinks.map((l) => (
-                  <li key={l.to}>
-                    <NavLink
-                      to={l.to}
-                      end={l.to === '/'}
-                      className={`flex min-h-11 items-center justify-between rounded-xl px-4 text-[15px] font-semibold transition-colors active:bg-ink/5 ${
-                        isActive(l.to) ? 'text-ink' : 'text-ink/75'
-                      }`}
-                    >
-                      {l.label}
-                      {isActive(l.to) && <span className="h-1.5 w-1.5 rounded-full bg-lilac" aria-label={t.paginaActual} />}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-1 flex items-center justify-between gap-2 border-t border-ink/10 px-3 py-2.5">
-                <span className="text-xs font-semibold text-ink/75">{t.tema}</span>
-                <ThemeToggle />
-              </div>
-              <div className="flex items-center justify-between gap-2 px-3 py-2.5">
-                <span className="text-xs font-semibold text-ink/75">{t.idioma}</span>
-                <LanguageToggle />
-              </div>
-            </motion.nav>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Móvil: un marcapáginas que cuelga arriba a la derecha; al pulsarlo, la misma cinta crece y descubre el menú */}
+      <div className="ribbon-scrim md:hidden" data-open={open} aria-hidden="true" onClick={close} />
+      <div ref={ribbonRef} className="ribbon md:hidden" data-open={open}>
+        <button
+          ref={toggleRef}
+          type="button"
+          className="ribbon-toggle"
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          aria-label={open ? t.cerrarMenu : t.abrirMenu}
+        >
+          {open ? <X size={22} strokeWidth={1.75} aria-hidden="true" /> : <Menu size={22} strokeWidth={1.75} aria-hidden="true" />}
+        </button>
+        <nav id="mobile-menu" aria-label={t.menuMovil} className="ribbon-body" inert={!open}>
+          <ul>
+            {navLinks.map((l, i) => (
+              <li key={l.to}>
+                <NavLink
+                  ref={i === 0 ? firstLinkRef : undefined}
+                  to={l.to}
+                  end={l.to === '/'}
+                  aria-current={isActive(l.to) ? 'page' : undefined}
+                  onClick={() => setOpenAt(null)}
+                  className={`ribbon-link quiet-mark ${isActive(l.to) ? 'is-active' : ''}`}
+                >
+                  {l.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          <div className="ribbon-controls">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
+        </nav>
+      </div>
     </>
   )
 }

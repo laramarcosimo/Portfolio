@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 const STORAGE_KEY = 'theme-mode'
@@ -36,7 +37,16 @@ export function ThemeProvider({ children }) {
 
   const setMode = (next) => {
     if (!MODES.includes(next)) return
-    setModeState(next)
+    // Fundido único de toda la página: ningún elemento cambia de tema antes que otro
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (document.startViewTransition && !calm) {
+      document.startViewTransition(() => {
+        flushSync(() => setModeState(next))
+        document.documentElement.setAttribute('data-theme', next === 'system' ? getSystemTheme() : next)
+      })
+    } else {
+      setModeState(next)
+    }
     try {
       localStorage.setItem(STORAGE_KEY, next)
     } catch {

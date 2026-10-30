@@ -3,14 +3,17 @@ import { MotionConfig, useInView } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import ColorPanel from '../components/ColorPanel'
+import ReaderProgress from '../components/ReaderProgress'
 import TypeCatalog from '../components/TypeCatalog'
 import Reveal from '../components/Reveal'
 import { useContent, useProjectPages } from '../data/useContent'
 import { useUi } from '../i18n/ui'
 
-const WRAP = 'mx-auto w-full max-w-6xl px-4 sm:px-8'
+const WRAP = 'w-full px-4 sm:px-8'
 // Imágenes de trabajo: a sangre en móvil, en un contenedor ancho en escritorio
-const WIDE = 'mx-auto w-full max-w-7xl sm:px-8'
+const WIDE = 'mx-auto w-full max-w-[1600px] sm:px-8'
+// Columna de lectura: el texto arranca siempre en la misma vertical
+const COLUMN = 'lg:ml-[33.333%] max-w-[38rem]'
 
 // Vídeo en bucle que se reproduce solo mientras está a la vista.
 function LoopVideo({ src, className = '' }) {
@@ -27,14 +30,14 @@ function LoopVideo({ src, className = '' }) {
 
 const Photo = ({ g, className = '' }) => <img src={g.src} alt={g.alt} loading="lazy" className={`block h-auto w-full bg-fog ${className}`} />
 
-/** Bloque con etiqueta a la izquierda (escritorio) y contenido a la derecha. */
-function Section({ label, children, wide = false, className = '' }) {
+/** Bloque: etiqueta pequeña encima del contenido. `column` lo sitúa en la columna editorial de texto. */
+function Section({ label, children, wide = false, column = false, className = '' }) {
   return (
-    <section className={`mt-20 sm:mt-28 ${className}`} aria-label={label}>
+    <section className={`mt-28 sm:mt-44 ${className}`} aria-label={label}>
       <div className={WRAP}>
-        <h2 className="mb-6 border-t border-ink/15 pt-4 eyebrow text-ink/75 sm:mb-8">{label}</h2>
+        <h2 className={`mb-10 font-[Quicksand] eyebrow text-ink/75 sm:mb-14 ${column ? COLUMN : ''}`}>{label}</h2>
       </div>
-      <div className={wide ? WIDE : WRAP}>{children}</div>
+      <div className={wide ? WIDE : WRAP}>{column ? <div className={COLUMN}>{children}</div> : children}</div>
     </section>
   )
 }
@@ -85,14 +88,14 @@ function ProjectNav({ slug, projects, t }) {
     const isNext = dir === 'next'
     const label = p ? (isNext ? t.proyectoSiguiente : t.proyectoAnterior) : t.volverAProyectos
     return (
-      <Link to={p ? `/proyectos/${p.slug}` : '/proyectos'} className={`group flex flex-col gap-3 py-8 sm:py-10 ${isNext ? 'sm:items-end sm:text-right' : ''}`}>
+      <Link to={p ? `/proyectos/${p.slug}` : '/proyectos'} className={`group flex flex-col gap-4 py-10 sm:py-14 ${isNext ? 'sm:items-end sm:text-right' : ''}`}>
         <span className={`flex items-center gap-2 eyebrow text-ink/75 ${isNext ? 'sm:flex-row-reverse' : ''}`}>
-          {isNext ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
+          {isNext ? <ArrowRight size={14} strokeWidth={1.25} /> : <ArrowLeft size={14} strokeWidth={1.25} />}
           {label}
         </span>
         {p && (
-          <span className="flex items-baseline gap-3 font-sans text-2xl font-semibold tracking-tight text-ink transition-colors group-hover:text-lilac-ink sm:text-4xl">
-            <span className="text-sm tabular-nums text-lilac-ink">{p.number}</span>
+          <span className="flex items-baseline gap-4 font-sans text-2xl font-bold tracking-[-0.02em] text-ink transition-opacity duration-500 group-hover:opacity-70 sm:text-[2rem]">
+            <span className="eyebrow tabular-nums text-ink/75">{p.number}</span>
             {p.name}
           </span>
         )}
@@ -101,7 +104,7 @@ function ProjectNav({ slug, projects, t }) {
   }
 
   return (
-    <nav aria-label={t.otrosProyectos} className={`${WRAP} mt-28 sm:mt-36`} style={{ '--font-sans': "'Quicksand', sans-serif" }}>
+    <nav aria-label={t.otrosProyectos} className={`${WRAP} mt-32 sm:mt-48`} style={{ '--font-sans': "'Quicksand', sans-serif" }}>
       <div className="grid divide-y divide-ink/15 border-y border-ink/15 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
         <div className="sm:pr-8">{renderItem(prev, 'prev')}</div>
         <div className="sm:pl-8">{renderItem(next, 'next')}</div>
@@ -140,8 +143,8 @@ export default function ProjectPage() {
     page.webTools && {
       label: t.webHechaCon.replace(/:$/, ''),
       value: (
-        <a href={page.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline decoration-lilac decoration-2 underline-offset-4 hover:text-lilac-ink">
-          {page.webTools.join(' · ')} <ArrowUpRight size={14} />
+        <a href={page.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline decoration-ink/35 decoration-1 underline-offset-4 transition-colors duration-500 hover:decoration-ink">
+          {page.webTools.join(' · ')} <ArrowUpRight size={14} strokeWidth={1.25} />
         </a>
       ),
     },
@@ -152,59 +155,57 @@ export default function ProjectPage() {
       <main className="font-sans" style={{ '--font-sans': fonts.body, '--font-serif': fonts.heading, '--font-display': fonts.heading }}>
         {/* Cabecera */}
         <header className={`${WRAP} pt-10 sm:pt-16`}>
-          <Link to="/proyectos" className="inline-flex items-center gap-2 font-[Quicksand] eyebrow text-ink/75 transition-colors hover:text-lilac-ink">
-            <ArrowLeft size={14} />
+          <Link to="/proyectos" className="inline-flex min-h-11 items-center gap-2 font-[Quicksand] eyebrow text-ink/75 transition-colors duration-500 hover:text-ink">
+            <ArrowLeft size={14} strokeWidth={1.25} />
             {t.proyectos}
           </Link>
-          <div className="mt-12 grid gap-x-3 sm:mt-16 sm:grid-cols-[4.5rem_1fr]">
-            {project && <p className="font-[Quicksand] text-base font-semibold tabular-nums text-lilac-ink">{project.number}</p>}
-            <div>
-              <h1 className="max-w-4xl font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-ink sm:text-7xl lg:text-8xl">{project?.name ?? page.title}</h1>
-              {project?.concept && <p className="mt-5 max-w-[40ch] text-lg leading-snug text-ink/75 sm:text-2xl">{project.concept}</p>}
-              <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4 font-[Quicksand] sm:mt-12">
-                {meta.map((m) => (
-                  <div key={m.label}>
-                    <dt className="eyebrow text-ink/75">{m.label}</dt>
-                    <dd className="mt-1 text-[15px] text-ink">{m.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
+          <div className="mt-16 sm:mt-28">
+            {project && <p className="font-[Quicksand] eyebrow tabular-nums text-ink/75">{project.number}</p>}
+            <h1 className={`mt-5 max-w-4xl font-serif text-[2.75rem] ${slug === 'casa-ricardo' ? 'font-normal' : 'font-bold'} leading-[1.05] tracking-[-0.02em] text-ink sm:text-6xl lg:text-7xl`}>{project?.name ?? page.title}</h1>
+            {project?.concept && <p className="mt-7 max-w-[40ch] text-lg font-medium leading-snug text-ink/85 sm:text-2xl">{project.concept}</p>}
+            <dl className="mt-12 flex flex-wrap gap-x-14 gap-y-6 font-[Quicksand] sm:mt-16">
+              {meta.map((m) => (
+                <div key={m.label}>
+                  <dt className="eyebrow text-ink/75">{m.label}</dt>
+                  <dd className="mt-2 text-[15px] font-medium text-ink">{m.value}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </header>
 
         {page.video ? (
           <>
-            <div className={`${WIDE} mt-12 sm:mt-16`}>
-              <video src={page.video} poster={page.poster} controls playsInline preload="metadata" className="block aspect-video w-full bg-navy object-contain" />
+            <div className={`${WIDE} mt-16 sm:mt-28`}>
+              <video src={page.video} poster={page.poster} controls playsInline preload="metadata" className="block aspect-video w-full bg-brand object-contain" />
             </div>
-            <Section label={t.elProyecto}>
-              <div className="max-w-[60ch] sm:ml-[5.25rem]">
+            <Section label={t.elProyecto} column>
+              <div>
                 <p className="text-xl font-medium leading-snug text-ink sm:text-2xl">{page.intro.lead}</p>
-                <p className="mt-5 text-base leading-relaxed text-ink/75 sm:text-lg">{page.intro.text}</p>
+                <p className="mt-6 text-base leading-[1.75] text-ink/85 sm:text-lg">{page.intro.text}</p>
               </div>
             </Section>
           </>
         ) : (
           <>
             {/* Una sola imagen grande del trabajo */}
-            <div className={`${WIDE} mt-12 sm:mt-16`}>
+            <div className={`${WIDE} mt-16 sm:mt-28`}>
               <img src={project.hero} alt={project.heroAlt} className="block h-auto w-full bg-fog" />
             </div>
 
             {/* El caso */}
-            <Section label={t.elProyecto}>
+            <Section label={t.elProyecto} column>
               {page.story ? (
-                <dl className="divide-y divide-ink/15">
+                <dl className="space-y-12 sm:space-y-16">
                   {page.story.map((b) => (
-                    <div key={b.key} className="grid gap-2 py-6 first:pt-0 sm:grid-cols-[12rem_1fr] sm:gap-8 sm:py-8">
-                      <dt className="font-[Quicksand] text-[15px] font-semibold text-lilac-ink">{t.story[b.key]}</dt>
-                      <dd className="max-w-[60ch] text-lg leading-relaxed text-ink sm:text-xl">{b.text}</dd>
+                    <div key={b.key}>
+                      <dt className="font-[Quicksand] eyebrow text-ink/75">{t.story[b.key]}</dt>
+                      <dd className="mt-4 text-lg leading-[1.7] text-ink sm:text-xl">{b.text}</dd>
                     </div>
                   ))}
                 </dl>
               ) : (
-                <p className="max-w-[60ch] text-lg leading-relaxed text-ink sm:text-xl">{page.explanation}</p>
+                <p className="text-lg leading-[1.7] text-ink sm:text-xl">{page.explanation}</p>
               )}
             </Section>
 
@@ -248,7 +249,7 @@ export default function ProjectPage() {
                   {page.videos.pair && (
                     <div className="grid gap-3 sm:grid-cols-2 sm:gap-6">
                       {page.videos.pair.map((v, i) => (
-                        <div key={v} className="overflow-hidden ring-1 ring-inset ring-ink/10" style={{ background: page.videos.pairTones?.[i] }}>
+                        <div key={v} className="overflow-hidden" style={{ background: page.videos.pairTones?.[i] }}>
                           <LoopVideo src={v} />
                         </div>
                       ))}
@@ -279,6 +280,7 @@ export default function ProjectPage() {
         )}
 
         <ProjectNav slug={slug} projects={projects} t={t} />
+        <ReaderProgress key={slug} />
         <div className="pb-24" />
       </main>
     </MotionConfig>
