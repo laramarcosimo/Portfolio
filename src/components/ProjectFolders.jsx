@@ -698,6 +698,8 @@ const viewport = () => ({
 })
 
 /** Composición abierta: la carpeta, tan grande como permite la pantalla, y las portadas encima y solapadas con ella. Las portadas van en coordenadas de la carpeta. */
+const HOVER_LOCK_MS = 600
+
 function stageLayout({ W, H, nav }, geo, infoH, active) {
   const n = geo.sheets.length
   const many = n >= MANY
@@ -979,6 +981,7 @@ function FolderLift({ group, items, level, geo: firstGeo, button, open, reduce, 
     if (open) closeBtn.current?.focus({ preventScroll: true })
   }, [open])
 
+  const hoverLock = useRef(0)
   const move = (next) => {
     const i = Math.max(0, Math.min(n - 1, next))
     setActive(i)
@@ -1063,6 +1066,12 @@ function FolderLift({ group, items, level, geo: firstGeo, button, open, reduce, 
                   className="lift-cover"
                   data-side={c.d !== 0 || undefined}
                   style={{ width: c.cw, height: c.ch, '--k': c.cw / geo.sheets[i].w, pointerEvents: reachable ? undefined : 'none' }}
+                  onPointerEnter={(e) => {
+                    // Con ratón, pasar por encima trae la portada al frente; la pausa evita que se alternen al recolocarse
+                    if (e.pointerType !== 'mouse' || c.d === 0 || gesture.current || performance.now() < hoverLock.current) return
+                    hoverLock.current = performance.now() + HOVER_LOCK_MS
+                    setActive(i)
+                  }}
                 >
                   <Link
                     ref={(el) => {
