@@ -100,112 +100,91 @@
 .portrait img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; filter: grayscale(1) contrast(1.08); }
 
 /* Carpetas de proyectos: su carpeta de papelería, con su estampado de ondas y el bolsillo curvo */
-.folder--navy { --f-face: #192a56; --f-ink: #f5f5f2; --f-wave: #96c9ff; --f-wave-o: 0.42; --f-pocket: #9690e4; --f-inner: #101c3f; --f-edge: #0d1733; --f-lip: #3a5192; }
-.folder--lilac { --f-face: #9690e4; --f-ink: #192a56; --f-wave: #192a56; --f-wave-o: 0.6; --f-pocket: #96c9ff; --f-inner: #7f78d2; --f-edge: #6f68c0; --f-lip: #bcb8f2; }
-.folder--sky { --f-face: #96c9ff; --f-ink: #192a56; --f-wave: #192a56; --f-wave-o: 0.55; --f-pocket: #9690e4; --f-inner: #78b4f2; --f-edge: #68a2df; --f-lip: #c8e3ff; }
+.folder--navy { --f-face: #192a56; --f-ink: #f5f5f2; --f-wave: #96c9ff; --f-wave-o: 0.42; --f-pocket: #9690e4; --f-inner: #101c3f; --f-lip: #3a5192; }
+.folder--lilac { --f-face: #9690e4; --f-ink: #192a56; --f-wave: #192a56; --f-wave-o: 0.6; --f-pocket: #96c9ff; --f-inner: #7f78d2; --f-lip: #bcb8f2; }
+.folder--sky { --f-face: #96c9ff; --f-ink: #192a56; --f-wave: #192a56; --f-wave-o: 0.55; --f-pocket: #9690e4; --f-inner: #78b4f2; --f-lip: #c8e3ff; }
 /* En oscuro la carpeta marino sería invisible: pasa a blanco roto y conserva su estampado */
-[data-theme="dark"] .folder--navy { --f-face: #f5f5f2; --f-ink: #192a56; --f-wave: #192a56; --f-wave-o: 0.55; --f-inner: #d6d6cf; --f-edge: #b5b5ad; --f-lip: #ffffff; }
+[data-theme="dark"] .folder--navy { --f-face: #f5f5f2; --f-ink: #192a56; --f-wave: #192a56; --f-wave-o: 0.55; --f-inner: #d6d6cf; --f-lip: #ffffff; }
 
-/* Tres en fila en escritorio; en móvil, una sobre otra con su panel justo debajo */
+/* Tres en fila en escritorio; en móvil, una sobre otra con el escenario justo debajo de la pulsada */
 .folders { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 2rem; padding-top: 1rem; position: relative; overflow-anchor: none; }
-.folder-slot { container-type: inline-size; width: 100%; max-width: 30rem; }
+.folder-slot { container-type: inline-size; width: 100%; max-width: 30rem; order: var(--o); }
+.folder, .stage-grow { --f-r: 0.625rem; --tab-h: 2.75rem; --tab-join: 2.5rem; --shoulder: 2.25rem; --inner-pad: 0.5rem; --wave-w: 4.5rem; --wave-h: 3.25rem; --cut: 1.5rem; --lip: 3px; }
 .folder { position: relative; display: block; width: 100%; height: 112cqw; text-align: left; cursor: pointer; color: var(--f-ink); }
 .folder:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 4px; }
-.folder-tab { position: absolute; left: 0; top: 0; z-index: 1; display: block; height: 2.75rem; max-width: calc(100% - 1.25rem); padding: 0.5625rem 0.5rem 0 1rem; font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; white-space: nowrap; background: var(--f-face); color: var(--f-ink); border-top-left-radius: 0.5rem; }
-.folder-tab::after { content: ""; position: absolute; top: 0; bottom: 0; right: -0.75rem; width: 1.5rem; z-index: -1; background: var(--f-face); border-top-right-radius: 0.5rem; transform: skewX(18deg); }
-/* Lámina trasera: reborde de cartulina con el grueso abajo y a la derecha; dentro, el fondo en sombra plana */
-.folder-back { position: absolute; inset: 2.5rem 0 0 0; display: block; background: var(--f-face); border-radius: 0 0.625rem 0.5rem 0.5rem; box-shadow: inset -3px -3px 0 var(--f-edge); }
-.folder-inner { position: absolute; inset: 0.5rem calc(0.5rem + 3px) 0 0.5rem; display: block; overflow: hidden; background: var(--f-inner); border-radius: 0.25rem 0.25rem 0 0; }
+/* Silueta: pestaña, hombro y lámina comparten radio y color; el hombro se solapa con ambos, así que no hay costura posible */
+.folder-tab, .big-tab { position: absolute; left: 0; top: 0; z-index: 1; display: block; height: var(--tab-h); background: var(--f-face); border-top-left-radius: var(--f-r); }
+.folder-tab { max-width: calc(100% - var(--shoulder)); padding: 0.5625rem 0.25rem 0 1rem; font-size: 0.875rem; line-height: 1.25rem; font-weight: 700; white-space: nowrap; color: var(--f-ink); }
+.folder-tab-text { text-decoration: underline transparent 2px; text-underline-offset: 0.2em; transition: text-decoration-color var(--dur-quick) ease-out; }
+.folder[aria-expanded="true"] .folder-tab-text { text-decoration-color: currentColor; }
+.tab-shoulder { position: absolute; top: 0; left: calc(100% - 1px); display: block; width: var(--shoulder); height: calc(var(--tab-join) + 1px); fill: var(--f-face); overflow: visible; }
+.folder-back { position: absolute; inset: var(--tab-join) 0 0 0; display: block; background: var(--f-face); border-radius: 0 var(--f-r) var(--f-r) var(--f-r); }
+.folder-inner { position: absolute; inset: var(--inner-pad) var(--inner-pad) 0 var(--inner-pad); display: block; overflow: hidden; background: var(--f-inner); border-radius: 0.25rem 0.25rem 0 0; transition: opacity var(--dur-quick) ease-out; }
 .folder-waves {
   position: absolute; inset: 0; display: block; pointer-events: none; background: var(--f-wave); opacity: var(--f-wave-o);
   --m: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='174' height='125' viewBox='0 0 174 125'%3E%3Cdefs%3E%3Cg id='w'%3E%3Cpath d='M2 57C18 46 36 41 52 42C78 44 100 62 130 66C150 69 166 60 178 48C170 70 150 80 128 78C98 75 76 56 50 52C34 50 18 52 2 57Z'/%3E%3Cpath d='M28 31C44 23 58 20 72 22C92 25 106 36 128 39C142 41 156 36 168 28C158 45 142 50 126 48C104 45 90 34 70 30C56 28 42 28 28 31Z'/%3E%3C/g%3E%3C/defs%3E%3Cuse href='%23w'/%3E%3Cuse href='%23w' x='-174'/%3E%3Cuse href='%23w' x='87' y='62'/%3E%3Cuse href='%23w' x='-87' y='62'/%3E%3Cuse href='%23w' x='87' y='-63'/%3E%3Cuse href='%23w' x='-87' y='-63'/%3E%3C/svg%3E");
-  -webkit-mask: var(--m) 0 0 / 4.5rem auto; mask: var(--m) 0 0 / 4.5rem auto;
+  -webkit-mask: var(--m) 0 0 / var(--wave-w) var(--wave-h); mask: var(--m) 0 0 / var(--wave-w) var(--wave-h);
 }
-/* Las láminas: se reconocen sin pasar el ratón; más de la mitad queda fuera, en abanico */
-.folder-sheet { --r: 0deg; --up: 0cqw; position: absolute; display: block; height: auto; rotate: var(--r); translate: 0 var(--up); box-shadow: 0 1px 2px rgb(15 27 60 / 0.3), 0 8px 18px rgb(15 27 60 / 0.22); transition: translate var(--dur-slow) var(--ease-expo), rotate var(--dur-slow) var(--ease-expo); }
-.folder[data-sheets="1"] .folder-sheet { --r: -2.5deg; left: 19cqw; top: 13cqw; width: 64cqw; }
-.folder[data-sheets="2"] .folder-sheet { top: 17cqw; width: 50cqw; }
-.folder[data-sheets="2"] .folder-sheet:nth-of-type(1) { --r: -5deg; left: 3cqw; }
-.folder[data-sheets="2"] .folder-sheet:nth-of-type(2) { --r: 4deg; left: 46cqw; top: 15cqw; }
-/* Tres o más: abanico de tres; el resto se ve al abrir */
-.folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet { top: 16cqw; width: 42cqw; }
-.folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet:nth-of-type(1) { --r: -6deg; left: 2cqw; }
-.folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet:nth-of-type(2) { --r: 1deg; left: 29cqw; top: 13cqw; }
-.folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet:nth-of-type(3) { --r: 6deg; left: 56cqw; }
-.folder .folder-sheet:nth-of-type(n + 4) { display: none; }
-.folder:hover .folder-sheet, .folder:focus-visible .folder-sheet, .folder[data-out] .folder-sheet { --up: -5cqw; }
-/* Fuera de la carpeta: su sitio se conserva para medir el regreso, pero la lámina es la portada que viaja */
-.folder[data-out] .folder-sheet { visibility: hidden; transition: none; }
-/* Solapa delantera: corte inclinado (la abertura), canto claro del papel y bolsillo curvo */
-.folder-front { --cut: polygon(0 1.5rem, 100% 0, 100% 100%, 0 100%); position: absolute; inset: 60cqw 3px 3px 0; z-index: 2; display: block; transform-origin: 50% 100%; filter: drop-shadow(0 -2px 5px rgb(15 27 60 / 0.28)); }
-.folder-front::before { content: ""; position: absolute; inset: 0; background: var(--f-lip); clip-path: var(--cut); }
-.folder-flap { position: absolute; inset: 3px 0 0 0; display: block; overflow: hidden; background: var(--f-face); border-radius: 0 0 0.375rem 0.375rem; clip-path: var(--cut); }
-.folder-pocket { position: absolute; right: 0; bottom: 0; display: block; padding: 1.25rem 1.125rem 0.875rem 2.75rem; color: #192a56; background: var(--f-pocket); border-top-left-radius: 3rem; border-bottom-right-radius: 0.375rem; }
+/* Las láminas: se reconocen sin pasar el ratón; un filete fino las separa del fondo */
+:root { --cover-edge: rgb(25 42 86 / 0.16); }
+[data-theme="dark"] { --cover-edge: rgb(245 245 242 / 0.22); }
+.fan-link img { outline: 1px solid var(--cover-edge); outline-offset: -1px; }
+/* Solapa: mismo radio que la lámina; canto claro de grueso constante y corte recto */
+.folder-front { position: absolute; inset: 60cqw 0 0 0; z-index: 2; display: block; filter: drop-shadow(0 -2px 5px rgb(15 27 60 / 0.28)); }
+.folder-front::before, .folder-flap { clip-path: polygon(0 var(--cut), 100% 0, 100% 100%, 0 100%); border-radius: 0 0 var(--f-r) var(--f-r); }
+.folder-front::before { content: ""; position: absolute; inset: 0; background: var(--f-lip); }
+.folder-flap { position: absolute; inset: var(--lip) 0 0 0; display: block; overflow: hidden; background: var(--f-face); }
+.folder-pocket { position: absolute; right: 0; bottom: 0; display: block; padding: 1.25rem 1.125rem 0.875rem 2.75rem; color: #192a56; background: var(--f-pocket); border-top-left-radius: 3rem; border-bottom-right-radius: var(--f-r); }
 .folder-state { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 700; }
 .folder-plus { position: relative; display: block; width: 0.75rem; height: 0.75rem; transition: rotate var(--dur-slow) var(--ease-expo); }
 .folder-plus::before, .folder-plus::after { content: ""; position: absolute; background: currentColor; }
 .folder-plus::before { left: 0; right: 0; top: calc(50% - 1px); height: 2px; }
 .folder-plus::after { top: 0; bottom: 0; left: calc(50% - 1px); width: 2px; }
-.folder[aria-expanded="true"] .folder-plus { rotate: 45deg; }
+.folder[aria-expanded="true"] .folder-plus, .big-front .folder-plus { rotate: 45deg; }
 
-/* El panel: las láminas enteras, en el color de su carpeta */
-.folder-panel-clip { grid-column: 1 / -1; margin-top: -2rem; overflow: hidden; background: var(--f-face, transparent); }
-.folder-panel { overflow: hidden; color: var(--f-ink); background: var(--f-face); }
-.folder-panel { --p-pad: 1rem; --p-cover-h: clamp(13rem, calc(100svh - 26.5rem), 34rem); padding-block: 1.5rem 0.75rem; }
-.folder-panel-head, .folder-panel-foot { padding-inline: var(--p-pad); opacity: var(--reveal, 1); transform: translateY(calc((1 - var(--reveal, 1)) * 0.75rem)); }
-.folder-panel[data-flying] .folder-cover img { visibility: hidden; }
-/* Las portadas en vuelo: por encima de todo, recortadas solo a los lados del bloque, como la fila */
-.folder-flight { position: absolute; inset: 0; z-index: 5; pointer-events: none; overflow-x: clip; }
-.folder-ghost { position: absolute; display: block; max-width: none; transform-origin: 50% 50%; box-shadow: 0 1px 2px rgb(15 27 60 / 0.3), 0 10px 24px rgb(15 27 60 / 0.25); will-change: transform; }
-/* Las otras dos carpetas dan un paso atrás */
-.folder { transition: scale var(--dur-slow) var(--ease-expo); transform-origin: 50% 100%; }
-.folders[data-active] .folder:not([data-out]) { scale: 0.97; }
-/* El título: el viejo sube tras la máscara y el nuevo asoma por debajo; ambos en la misma celda */
-.folder-panel-title { display: grid; overflow: hidden; padding-bottom: 0.08em; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.08; font-weight: 700; letter-spacing: -0.025em; text-wrap: balance; }
-.folder-panel-title > span { grid-area: 1 / 1; display: block; }
-.folder-panel-meta { margin-top: 0.375rem; font-size: 0.9375rem; line-height: 1.4; font-weight: 500; }
-/* La fila: scroll nativo con imán. Los márgenes laterales los calcula el componente para poder centrar los extremos */
-.folder-row-box { margin-top: 1.25rem; container-type: inline-size; }
-.folder-row { position: relative; display: flex; align-items: center; gap: 1rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding-block: 0.25rem 1.5rem; padding-inline: var(--row-start, 0) var(--row-end, 0); }
-.folder-row::-webkit-scrollbar { display: none; }
-.folder-row:focus-visible { outline-offset: -3px; }
-.folder-row[data-single="true"] { padding-inline: var(--p-pad); overflow: visible; }
-.folder-row:not([data-single="true"]) { cursor: grab; }
-.folder-row.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
-.folder-row.is-dragging a { cursor: grabbing; }
-.folder-cover { flex: none; display: block; scroll-snap-align: center; }
-.folder-cover img { display: block; width: auto; height: auto; max-height: var(--p-cover-h); max-width: 84cqw; box-shadow: 0 1px 2px rgb(15 27 60 / 0.3), 0 10px 24px rgb(15 27 60 / 0.25); user-select: none; -webkit-user-drag: none; }
-.folder-row[data-single="true"] .folder-cover img { max-width: calc(100cqw - 2 * var(--p-pad)); }
-.folder-panel-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.25rem 1rem; }
-.folder-work-go { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 2.75rem; font-size: 1rem; font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; }
-.folder-row-pos { font-size: 0.9375rem; font-weight: 600; font-variant-numeric: tabular-nums; }
-.folder-panel :focus-visible { outline-color: var(--f-ink); }
+/* Con una abierta: la fila no se mueve. Las otras dos se apagan sin perder el contraste de sus textos; la elegida se queda vacía, con su pestaña marcada */
 
-/* La rueda (más de 3 proyectos): cilindro de portadas */
-.folder-wheel { position: relative; height: calc(var(--p-cover-h) + 2.5rem); overflow: hidden; perspective: 1500px; cursor: grab; touch-action: pan-y; user-select: none; }
-.folder-wheel.is-dragging { cursor: grabbing; }
-.folder-wheel:focus-visible { outline-offset: -3px; }
-.folder-wheel .folder-cover { position: absolute; left: 50%; top: 50%; backface-visibility: hidden; will-change: transform, opacity; }
-.folder-wheel .folder-cover img { max-width: 62cqw; }
+/* El escenario: sin panel de color, sobre el fondo de la página. Reserva todo su sitio; cerrado no existe */
+.folder-stage { grid-column: 1 / -1; order: var(--o); overflow: hidden; color: var(--color-ink); }
+.stage-inner { padding-block: 1.5rem 1.25rem; }
+.stage-scene { position: relative; touch-action: pan-y; user-select: none; }
+.stage-scene[data-many] { cursor: grab; }
+.stage-grow { --f-r: 0.875rem; --tab-h: 3.5rem; --tab-join: 3rem; --shoulder: 3rem; --inner-pad: 0.75rem; --wave-w: 6.75rem; --wave-h: 4.875rem; --cut: 2.25rem; --lip: 4px; position: absolute; left: 50%; width: 0; height: 0; transform-origin: 0 0; }
+.big-part { position: absolute; }
+.stage-grow, .folder-cell { will-change: transform; }
+.big-back { z-index: 1; cursor: pointer; }
+.big-tab { width: 34%; }
+.fan { position: absolute; left: 0; top: 0; z-index: 2; }
+.fan-arm { will-change: transform; position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; }
+.fan-cover { position: absolute; will-change: transform; }
+.fan-link { display: block; width: 100%; height: 100%; }
+.fan-link:focus-visible { outline: 3px solid var(--color-ink); outline-offset: 3px; }
+.fan-link img { display: block; width: 100%; height: 100%; object-fit: cover; box-shadow: 0 1px 2px rgb(15 27 60 / 0.3), 0 12px 28px rgb(15 27 60 / 0.26); user-select: none; -webkit-user-drag: none; }
+.big-front { z-index: 3; pointer-events: none; }
+.big-front .folder-front { inset: 36% 0 0 0; cursor: pointer; pointer-events: auto; }
+.big-front .folder-pocket { display: grid; justify-items: end; row-gap: 0.125rem; padding: 1.25rem 1.25rem 0.875rem 3.25rem; border-top-left-radius: 3.5rem; }
+.big-label { font-size: clamp(1.125rem, 2vw, 1.625rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; white-space: nowrap; }
+.stage-info { display: grid; justify-items: center; min-height: 7rem; padding-top: 0.75rem; text-align: center; }
+.stage-info-body { display: grid; justify-items: center; align-content: start; }
+.stage-info-name { font-size: clamp(1.375rem, 2.2vw, 2rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; }
+.stage-info-meta { margin-top: 0.25rem; font-size: 0.9375rem; line-height: 1.35; font-weight: 500; }
+.stage-info-go { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 2.75rem; font-size: 1rem; font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; }
 
-@media (min-width: 768px) {
-  /* Panel a dos columnas: título a la izquierda y portadas a la derecha; nunca queda hueco bajo el título */
-  .folder-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); grid-template-rows: 1fr auto; grid-template-areas: "head row" "foot row"; column-gap: 1.5rem; --p-cover-h: clamp(16rem, calc(100svh - 18rem), 36rem); }
-  .folder-panel-head { grid-area: head; }
-  .folder-panel-foot { grid-area: foot; }
-  .folder-row-box { grid-area: row; margin-top: 0; min-width: 0; align-self: center; }
-  .folder-row[data-single="true"] { justify-content: center; padding-block: 0.25rem 0.75rem; }
-  .folder-panel-title { font-size: clamp(2rem, 3.6vw, 4.5rem); }
-}
 @media (min-width: 1024px) {
   .folders { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1.5rem; row-gap: 0; }
   .folder-slot { order: 1; max-width: none; }
-  .folder-panel-clip { order: 2; margin-top: 0; }
-  .folder-panel { --p-pad: 2rem; padding-block: 2rem 1.5rem; }
+  .folder-stage { order: 2; }
+  .folder-cell { display: block; position: relative; grid-row: 2; }
+  .desk-spacer { display: block; grid-column: 1 / -1; }
+  /* La abierta crece en la propia fila; su abanico sale por encima de la solapa */
+  .desk-fan { position: absolute; inset: 0; z-index: 5; pointer-events: none; clip-path: inset(-1500px -600px 46.4% -600px); }
+  .desk-pivot { position: absolute; left: 50%; width: 0; height: 0; }
+  .desk-fan[data-many] { cursor: grab; }
+  .desk-info { position: absolute; left: 50%; top: 100%; z-index: 6; display: grid; justify-items: center; width: calc(100% * var(--s)); margin-top: calc(12px / var(--s)); translate: -50% 0; scale: calc(1 / var(--s)); transform-origin: 50% 0; text-align: center; color: var(--color-ink); visibility: hidden; transition: visibility 0s 1.1s; pointer-events: none; }
+  .desk-info[data-on] { visibility: visible; transition-delay: 0s; }
+  .desk-info a { pointer-events: auto; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .folder:hover .folder-sheet, .folder:focus-visible .folder-sheet, .folder[data-out] .folder-sheet { --up: 0cqw; }
-}
+@media (max-width: 1023px) { .folder-cell { display: contents; } .desk-spacer { display: none; } }
 
 /* Portada: nombre grande, resumen alineado a la tercera carpeta y las carpetas ya en la primera pantalla */
 .home-line { transition: opacity var(--dur-quick) ease-out; }
@@ -233,25 +212,32 @@
 
 /* Pie: firma pequeña y pestañas de contacto que nacen del borde inferior */
 .footer { position: relative; z-index: 10; overflow: clip; padding-top: 3.5rem; }
-.footer-id { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 2rem; padding: 0 1rem 1.25rem; }
-.footer-legal { display: grid; gap: 0.125rem; font-size: 0.75rem; line-height: 1.35; font-weight: 500; color: color-mix(in srgb, var(--color-ink) 82%, transparent); }
-.footer-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.375rem; margin-bottom: -0.5rem; padding-inline: 1rem; }
-.footer-cards li:last-child { grid-column: 1 / -1; }
-.footer-cards li { display: grid; }
-.footer-card { position: relative; isolation: isolate; display: flex; flex-direction: column; min-height: 6.25rem; padding: 0.75rem 1.5rem 1.25rem 0.875rem; overflow: hidden; color: var(--f-ink); background: var(--f-face); --f-wave-o: 0.16; clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1.25rem, 100% 100%, 0 100%); transition: transform var(--dur-slow) var(--ease-expo); }
-.footer-card:hover { transform: translateY(-0.375rem); }
+.footer-id { padding: 0 1rem 0.75rem; }
+.footer-legal { display: grid; gap: 0.125rem; font-size: 0.75rem; line-height: 1.35; font-weight: 500; color: color-mix(in srgb, var(--color-ink) 82%, transparent); padding: 0 1rem 1.25rem; }
+.footer-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.25rem; margin-bottom: -0.5rem; padding-inline: 1rem; }
+.footer-cards li { display: grid; min-width: 0; }
+/* Móvil: solo icono. 3.5rem de alto menos los 0.5rem que esconde el borde: 48px visibles para el dedo. */
+.footer-card { display: flex; align-items: center; justify-content: center; min-height: 3.5rem; padding-bottom: 0.5rem; color: var(--f-ink); background: var(--f-face); clip-path: polygon(0 0, calc(100% - 0.75rem) 0, 100% 0.875rem, 100% 100%, 0 100%); transition: transform var(--dur-slow) var(--ease-expo); }
+.footer-card:hover { transform: translateY(-0.25rem); }
 .footer-card:focus-visible { outline: 2px solid currentColor; outline-offset: -5px; }
-.footer-card .folder-waves { inset: 0 0 50% 40%; z-index: -1; -webkit-mask-size: 3.5rem auto; mask-size: 3.5rem auto; }
-.footer-card > svg { flex: none; margin-bottom: auto; }
-.footer-card-name { margin-top: 0.5rem; font-size: 1.0625rem; line-height: 1.2; font-weight: 700; letter-spacing: -0.015em; }
-.footer-card-detail { display: none; font-size: 0.8125rem; line-height: 1.3; font-weight: 600; overflow-wrap: anywhere; }
-@media (min-width: 640px) { .footer-id { padding-inline: 2rem; } .footer-legal { text-align: right; } .footer-cards { padding-inline: 2rem; } }
+.footer-card > svg { flex: none; width: 1.25rem; height: 1.25rem; }
+.footer-card-name { display: none; }
+@media (min-width: 640px) { .footer-id, .footer-legal, .footer-cards { padding-inline: 2rem; } }
+/* Desde tableta: la firma arriba; abajo, en la misma fila, las pestañas y el texto legal centrado en su parte visible */
 @media (min-width: 768px) {
-  .footer-cards { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.5rem; }
-  .footer-cards li:last-child { grid-column: auto; }
-  .footer-card { min-height: 7.5rem; }
+  .footer { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1.5rem; }
+  .footer-id { grid-column: 1 / -1; padding-bottom: 1.25rem; }
+  .footer-cards { grid-row: 2; grid-column: 1; grid-template-columns: repeat(4, 4.5rem); gap: 0.375rem; padding-right: 0; }
+  .footer-legal { grid-row: 2; grid-column: 2; align-self: center; justify-self: end; padding: 0 2rem 0 0; text-align: right; }
+  .footer-card { min-height: 3.25rem; }
 }
-@media (min-width: 1024px) { .footer-card { min-height: 8.5rem; padding: 1rem 1.75rem 1.5rem 1rem; } .footer-card-detail { display: block; } .footer-card-name { font-size: 1.25rem; } }
+/* Con sitio para que el texto legal no se parta: icono y nombre en línea */
+@media (min-width: 960px) {
+  .footer-cards { grid-template-columns: repeat(4, 7.5rem); }
+  .footer-card { justify-content: flex-start; gap: 0.375rem; padding: 0 1rem 0.5rem 0.75rem; }
+  .footer-card > svg { width: 1.125rem; height: 1.125rem; }
+  .footer-card-name { display: block; font-size: 0.875rem; line-height: 1.2; font-weight: 700; white-space: nowrap; }
+}
 @media (prefers-reduced-motion: reduce) { .footer-card:hover { transform: none; } }
 
 /* Selector de tema: las tres opciones a la vista */
@@ -306,25 +292,22 @@
 @media (max-height: 480px) { .contact-stage { padding-top: 0.5rem; } .contact-line { padding-bottom: 0.5rem; } .contact-route { min-height: 5.5rem; padding-block: 0.625rem; } .contact-route > svg { width: 1.25rem; height: 1.25rem; } .contact-route-name { margin-top: 0.25rem; } }
 @media (prefers-reduced-motion: reduce) { .home-top .folder { animation: none; } .contact-route:hover { transform: none; } }
 
-/* Móvil: carpetas compactas; el panel usa la misma fila de portadas, a la medida de la pantalla */
+/* Móvil: carpetas compactas; el escenario se abre debajo de la pulsada y su abanico cabe en el ancho */
 @media (max-width: 639px) {
   .folders { row-gap: 0; padding-top: 0; }
   .folder-slot { max-width: none; margin-bottom: 1.25rem; }
   .folder { height: 80cqw; overflow: hidden; }
   .folder-front { inset: 44cqw 0 0 0; }
-  .folder[data-sheets="1"] .folder-sheet { top: calc(2.75rem + 1cqw); left: 22cqw; width: 56cqw; }
-  .folder[data-sheets="2"] .folder-sheet { top: calc(2.75rem + 1cqw); width: 44cqw; }
-  .folder[data-sheets="2"] .folder-sheet:nth-of-type(2) { top: calc(2.75rem); left: 50cqw; }
-  .folder-pocket { padding: 0.875rem 1rem 0.75rem 2.25rem; border-top-left-radius: 2.5rem; }
-  .folder-panel-clip { margin-top: -1.25rem; margin-bottom: 1.25rem; }
+  .folder > .folder-front .folder-pocket { padding: 0.875rem 1rem 0.75rem 2.25rem; border-top-left-radius: 2.5rem; }
+  .stage-inner { padding-block: 0 1.25rem; }
+  .stage-info { min-height: 8.5rem; }
 }
 @media (min-width: 640px) and (max-width: 1023px) {
   .folders { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1rem; row-gap: 0; }
   .folder-slot { order: 1; max-width: none; }
-  .folder-panel-clip { order: 2; margin-top: 0; }
+  .folder-stage { order: 2; }
   .folder-tab .font-medium { display: none; }
-  .folder-pocket { padding: 0.875rem 0.875rem 0.625rem 1.75rem; border-top-left-radius: 2.5rem; }
-  .folder-panel { --p-pad: 1.5rem; }
+  .folder > .folder-front .folder-pocket { padding: 0.875rem 0.875rem 0.625rem 1.75rem; border-top-left-radius: 2.5rem; }
 }
 
 /* Lector: progreso de lectura de los proyectos, como en un e-book */
@@ -357,3 +340,24 @@
   .cv-tools { display: none; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* Láminas asomando por encima de la solapa (tableta y móvil; en escritorio son las propias portadas del abanico) */
+.folder-sheet { --r: 0deg; position: absolute; display: block; height: auto; rotate: var(--r); box-shadow: 0 1px 2px rgb(15 27 60 / 0.3), 0 6px 14px rgb(15 27 60 / 0.2); transition: opacity 0.4s ease-out; }
+.folder[data-out] .folder-sheet { opacity: 0; }
+.folder[data-sheets="1"] .folder-sheet { --r: -2.5deg; left: 19cqw; top: 46cqw; width: 64cqw; }
+.folder[data-sheets="2"] .folder-sheet { top: 47cqw; width: 50cqw; }
+.folder[data-sheets="2"] .folder-sheet:nth-of-type(1) { --r: -5deg; left: 3cqw; }
+.folder[data-sheets="2"] .folder-sheet:nth-of-type(2) { --r: 4deg; left: 46cqw; top: 45cqw; }
+.folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet { top: 47cqw; width: 42cqw; }
+.folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet:nth-of-type(1) { --r: -6deg; left: 2cqw; }
+.folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet:nth-of-type(2) { --r: 1deg; left: 29cqw; top: 44cqw; }
+.folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet:nth-of-type(3) { --r: 6deg; left: 56cqw; }
+.folder .folder-sheet:nth-of-type(n + 4) { display: none; }
+@media (max-width: 639px) {
+  .folder[data-sheets="1"] .folder-sheet { top: 34cqw; left: 22cqw; width: 56cqw; }
+  .folder[data-sheets="2"] .folder-sheet { top: 35cqw; width: 44cqw; }
+  .folder[data-sheets="2"] .folder-sheet:nth-of-type(2) { top: 33cqw; left: 50cqw; }
+  .folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet { top: 35cqw; }
+  .folder:not([data-sheets="1"], [data-sheets="2"]) .folder-sheet:nth-of-type(2) { top: 32cqw; }
+}
+@media (min-width: 1024px) { .folder-sheet { display: none !important; } }
