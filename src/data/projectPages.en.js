@@ -10,6 +10,8 @@ import marcaLogoBlanco from '../assets/video/marca-logo-blanco.mp4'
 import marcaLogoAzul from '../assets/video/marca-logo-azul.mp4'
 import jaimeLogoBlanco from '../assets/video/jaime-logo-blanco.mp4'
 import jaimeLogoNegro from '../assets/video/jaime-logo-negro.mp4'
+import patronAzul from '../assets/marca-personal/patron-azul.png'
+import patronBlanco from '../assets/marca-personal/patron-blanco.png'
 import videoLola from '../assets/video/video-lola.mp4'
 
 export { projectFonts }
@@ -18,8 +20,12 @@ const alphabet = ['Aa', 'Bb', 'Cc', 'Dd', 'Ee', 'Ff', 'Gg', 'Hh', 'Ii', 'Jj', 'K
 
 const ph = (path, alt) => ({ src: img(path), alt })
 
+// Labels of the shared case-study template.
+const labels = { story: 'Story', brand: 'Brand system', logo: 'Logo', pattern: 'Pattern', applications: 'Applications', styles: 'Styles of' }
+
 export const projectPages = {
   'marca-personal': {
+    labels,
     title: 'Personal Brand',
     cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/portada'), alt: 'Personal Brand cover' },
     context: 'Personal project',
@@ -35,7 +41,7 @@ export const projectPages = {
         lines: ['HEX     #9690E4', 'RGB     150, 144, 228', 'CMYK    40, 38, 0, 0'],
         bg: '#9690E4',
         dark: true,
-        logos: [ph('marca-personal/logo-blanco', 'White Logo'), ph('marca-personal/logo-azul', 'Blue Logo')],
+        logos: [ph('marca-personal/logo-azul', 'Blue Logo'), ph('marca-personal/logo-blanco', 'White Logo')],
       },
       {
         name: 'Deep Midnight Blue',
@@ -48,7 +54,7 @@ export const projectPages = {
         lines: ['HEX     #96C9FF', 'RGB     150, 201, 255', 'CMYK    40, 15, 0, 0'],
         bg: '#96C9FF',
         dark: true,
-        logos: [ph('marca-personal/logo-blanco', 'White Logo'), ph('marca-personal/logo-azul', 'Blue Logo')],
+        logos: [ph('marca-personal/logo-azul', 'Blue Logo'), ph('marca-personal/logo-blanco', 'White Logo')],
       },
     ],
     typography: {
@@ -63,15 +69,20 @@ export const projectPages = {
         { label: 'Light', weight: 300, family: "'Quicksand'" },
       ],
     },
-    stationery: [
-      { pair: [ph('marca-personal/libretas', 'Notebooks'), ph('marca-personal/boligrafos', 'Pens')] },
-      { main: ph('marca-personal/tarjeta', 'Business Card') },
-      { pair: [ph('marca-personal/carpeta', 'Folder'), ph('marca-personal/sobre', 'Envelope')] },
-    ],
+    shots: {
+      libretas: ph('marca-personal/libretas', 'Notebooks'),
+      boligrafos: ph('marca-personal/boligrafos', 'Pens'),
+      tarjeta: ph('marca-personal/tarjeta', 'Business Card'),
+      carpeta: ph('marca-personal/carpeta', 'Folder'),
+      sobre: ph('marca-personal/sobre', 'Envelope'),
+      patronAzul: { src: patronAzul, alt: 'Blue brand pattern', tile: '#FFFFFF' },
+      patronBlanco: { src: patronBlanco, alt: 'White brand pattern', tile: '#192A56' },
+    },
     tools: ['illustrator', 'photoshop', 'after-effects'],
   },
 
   'identidad-visual': {
+    labels,
     title: 'Visual Identity',
     cover: { desktop: img('identidad-visual/portada-interior'), mobile: img('identidad-visual/portada-interior'), alt: 'Visual Identity inner cover' },
     context: 'Commission · Personal brand for an engineer',
@@ -114,17 +125,20 @@ export const projectPages = {
         { label: 'Hum Hair', weight: 100, family: "'Fieldwork Hum'" },
       ],
     },
-    stationery: [
-      { main: ph('identidad-visual/tarjeta', 'Business Card') },
-      { pair: [ph('identidad-visual/boligrafo', 'Mug'), ph('identidad-visual/agenda', 'Notebook')] },
-      { main: ph('identidad-visual/web', 'Jaime Website'), href: 'https://jaimemartglez.vercel.app' },
-    ],
+    shots: {
+      tarjeta: ph('identidad-visual/tarjeta', 'Business Card'),
+      boligrafo: ph('identidad-visual/boligrafo', 'Pen'),
+      agenda: ph('identidad-visual/agenda', 'Notebook'),
+      taza: ph('identidad-visual/taza', 'Mug'),
+      web: ph('identidad-visual/web', 'Jaime Website'),
+    },
     tools: ['illustrator', 'photoshop', 'after-effects'],
     webTools: ['UI', 'UX', 'AI'],
     link: 'https://jaimemartglez.vercel.app',
   },
 
   'casa-ricardo': {
+    labels,
     title: 'Casa Ricardo',
     cover: { desktop: img('casa-ricardo/logo'), mobile: img('casa-ricardo/logo'), alt: 'Casa Ricardo cover', contain: true },
     context: 'Internship',
@@ -133,7 +147,7 @@ export const projectPages = {
       { key: 'proceso', text: "Legibility, composition and adaptation to different formats were improved." },
       { key: 'resultado', text: "The result was a more current, cleaner image while keeping the business's recognisable personality." },
     ],
-    comparison: [ph('casa-ricardo/logo', 'New Casa Ricardo Logo'), ph('casa-ricardo/logo-viejo', 'Old Casa Ricardo Logo')],
+    comparison: { old: ph('casa-ricardo/logo-viejo', 'Old Casa Ricardo Logo'), new: ph('casa-ricardo/logo', 'New Casa Ricardo Logo'), before: 'Before', after: 'After' },
     colors: [
       {
         name: 'Casa Ricardo Red',
@@ -176,16 +190,19 @@ export const projectPages = {
       },
     ],
     stickers: ph('casa-ricardo/pegatinas', '4 stickers'),
-    stationery: [
-      { pair: [ph('casa-ricardo/packaging-delante', 'Packaging 1'), ph('casa-ricardo/packaging-detras', 'Packaging 2')] },
-      { pair: [ph('casa-ricardo/bolsas', 'Casa Ricardo Bags'), ph('casa-ricardo/tarjeta', 'Business Card')] },
-      { pair: [ph('casa-ricardo/valla', 'Casa Ricardo Billboard'), ph('casa-ricardo/mupi', 'Casa Ricardo Street Poster')] },
-    ],
+    shots: {
+      packagingDetras: ph('casa-ricardo/packaging-detras', 'Packaging 2'),
+      bolsas: ph('casa-ricardo/bolsas', 'Casa Ricardo Bags'),
+      tarjeta: ph('casa-ricardo/tarjeta', 'Business Card'),
+      valla: ph('casa-ricardo/valla', 'Casa Ricardo Billboard'),
+      mupi: ph('casa-ricardo/mupi', 'Casa Ricardo Street Poster'),
+    },
     tools: ['illustrator', 'photoshop'],
     typekit: 'https://use.typekit.net/sjx7ptx.css',
   },
 
   'proyecto-video': {
+    labels,
     title: 'Video Project',
     context: 'Audiovisual project',
     intro: { lead: 'SloMo × Lola Índigo.', text: "Audiovisual reinterpretation born from the union of Chanel's music and Lola Índigo's visual universe to create a new music video." },

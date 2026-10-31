@@ -9,11 +9,16 @@ import marcaLogoBlanco from '../assets/video/marca-logo-blanco.mp4'
 import marcaLogoAzul from '../assets/video/marca-logo-azul.mp4'
 import jaimeLogoBlanco from '../assets/video/jaime-logo-blanco.mp4'
 import jaimeLogoNegro from '../assets/video/jaime-logo-negro.mp4'
+import patronAzul from '../assets/marca-personal/patron-azul.png'
+import patronBlanco from '../assets/marca-personal/patron-blanco.png'
 import videoLola from '../assets/video/video-lola.mp4'
 
 const alphabet = ['Aa', 'Bb', 'Cc', 'Dd', 'Ee', 'Ff', 'Gg', 'Hh', 'Ii', 'Jj', 'Kk', 'Ll', 'Mm', 'Nn', 'Oo', 'Pp', 'Qq', 'Rr', 'Ss', 'Tt', 'Uu', 'Vv', 'Ww', 'Xx', 'Yy', 'Zz']
 
 const ph = (path, alt) => ({ src: img(path), alt })
+
+// Etiquetas de la plantilla común de los casos de estudio.
+const labels = { story: 'Historia', brand: 'Sistema de marca', logo: 'Logotipo', pattern: 'Patrón', applications: 'Aplicaciones', styles: 'Estilos de' }
 
 // Tipografía de cada página de proyecto: `body` para el texto y `heading` para los títulos.
 // Toda la web usa Quicksand salvo estas páginas, que usan la tipografía del propio proyecto.
@@ -27,6 +32,7 @@ export const projectFonts = {
 
 export const projectPages = {
   'marca-personal': {
+    labels,
     title: 'Marca Personal',
     cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/portada'), alt: 'Portada Marca Personal' },
     context: 'Proyecto personal',
@@ -42,7 +48,7 @@ export const projectPages = {
         lines: ['HEX     #9690E4', 'RGB     150, 144, 228', 'CMYK    40, 38, 0, 0'],
         bg: '#9690E4',
         dark: true,
-        logos: [ph('marca-personal/logo-blanco', 'Logo Blanco'), ph('marca-personal/logo-azul', 'Logo Azul')],
+        logos: [ph('marca-personal/logo-azul', 'Logo Azul'), ph('marca-personal/logo-blanco', 'Logo Blanco')],
       },
       {
         name: 'Azul Medianoche Profundo',
@@ -55,7 +61,7 @@ export const projectPages = {
         lines: ['HEX     #96C9FF', 'RGB     150, 201, 255', 'CMYK    40, 15, 0, 0'],
         bg: '#96C9FF',
         dark: true,
-        logos: [ph('marca-personal/logo-blanco', 'Logo Blanco'), ph('marca-personal/logo-azul', 'Logo Azul')],
+        logos: [ph('marca-personal/logo-azul', 'Logo Azul'), ph('marca-personal/logo-blanco', 'Logo Blanco')],
       },
     ],
     typography: {
@@ -70,15 +76,20 @@ export const projectPages = {
         { label: 'Light', weight: 300, family: "'Quicksand'" },
       ],
     },
-    stationery: [
-      { pair: [ph('marca-personal/libretas', 'Libretas'), ph('marca-personal/boligrafos', 'Bolígrafos')] },
-      { main: ph('marca-personal/tarjeta', 'Tarjeta de Visita') },
-      { pair: [ph('marca-personal/carpeta', 'Carpeta'), ph('marca-personal/sobre', 'Sobre')] },
-    ],
+    shots: {
+      libretas: ph('marca-personal/libretas', 'Libretas'),
+      boligrafos: ph('marca-personal/boligrafos', 'Bolígrafos'),
+      tarjeta: ph('marca-personal/tarjeta', 'Tarjeta de Visita'),
+      carpeta: ph('marca-personal/carpeta', 'Carpeta'),
+      sobre: ph('marca-personal/sobre', 'Sobre'),
+      patronAzul: { src: patronAzul, alt: 'Patrón azul de la marca', tile: '#FFFFFF' },
+      patronBlanco: { src: patronBlanco, alt: 'Patrón blanco de la marca', tile: '#192A56' },
+    },
     tools: ['illustrator', 'photoshop', 'after-effects'],
   },
 
   'identidad-visual': {
+    labels,
     title: 'Identidad Visual',
     cover: { desktop: img('identidad-visual/portada-interior'), mobile: img('identidad-visual/portada-interior'), alt: 'Portada Interior Identidad Visual' },
     context: 'Encargo · Marca personal de un ingeniero',
@@ -121,17 +132,20 @@ export const projectPages = {
         { label: 'Hum Hair', weight: 100, family: "'Fieldwork Hum'" },
       ],
     },
-    stationery: [
-      { main: ph('identidad-visual/tarjeta', 'Tarjeta de Visita') },
-      { pair: [ph('identidad-visual/boligrafo', 'Taza'), ph('identidad-visual/agenda', 'Libreta')] },
-      { main: ph('identidad-visual/web', 'Web Jaime'), href: 'https://jaimemartglez.vercel.app' },
-    ],
+    shots: {
+      tarjeta: ph('identidad-visual/tarjeta', 'Tarjeta de Visita'),
+      boligrafo: ph('identidad-visual/boligrafo', 'Bolígrafo'),
+      agenda: ph('identidad-visual/agenda', 'Libreta'),
+      taza: ph('identidad-visual/taza', 'Taza'),
+      web: ph('identidad-visual/web', 'Web Jaime'),
+    },
     tools: ['illustrator', 'photoshop', 'after-effects'],
     webTools: ['UI', 'UX', 'AI'],
     link: 'https://jaimemartglez.vercel.app',
   },
 
   'casa-ricardo': {
+    labels,
     title: 'Casa Ricardo',
     cover: { desktop: img('casa-ricardo/logo'), mobile: img('casa-ricardo/logo'), alt: 'Portada Casa Ricardo', contain: true },
     context: 'Prácticas',
@@ -140,7 +154,7 @@ export const projectPages = {
       { key: 'proceso', text: "Se mejoró la legibilidad, la composición y su adaptación a distintos formatos." },
       { key: 'resultado', text: "El resultado fue una imagen más actual y limpia, manteniendo la personalidad reconocible del negocio." },
     ],
-    comparison: [ph('casa-ricardo/logo', 'Logo Nuevo Casa Ricardo'), ph('casa-ricardo/logo-viejo', 'Logo Viejo Casa Ricardo')],
+    comparison: { old: ph('casa-ricardo/logo-viejo', 'Logo Viejo Casa Ricardo'), new: ph('casa-ricardo/logo', 'Logo Nuevo Casa Ricardo'), before: 'Antes', after: 'Después' },
     colors: [
       {
         name: 'Rojo Casa Ricardo',
@@ -183,16 +197,19 @@ export const projectPages = {
       },
     ],
     stickers: ph('casa-ricardo/pegatinas', '4 pegatinas'),
-    stationery: [
-      { pair: [ph('casa-ricardo/packaging-delante', 'Packaging 1'), ph('casa-ricardo/packaging-detras', 'Packaging 2')] },
-      { pair: [ph('casa-ricardo/bolsas', 'Bolsas Casa Ricardo'), ph('casa-ricardo/tarjeta', 'Tarjeta Visita')] },
-      { pair: [ph('casa-ricardo/valla', 'Valla Casa Ricardo'), ph('casa-ricardo/mupi', 'MUPI Casa Ricardo')] },
-    ],
+    shots: {
+      packagingDetras: ph('casa-ricardo/packaging-detras', 'Packaging 2'),
+      bolsas: ph('casa-ricardo/bolsas', 'Bolsas Casa Ricardo'),
+      tarjeta: ph('casa-ricardo/tarjeta', 'Tarjeta Visita'),
+      valla: ph('casa-ricardo/valla', 'Valla Casa Ricardo'),
+      mupi: ph('casa-ricardo/mupi', 'MUPI Casa Ricardo'),
+    },
     tools: ['illustrator', 'photoshop'],
     typekit: 'https://use.typekit.net/sjx7ptx.css',
   },
 
   'proyecto-video': {
+    labels,
     title: 'Proyecto Video',
     context: 'Proyecto audiovisual',
     intro: { lead: 'SloMo × Lola Índigo.', text: 'Reinterpretación audiovisual nacida de la unión entre la música de Chanel y el universo visual de Lola Índigo para crear un nuevo videoclip.' },

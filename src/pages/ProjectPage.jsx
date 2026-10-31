@@ -1,119 +1,243 @@
-import { useEffect, useRef } from 'react'
-import { MotionConfig, useInView } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { MotionConfig, motion, useInView } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import ColorPanel from '../components/ColorPanel'
-import ReaderProgress from '../components/ReaderProgress'
-import TypeCatalog from '../components/TypeCatalog'
-import Reveal from '../components/Reveal'
 import { useContent, useProjectPages } from '../data/useContent'
 import { useUi } from '../i18n/ui'
 
-const WRAP = 'w-full px-4 sm:px-8'
-// Imágenes de trabajo: a sangre en móvil, en un contenedor ancho en escritorio
-const WIDE = 'mx-auto w-full max-w-[1600px] sm:px-8'
-// Columna de lectura: el texto arranca siempre en la misma vertical
-const COLUMN = 'lg:ml-[33.333%] max-w-[38rem]'
+const EASE = [0.22, 1, 0.36, 1]
+const TYPEKIT_SLUG = 'casa-ricardo'
+// Peso de los títulos cuando la tipografía del proyecto no es Quicksand Bold.
+const HEADING_WEIGHT = { 'identidad-visual': 600, 'casa-ricardo': 400 }
 
-// Vídeo en bucle que se reproduce solo mientras está a la vista.
-function LoopVideo({ src, className = '' }) {
+// Tamaños naturales: reservan el hueco antes de cargar para que nada salte.
+const SIZE = {
+  libretas: [1200, 900], boligrafos: [1200, 900], tarjetaMarca: [1200, 676], carpeta: [1200, 900], sobre: [1200, 900], patron: [596, 842],
+  tarjetaJaime: [1200, 800], agenda: [1200, 900], boligrafo: [1200, 1200], taza: [1200, 576], web: [1400, 940],
+  packaging: [1200, 960], pegatinas: [1200, 676], bolsas: [1200, 1066], tarjetaCasa: [1200, 900], valla: [1400, 1050], mupi: [1200, 900],
+  logoCasa: [900, 506], logoMarca: [900, 506], poster: [1080, 1350], film: [640, 360], logoViejo: [900, 744], logoJaime: [600, 288],
+}
+
+// Color de cada proyecto: portada y cierre ("siguiente proyecto").
+const THEME = {
+  'marca-personal': { hero: '#192A56', heroInk: '#FFFFFF', accent: '#96C9FF', next: '#192A56', nextInk: '#FFFFFF' },
+  'identidad-visual': { hero: '#000000', heroInk: '#FFFFFF', accent: '#00C896', next: '#00C896', nextInk: '#000000' },
+  'casa-ricardo': { hero: '#0032A0', heroInk: '#FFFFFF', accent: '#DDAA55', next: '#DB251E', nextInk: '#FFFFFF' },
+  'proyecto-video': { hero: '#0B1416', heroInk: '#F5F5F2', accent: '#7FD6C8', next: '#0B1416', nextInk: '#F5F5F2' },
+}
+
+function Rise({ children, className = '', delay = 0, style }) {
+  return (
+    <motion.div
+      className={className}
+      style={style}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.01 }}
+      transition={{ duration: 0.8, delay, ease: EASE }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+// Proporción común de cada disposición: ancho completo o dos mitades iguales.
+const RATIO = { full: 16 / 9, two: 4 / 3 }
+
+// Bucle mudo que solo se descarga y reproduce cuando está a la vista.
+function Loop({ src, label, className, style, width, height }) {
   const ref = useRef(null)
-  const inView = useInView(ref, { amount: 0.4 })
+  const inView = useInView(ref, { amount: 0.15 })
   useEffect(() => {
     const v = ref.current
     if (!v) return
     if (inView) v.play().catch(() => {})
     else v.pause()
   }, [inView])
-  return <video ref={ref} src={src} muted loop playsInline preload="metadata" className={`block w-full ${className}`} />
+  return <video ref={ref} src={src} muted loop playsInline preload="none" aria-label={label} width={width} height={height} className={className} style={style} />
 }
 
-const Photo = ({ g, className = '' }) => <img src={g.src} alt={g.alt} loading="lazy" className={`block h-auto w-full bg-fog ${className}`} />
-
-/** Bloque: etiqueta pequeña encima del contenido. `column` lo sitúa en la columna editorial de texto. */
-function Section({ label, children, wide = false, column = false, className = '' }) {
+/** Único marco de la plantilla: se ve la pieza entera, centrada y con las esquinas redondeadas. */
+function Frame({ item, layout = 'two', eager = false }) {
+  const { g, video, film, poster, size, label, tone, cover } = item
+  const fit = cover ? 'cs-media--cover' : size[0] / size[1] >= RATIO[layout] ? 'cs-media--w' : 'cs-media--h'
+  const shared = { width: size[0], height: size[1], className: `cs-media ${fit}`, style: { aspectRatio: `${size[0]} / ${size[1]}` } }
   return (
-    <section className={`mt-28 sm:mt-44 ${className}`} aria-label={label}>
-      <div className={WRAP}>
-        <h2 className={`mb-10 font-[Quicksand] eyebrow text-ink/75 sm:mb-14 ${column ? COLUMN : ''}`}>{label}</h2>
-      </div>
-      <div className={wide ? WIDE : WRAP}>{column ? <div className={COLUMN}>{children}</div> : children}</div>
-    </section>
+    <div className={`cs-frame cs-frame--${layout}`} style={tone ? { background: tone } : undefined}>
+      {film ? <video {...shared} src={film} poster={poster} controls playsInline preload="metadata" aria-label={label} />
+        : video ? <Loop {...shared} src={video} label={label} />
+        : <img {...shared} src={g.src} alt={g.alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />}
+    </div>
   )
 }
 
-function Applications({ rows }) {
+function Cell({ item, layout }) {
+  const frame = <Frame item={item} layout={layout} />
   return (
-    <div className="space-y-3 sm:space-y-6">
-      {rows.map((row, i) => (
-        <Reveal key={i}>
-          {row.pair ? (
-            <div className="grid items-start gap-3 sm:grid-cols-2 sm:gap-6">
-              {row.pair.map((g) => (
-                <Photo key={g.src} g={g} />
-              ))}
-            </div>
-          ) : row.href ? (
-            <a href={row.href} target="_blank" rel="noreferrer" className="group block">
-              <Photo g={row.main} className="transition duration-500 group-hover:opacity-90" />
-            </a>
-          ) : (
-            <Photo g={row.main} />
-          )}
-        </Reveal>
+    <Rise className={layout === 'full' ? 'cs-col-12' : 'cs-col-6'}>
+      {item.href ? (
+        <a href={item.href} target="_blank" rel="noreferrer" className="block">
+          {frame}
+          <span className="cs-caption cs-caption--link">{item.caption} <ArrowUpRight size={16} strokeWidth={1.5} /></span>
+        </a>
+      ) : (
+        <>
+          {frame}
+          {item.caption && <p className="cs-caption">{item.caption}</p>}
+        </>
+      )}
+    </Rise>
+  )
+}
+
+const full = (item) => ({ layout: 'full', items: [item] })
+const two = (a, b) => ({ layout: 'two', items: [a, b] })
+
+function Rows({ rows }) {
+  return (
+    <div className="cs-rows">
+      {rows.map((r, i) => (
+        <div key={i} className="cs-grid">
+          {r.items.map((item, k) => <Cell key={k} item={item} layout={r.layout} />)}
+        </div>
       ))}
     </div>
   )
 }
 
-// Quita de las aplicaciones la imagen que ya se usa como portada; una pareja que se queda con una sola pasa a ancho completo.
-function withoutHero(rows, heroSrc) {
-  return rows
-    .map((row) => {
-      if (row.pair) {
-        const rest = row.pair.filter((g) => g.src !== heroSrc)
-        return rest.length === 2 ? row : rest.length === 1 ? { main: rest[0] } : null
-      }
-      return row.main?.src === heroSrc ? null : row
-    })
-    .filter(Boolean)
+/** Qué pieza va en cada hueco de la plantilla. El orden y las disposiciones son comunes a todos los proyectos. */
+function compose(slug, page, project, t) {
+  const name = project?.name ?? page.title
+  const shot = (g, size, tone, cover) => ({ g, size, tone, cover })
+  const loop = (video, size, tone) => ({ video, size, tone, label: name })
+  if (slug === 'marca-personal') {
+    const s = page.shots
+    const v = page.videos
+    return {
+      hero: shot(s.libretas, SIZE.libretas),
+      logo: [full(loop(v.single, [2000, 1000], '#FFFFFF')), two(loop(v.pair[0], [1920, 1642], '#192A56'), loop(v.pair[1], [1920, 1646], '#DCDCDC'))],
+      logoSize: SIZE.logoMarca,
+      patterns: [two(shot(s.patronAzul, SIZE.patron, s.patronAzul.tile, true), shot(s.patronBlanco, SIZE.patron, s.patronBlanco.tile, true))],
+      applications: [two(shot(s.boligrafos, SIZE.boligrafos), shot(s.tarjeta, SIZE.tarjetaMarca, '#9690E4')), two(shot(s.carpeta, SIZE.carpeta), shot(s.sobre, SIZE.sobre)), full(loop(v.wide, [4000, 1000], '#DCDCDC'))],
+    }
+  }
+  if (slug === 'identidad-visual') {
+    const s = page.shots
+    return {
+      hero: shot(s.tarjeta, SIZE.tarjetaJaime),
+      logo: [two(loop(page.videos.pair[0], [1080, 964], page.videos.pairTones[0]), loop(page.videos.pair[1], [1080, 964], page.videos.pairTones[1]))],
+      logoSize: SIZE.logoJaime,
+      applications: [
+        two(shot(s.agenda, SIZE.agenda), shot(s.boligrafo, SIZE.boligrafo)),
+        full(shot(s.taza, SIZE.taza, '#2B2B2B')),
+        full({ ...shot(s.web, SIZE.web), href: page.link, caption: `${t.webHechaCon.replace(/:$/, '')} ${page.webTools.join(' · ')}` }),
+      ],
+    }
+  }
+  if (slug === 'casa-ricardo') {
+    const s = page.shots
+    const cmp = page.comparison
+    return {
+      hero: shot({ src: project.hero, alt: project.heroAlt }, SIZE.packaging),
+      logo: [
+        two({ ...shot(cmp.old, SIZE.logoViejo, '#FFFFFF'), caption: cmp.before }, { ...shot(cmp.new, SIZE.logoCasa, '#DB251E'), caption: cmp.after }),
+        full(shot(page.stickers, SIZE.pegatinas, '#FFFFFF')),
+      ],
+      logoSize: SIZE.logoCasa,
+      applications: [
+        two(shot(s.packagingDetras, SIZE.packaging, '#DDAA55'), shot(s.bolsas, SIZE.bolsas, '#DDAA55')),
+        full(shot(s.valla, SIZE.valla)),
+        two(shot(s.mupi, SIZE.mupi), shot(s.tarjeta, SIZE.tarjetaCasa, '#FFFFFF')),
+      ],
+    }
+  }
+  // Proyecto de vídeo: no tiene sistema de marca propio, así que esa sección no aparece.
+  return {
+    hero: shot({ src: page.poster, alt: name }, SIZE.poster),
+    applications: [full({ film: page.video, poster: page.poster, size: SIZE.film, tone: '#000000', label: name })],
+  }
 }
 
-function ProjectNav({ slug, projects, t }) {
-  const i = projects.findIndex((p) => p.slug === slug)
-  const prev = projects[i - 1]
-  const next = projects[i + 1]
-
-  const renderItem = (p, dir) => {
-    const isNext = dir === 'next'
-    const label = p ? (isNext ? t.proyectoSiguiente : t.proyectoAnterior) : t.volverAProyectos
-    return (
-      <Link to={p ? `/proyectos/${p.slug}` : '/proyectos'} className={`group flex flex-col gap-4 py-10 sm:py-14 ${isNext ? 'sm:items-end sm:text-right' : ''}`}>
-        <span className={`flex items-center gap-2 eyebrow text-ink/75 ${isNext ? 'sm:flex-row-reverse' : ''}`}>
-          {isNext ? <ArrowRight size={14} strokeWidth={1.25} /> : <ArrowLeft size={14} strokeWidth={1.25} />}
-          {label}
-        </span>
-        {p && (
-          <span className="flex items-baseline gap-4 font-sans text-2xl font-bold tracking-[-0.02em] text-ink transition-opacity duration-500 group-hover:opacity-70 sm:text-[2rem]">
-            <span className="eyebrow tabular-nums text-ink/75">{p.number}</span>
-            {p.name}
-          </span>
-        )}
-      </Link>
-    )
-  }
-
+function Credits({ project, page, toolLabels, t }) {
+  const rows = [
+    project?.category && [t.categoria, project.category],
+    page.context && [t.contexto, page.context],
+    [t.herramientas, page.tools.map((x) => toolLabels[x]).join(', ')],
+  ].filter(Boolean)
   return (
-    <nav aria-label={t.otrosProyectos} className={`${WRAP} mt-32 sm:mt-48`} style={{ '--font-sans': "'Quicksand', sans-serif" }}>
-      <div className="grid divide-y divide-ink/15 border-y border-ink/15 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-        <div className="sm:pr-8">{renderItem(prev, 'prev')}</div>
-        <div className="sm:pl-8">{renderItem(next, 'next')}</div>
+    <dl className="cs-credits">
+      {rows.map(([k, v]) => (
+        <div key={k}>
+          <dt>{k}</dt>
+          <dd>{v}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+function Swatch({ color, logoSize }) {
+  const ink = color.dark ? '#10131A' : '#FFFFFF'
+  const logo = color.logos?.[0]
+  return (
+    <div className={`cs-swatch ${color.bordered ? 'cs-swatch--edge' : ''}`} style={{ background: color.bg, color: ink }}>
+      <div className="cs-swatch-logo">
+        {logo && <img src={logo.src} alt={logo.alt} width={logoSize[0]} height={logoSize[1]} loading="lazy" decoding="async" />}
       </div>
+      <div>
+        <p className="cs-swatch-name">{color.name}</p>
+        <p className="cs-swatch-hex">{color.bg.toUpperCase()}</p>
+      </div>
+    </div>
+  )
+}
+
+/** Muestra tipográfica: cada estilo es un botón que aplica su familia y su peso al texto de ejemplo. */
+function Specimen({ ty, stylesLabel }) {
+  const [active, setActive] = useState(0)
+  const w = ty.weights[active] ?? ty.weights[0]
+  const extra = Array.isArray(ty.extra) ? ty.extra.join(' ') : ty.extra
+  const faceOf = (x) => ({ fontFamily: `${x.family}, sans-serif`, fontWeight: x.weight })
+  return (
+    <div className="cs-specimen">
+      <div className="cs-specimen-styles" role="group" aria-label={`${stylesLabel} ${ty.title}`}>
+        {ty.weights.map((x, i) => (
+          <button key={x.label} type="button" className="cs-style" style={faceOf(x)} aria-pressed={i === active} onClick={() => setActive(i)}>
+            {x.label}
+          </button>
+        ))}
+      </div>
+      <div className="cs-specimen-sample" style={faceOf(w)}>
+        <div className="cs-specimen-head">
+          <p className="cs-specimen-name">{ty.title}</p>
+          <p className="cs-specimen-aa" aria-hidden="true">Aa</p>
+        </div>
+        <p className="cs-specimen-chars">{ty.chars.join(' ')}</p>
+        <p className="cs-specimen-chars">{extra}</p>
+      </div>
+    </div>
+  )
+}
+
+function NextProject({ slug, projects, t }) {
+  const { projectFonts } = useProjectPages()
+  const i = projects.findIndex((p) => p.slug === slug)
+  const next = projects[(i + 1) % projects.length]
+  const theme = THEME[next.slug]
+  return (
+    <nav aria-label={t.otrosProyectos}>
+      <Link to={`/proyectos/${next.slug}`} className="cs-next" style={{ background: theme.next, color: theme.nextInk }}>
+        <span className="cs-wrap block">
+          <span className="cs-next-label">{t.proyectoSiguiente} <ArrowRight size={16} strokeWidth={1.5} /></span>
+          <span className="cs-next-name" style={{ fontFamily: projectFonts[next.slug].heading }}>{next.name}</span>
+        </span>
+      </Link>
+      <div className="cs-wrap"><Link to="/proyectos" className="cs-return"><ArrowLeft size={14} strokeWidth={1.5} /> {t.volverAProyectos}</Link></div>
     </nav>
   )
 }
 
-/** Página de un proyecto: cabecera, una imagen grande, el caso, aplicaciones a gran tamaño y el sistema (color y tipografía). */
+/** Caso de estudio de cada proyecto: una sola plantilla (portada, historia, sistema de marca, aplicaciones, siguiente), con su color y su tipografía. */
 export default function ProjectPage() {
   const { slug } = useParams()
   const { projects, featuredProjects, toolLabels } = useContent()
@@ -121,167 +245,92 @@ export default function ProjectPage() {
   const t = useUi()
   const page = projectPages[slug]
 
-  // Casa Ricardo usa fuentes de Adobe Fonts (Typekit), como en la web original
+  const i = projects.findIndex((p) => p.slug === slug)
+  const nextSlug = projects[(i + 1) % projects.length]?.slug
+  const typekit = slug === TYPEKIT_SLUG || nextSlug === TYPEKIT_SLUG ? projectPages[TYPEKIT_SLUG].typekit : null
+
+  // Ella Roman y Depot New vienen de Adobe Fonts; también hacen falta en el enlace al proyecto siguiente.
   useEffect(() => {
-    if (!page?.typekit) return undefined
+    if (!typekit) return undefined
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = page.typekit
+    link.href = typekit
     document.head.appendChild(link)
     return () => link.remove()
-  }, [page])
+  }, [typekit])
 
   if (!page) return <Navigate to="/proyectos" replace />
 
   const fonts = projectFonts[slug]
   const project = featuredProjects.find((p) => p.slug === slug)
-
-  const meta = [
-    { label: t.categoria, value: project?.category },
-    page.context && { label: t.contexto, value: page.context },
-    { label: t.herramientas, value: page.tools.map((tool) => toolLabels[tool]).join(', ') },
-    page.webTools && {
-      label: t.webHechaCon.replace(/:$/, ''),
-      value: (
-        <a href={page.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline decoration-ink/35 decoration-1 underline-offset-4 transition-colors duration-500 hover:decoration-ink">
-          {page.webTools.join(' · ')} <ArrowUpRight size={14} strokeWidth={1.25} />
-        </a>
-      ),
-    },
-  ].filter(Boolean)
+  const theme = THEME[slug]
+  const vars = { '--font-sans': fonts.body, '--font-serif': fonts.heading, '--font-display': fonts.heading, '--cs-heading': fonts.heading, '--cs-heading-weight': HEADING_WEIGHT[slug] ?? 700 }
+  const name = project?.name ?? page.title
+  const parts = compose(slug, page, project, t)
+  const paragraphs = page.video ? [page.intro.lead, page.intro.text] : page.story.map((s) => s.text)
+  const specimens = page.typographyPair ?? (page.typography ? [page.typography] : [])
+  const L = page.labels
 
   return (
     <MotionConfig reducedMotion="user">
-      <main className="font-sans" style={{ '--font-sans': fonts.body, '--font-serif': fonts.heading, '--font-display': fonts.heading }}>
-        {/* Cabecera */}
-        <header className={`${WRAP} pt-10 sm:pt-16`}>
-          <Link to="/proyectos" className="inline-flex min-h-11 items-center gap-2 font-[Quicksand] eyebrow text-ink/75 transition-colors duration-500 hover:text-ink">
-            <ArrowLeft size={14} strokeWidth={1.25} />
-            {t.proyectos}
-          </Link>
-          <div className="mt-16 sm:mt-28">
-            {project && <p className="font-[Quicksand] eyebrow tabular-nums text-ink/75">{project.number}</p>}
-            <h1 className={`mt-5 max-w-4xl font-serif text-[2.75rem] ${slug === 'casa-ricardo' ? 'font-normal' : 'font-bold'} leading-[1.05] tracking-[-0.02em] text-ink sm:text-6xl lg:text-7xl`}>{project?.name ?? page.title}</h1>
-            {project?.concept && <p className="mt-7 max-w-[40ch] text-lg font-medium leading-snug text-ink/85 sm:text-2xl">{project.concept}</p>}
-            <dl className="mt-12 flex flex-wrap gap-x-14 gap-y-6 font-[Quicksand] sm:mt-16">
-              {meta.map((m) => (
-                <div key={m.label}>
-                  <dt className="eyebrow text-ink/75">{m.label}</dt>
-                  <dd className="mt-2 text-[15px] font-medium text-ink">{m.value}</dd>
-                </div>
-              ))}
-            </dl>
+      <main className="cs" style={vars} data-project={slug}>
+        <header className="cs-hero" style={{ background: theme.hero, color: theme.heroInk }}>
+          <div className="cs-wrap cs-grid">
+            <div className="cs-col-6 cs-hero-copy">
+              <Link to="/proyectos" className="cs-back"><ArrowLeft size={14} strokeWidth={1.5} /> {t.proyectos}</Link>
+              <div>
+                <h1 className="cs-title">{name}</h1>
+                {project?.concept && <p className="cs-concept">{project.concept}</p>}
+              </div>
+            </div>
+            <div className="cs-col-6"><Frame item={parts.hero} eager /></div>
           </div>
         </header>
 
-        {page.video ? (
-          <>
-            <div className={`${WIDE} mt-16 sm:mt-28`}>
-              <video src={page.video} poster={page.poster} controls playsInline preload="metadata" className="block aspect-video w-full bg-brand object-contain" />
-            </div>
-            <Section label={t.elProyecto} column>
-              <div>
-                <p className="text-xl font-medium leading-snug text-ink sm:text-2xl">{page.intro.lead}</p>
-                <p className="mt-6 text-base leading-[1.75] text-ink/85 sm:text-lg">{page.intro.text}</p>
+        <section className="cs-section">
+          <div className="cs-wrap cs-grid">
+            <h2 className="cs-col-6 cs-heading">{L.story}</h2>
+            <Rise className="cs-col-6">
+              {paragraphs.map((text) => <p key={text} className="cs-text">{text}</p>)}
+              <Credits project={project} page={page} toolLabels={toolLabels} t={t} />
+            </Rise>
+          </div>
+        </section>
+
+        {parts.logo && (
+          <section className="cs-section">
+            <div className="cs-wrap">
+              <h2 className="cs-heading">{L.brand}</h2>
+              <div className="cs-block">
+                <h3 className="cs-label">{L.logo}</h3>
+                <Rows rows={parts.logo} />
               </div>
-            </Section>
-          </>
-        ) : (
-          <>
-            {/* Una sola imagen grande del trabajo */}
-            <div className={`${WIDE} mt-16 sm:mt-28`}>
-              <img src={project.hero} alt={project.heroAlt} className="block h-auto w-full bg-fog" />
-            </div>
-
-            {/* El caso */}
-            <Section label={t.elProyecto} column>
-              {page.story ? (
-                <dl className="space-y-12 sm:space-y-16">
-                  {page.story.map((b) => (
-                    <div key={b.key}>
-                      <dt className="font-[Quicksand] eyebrow text-ink/75">{t.story[b.key]}</dt>
-                      <dd className="mt-4 text-lg leading-[1.7] text-ink sm:text-xl">{b.text}</dd>
-                    </div>
-                  ))}
-                </dl>
-              ) : (
-                <p className="text-lg leading-[1.7] text-ink sm:text-xl">{page.explanation}</p>
-              )}
-            </Section>
-
-            {/* Comparación de logotipos (Casa Ricardo) */}
-            {page.comparison && (
-              <Section label={t.evolucionLogo} wide>
-                <div className="grid gap-3 sm:grid-cols-2 sm:gap-6">
-                  {page.comparison.map((g) => (
-                    <figure key={g.src} className="grid aspect-[4/3] place-items-center bg-white p-8 sm:p-14">
-                      <img src={g.src} alt={g.alt} loading="lazy" className="max-h-full w-auto max-w-full object-contain" />
-                    </figure>
-                  ))}
+              <div className="cs-block">
+                <h3 className="cs-label">{t.color}</h3>
+                <Rise className="cs-swatches">{page.colors.map((c) => <Swatch key={c.bg} color={c} logoSize={parts.logoSize} />)}</Rise>
+              </div>
+              <div className="cs-block" key={slug}>
+                <h3 className="cs-label">{t.tipografia}</h3>
+                {specimens.map((ty) => <Specimen key={ty.title} ty={ty} stylesLabel={L.styles} />)}
+              </div>
+              {parts.patterns && (
+                <div className="cs-block">
+                  <h3 className="cs-label">{L.pattern}</h3>
+                  <Rows rows={parts.patterns} />
                 </div>
-              </Section>
-            )}
-
-            {/* Aplicaciones, a gran tamaño */}
-            <Section label={t.aplicaciones} wide>
-              {page.stickers && (
-                <Reveal className="mb-3 sm:mb-6">
-                  <Photo g={page.stickers} />
-                </Reveal>
               )}
-              <Applications rows={withoutHero(page.stationery, project.hero)} />
-            </Section>
-
-            {/* Vídeos del logotipo */}
-            {page.videos && (
-              <Section label={t.movimiento} wide>
-                <div className="space-y-3 sm:space-y-6">
-                  {page.videos.single && (
-                    <div className="overflow-hidden bg-fog">
-                      <LoopVideo src={page.videos.single} />
-                    </div>
-                  )}
-                  {page.videos.wide && (
-                    <div className="overflow-hidden bg-fog">
-                      <LoopVideo src={page.videos.wide} />
-                    </div>
-                  )}
-                  {page.videos.pair && (
-                    <div className="grid gap-3 sm:grid-cols-2 sm:gap-6">
-                      {page.videos.pair.map((v, i) => (
-                        <div key={v} className="overflow-hidden" style={{ background: page.videos.pairTones?.[i] }}>
-                          <LoopVideo src={v} />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </Section>
-            )}
-
-            {/* Sistema: color y tipografía, en formato compacto */}
-            <Section label={t.color}>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-8 font-[Quicksand] sm:grid-cols-3 sm:gap-x-6">
-                {page.colors.map((c) => (
-                  <ColorPanel key={c.name} color={c} />
-                ))}
-              </div>
-            </Section>
-
-            <Section label={t.tipografia}>
-              <div className="grid gap-12 sm:grid-cols-2">
-                {page.typography && <TypeCatalog {...page.typography} />}
-                {page.typographyPair?.map((ty) => (
-                  <TypeCatalog key={ty.title} {...ty} />
-                ))}
-              </div>
-            </Section>
-          </>
+            </div>
+          </section>
         )}
 
-        <ProjectNav slug={slug} projects={projects} t={t} />
-        <ReaderProgress key={slug} />
-        <div className="pb-24" />
+        <section className="cs-section">
+          <div className="cs-wrap">
+            <h2 className="cs-heading">{L.applications}</h2>
+            <div className="cs-block"><Rows rows={parts.applications} /></div>
+          </div>
+        </section>
+
+        <NextProject slug={slug} projects={projects} t={t} />
       </main>
     </MotionConfig>
   )
