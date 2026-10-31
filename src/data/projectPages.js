@@ -97,7 +97,7 @@ export const projectPages = {
       { key: 'concepto', text: "Esta identidad nace de la integración de las iniciales del ingeniero, diseñadas bajo un concepto de interconectividad." },
       { key: 'resultado', text: "El resultado es un monograma minimalista y estructurado que refleja la capacidad de resolver problemas complejos a través de soluciones limpias, aportando una base visual sólida y profesional a su marca personal." },
     ],
-    videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro], pairTones: ['#000', '#fff'] },
+    videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro] },
     colors: [
       {
         name: 'Negro',
@@ -198,6 +198,7 @@ export const projectPages = {
     ],
     stickers: ph('casa-ricardo/pegatinas', '4 pegatinas'),
     shots: {
+      packagingDelante: ph('casa-ricardo/packaging-delante', 'Packaging 1'),
       packagingDetras: ph('casa-ricardo/packaging-detras', 'Packaging 2'),
       bolsas: ph('casa-ricardo/bolsas', 'Bolsas Casa Ricardo'),
       tarjeta: ph('casa-ricardo/tarjeta', 'Tarjeta Visita'),

@@ -90,7 +90,7 @@ export const projectPages = {
       { key: 'concepto', text: "This identity is born from the integration of the engineer's initials, designed under a concept of interconnectivity." },
       { key: 'resultado', text: "The result is a minimalist, structured monogram that reflects the ability to solve complex problems through clean solutions, giving his personal brand a solid, professional visual foundation." },
     ],
-    videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro], pairTones: ['#000', '#fff'] },
+    videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro] },
     colors: [
       {
         name: 'Black',
@@ -191,6 +191,7 @@ export const projectPages = {
     ],
     stickers: ph('casa-ricardo/pegatinas', '4 stickers'),
     shots: {
+      packagingDelante: ph('casa-ricardo/packaging-delante', 'Packaging 1'),
       packagingDetras: ph('casa-ricardo/packaging-detras', 'Packaging 2'),
       bolsas: ph('casa-ricardo/bolsas', 'Casa Ricardo Bags'),
       tarjeta: ph('casa-ricardo/tarjeta', 'Business Card'),
