@@ -176,6 +176,10 @@
   .folder { overflow: hidden; }
   .folder[data-lifted] > * { visibility: hidden; }
   .folder[data-lifted] .folder-plus { transition: none; }
+  /* Portada: la carpeta se achata según la altura de pantalla para que el botón Abrir se vea sin scroll */
+  .home-top .folder { --folder-h: clamp(64cqw, calc(100svh - 370px), 112cqw); height: var(--folder-h); }
+  .home-top .folder-front { inset: calc(var(--folder-h) * 0.536) 0 0 0; }
+  .home-top .folder-sheet { translate: 0 calc(var(--folder-h) * 0.536 - 60cqw); }
 }
 
 /* Escritorio, abierta: un solo padre transformado con tres pisos (fondo, portadas, solapa). Solo se animan transform y opacity */

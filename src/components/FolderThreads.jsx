@@ -39,9 +39,11 @@ function tracePaths(root, name, block) {
   if (tabs.length !== LINES.length) return null
   const sy = offsetIn(root, block).y + block.offsetHeight + 10
   const cx = offsetIn(root, name).x + name.offsetWidth * 0.22
+  // Mismo punto de llegada en cada pestaña (no su centro, que varía con el texto): los hilos quedan equidistantes
+  const inset = Math.min(...tabs.map((tab) => tab.offsetWidth)) / 2
   const paths = tabs.map((tab, i) => {
     const p = offsetIn(root, tab)
-    return flowingPath(cx + (i - 1) * SPREAD, sy, p.x + tab.offsetWidth / 2, p.y)
+    return flowingPath(cx + (i - 1) * SPREAD, sy, p.x + inset, p.y)
   })
   return { w: root.offsetWidth, h: root.offsetHeight, paths }
 }
