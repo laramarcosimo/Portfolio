@@ -1,9 +1,12 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { animate, AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { createPortal } from 'react-dom'
+import { animate, AnimatePresence, cubicBezier, motion, useMotionValue, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useContent, useProjectPages } from '../data/useContent'
 import { useUi } from '../i18n/ui'
 import { DUR } from '../lib/motion'
+
+/* ---------- Móvil y tableta: el escenario bajo la carpeta ---------- */
 
 const EASE_EXPO = [0.22, 1, 0.36, 1] // curva suave, igual para todo
 const SLOW = 1.1 // s: carpeta, portadas, alturas y scroll
@@ -188,71 +191,8 @@ function FanCover({ project, index, angle, geo, aspect, out, entered, lifted, re
   )
 }
 
-const DESK_CLIP = 0.536 // fracción de la altura donde empieza la solapa: lo que queda por debajo oculta las portadas
-
-/** Abanico de escritorio, en unidades de la carpeta sin escalar (la escala la pone la celda): como la demo aprobada. */
-function deskGeo(fw, H, aspects, many) {
-  const cw = (many ? 0.5 : 0.63) * fw
-  const sp = (many ? 0.3 : 0.585) * fw
-  const ang = many ? 8 : 12
-  const clipY = H * DESK_CLIP
-  const arc = (d) => (Math.abs(d) * 0.108 - 0.138) * fw
-  const box = aspects.map((a) => {
-    const ch = Math.min(cw / a, 0.9 * fw)
-    return { ch, w: ch * a }
-  })
-  let top = 0
-  const ds = many ? [-2.2, 0, 2.2] : aspects.map((_, i) => i - (aspects.length - 1) / 2)
-  for (const b of box) {
-    for (const d of ds) {
-      const rad = (Math.abs(d) * ang * Math.PI) / 180
-      const cy = clipY + 0.08 * fw - b.ch / 2 + arc(d) - 0.16 * b.ch
-      top = Math.min(top, cy - ((b.ch / 2) * Math.cos(rad) + (b.w / 2) * Math.sin(rad)) * 1.08)
-    }
-  }
-  return { fw, sp, ang, clipY, arc, box, up: Math.ceil(-top + 0.03 * fw) }
-}
-
-/** Portada de escritorio: nace dentro de la carpeta (oculta por la solapa) y sale en abanico; al cerrar vuelve a entrar con ella. */
-function DeskCover({ project, index, d, many, geo, out, entered, lifted, reduce, dragging, hidden, z, onLift, onDrop, onCoverClick, onCoverPointerDown, onKeyNav, linkRef, label, n }) {
-  const { ch, w } = geo.box[index]
-  const shown = out && !hidden
-  const open = { x: d * geo.sp, y: geo.arc(d) + (lifted ? -0.16 * ch : 0), rotate: lifted ? 0 : n === 1 ? -3 : d * geo.ang, scale: lifted ? 1.08 : 1, opacity: hidden ? 0 : 1 }
-  // Cerrada: asoma la parte alta de la portada, algo abierta en abanico, detrás de la solapa; desde ahí sale al abrir
-  const pd = many ? Math.max(-1.2, Math.min(1.2, d)) : d
-  const inside = { x: pd * geo.sp * 0.28, y: ch - 0.2 * geo.fw, rotate: n === 1 ? -1.5 : pd * geo.ang * 0.5, scale: 1, opacity: 1 }
-  const delay = out && !entered && !reduce ? 0.05 + index * STAGGER : 0
-  const dur = reduce ? 0 : out && entered ? (dragging ? 0 : DUR.quick * 1.2) : SLOW
-  return (
-    <motion.div
-      className="fan-cover"
-      style={{ left: -w / 2, top: 0.08 * geo.fw - ch, width: w, height: ch, zIndex: z, pointerEvents: shown ? 'auto' : 'none' }}
-      initial={inside}
-      animate={out ? open : inside}
-      transition={{ duration: dur, delay, ease: EASE_EXPO }}
-      onPointerEnter={(e) => e.pointerType === 'mouse' && onLift(index)}
-      onPointerLeave={(e) => e.pointerType === 'mouse' && onDrop(index)}
-    >
-      <Link
-        ref={linkRef}
-        to={`/proyectos/${project.slug}`}
-        className="fan-link"
-        draggable={false}
-        tabIndex={shown ? 0 : -1}
-        onPointerDown={(e) => onCoverPointerDown(e, index)}
-        onClick={(e) => onCoverClick(e, index)}
-        onFocus={() => onLift(index, true)}
-        onBlur={() => onDrop(index)}
-        onKeyDown={(e) => onKeyNav(e, index)}
-      >
-        <img src={project.cover} alt={label} draggable={false} />
-      </Link>
-    </motion.div>
-  )
-}
-
 /** Lo que se abre bajo la fila: la carpeta grande, su abanico y, debajo, el proyecto que se está mirando. */
-function FolderStage({ id, group, items, level, out, collapsed, held, reduce, origin, focusFirst, onClose, desk, deskBox, onReserve }) {
+function FolderStage({ id, group, items, level, out, collapsed, held, reduce, origin, focusFirst, onClose }) {
   const t = useUi()
   const { projectPages } = useProjectPages()
   const Title = `h${level + 1}`
@@ -275,7 +215,6 @@ function FolderStage({ id, group, items, level, out, collapsed, held, reduce, or
   const [entered, setEntered] = useState(false)
 
   useLayoutEffect(() => {
-    if (desk) return undefined
     const el = stageRef.current
     const fit = () => setSize({ w: el.clientWidth, h: window.innerHeight })
     fit()
@@ -287,12 +226,7 @@ function FolderStage({ id, group, items, level, out, collapsed, held, reduce, or
       window.removeEventListener('resize', fit)
     }
   }, [])
-  const geo = desk ? deskGeo(deskBox.w, deskBox.H, aspects, many) : size && fanLayout(size.w, size.h, aspects)
-  const deskUp = desk ? geo.up * deskBox.s : 0
-  useEffect(() => {
-    if (desk && out) onReserve(deskUp)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [desk, out, deskUp])
+  const geo = size && fanLayout(size.w, size.h, aspects)
 
   // Se mide antes de pintar; la altura crece de 0 a lo medido
   useLayoutEffect(() => {
@@ -320,7 +254,7 @@ function FolderStage({ id, group, items, level, out, collapsed, held, reduce, or
 
   // La página baja solo lo justo para que el escenario se vea entero
   useEffect(() => {
-    if (desk || !out || !height || !stageRef.current) return undefined
+    if (!out || !height || !stageRef.current) return undefined
     const nav = document.querySelector('.sticky.top-0')?.offsetHeight ?? 0
     const top = stageRef.current.getBoundingClientRect().top
     const over = top + height + 16 - window.innerHeight
@@ -421,74 +355,6 @@ function FolderStage({ id, group, items, level, out, collapsed, held, reduce, or
 
   const project = items[shown] ?? items[0]
   const meta = [project.category, projectPages[project.slug]?.context?.split(' · ')[0]].filter(Boolean).join(' · ')
-  if (desk) {
-    return (
-      <>
-        <div
-          id={out ? id : undefined}
-          className="desk-fan"
-          data-many={many || undefined}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerEnd}
-          onPointerCancel={onPointerEnd}
-          onClickCapture={onClickCapture}
-        >
-          <div className="desk-pivot" style={{ top: geo.clipY }}>
-            {items.map((p, i) => {
-              const d = many ? i - rot : i - (n - 1) / 2
-              return (
-                <DeskCover
-                  key={p.slug}
-                  project={p}
-                  index={i}
-                  n={n}
-                  d={d}
-                  many={many}
-                  geo={geo}
-                  out={out}
-                  entered={entered}
-                  lifted={lifted === i}
-                  reduce={reduce}
-                  dragging={dragging}
-                  hidden={many && Math.abs(d) > 2.2}
-                  z={lifted === i ? 50 : many ? 20 - Math.round(Math.abs(d) * 2) : 10 + i}
-                  onLift={lift}
-                  onDrop={drop}
-                  onCoverClick={onCoverClick}
-                  onCoverPointerDown={onCoverPointerDown}
-                  onKeyNav={onKeyNav}
-                  linkRef={(el) => {
-                    links.current[i] = el
-                  }}
-                  label={t.portadaDe(p.name)}
-                />
-              )
-            })}
-          </div>
-        </div>
-        <div className="desk-info" data-on={out || undefined} aria-hidden={!out} style={{ '--s': deskBox.s }}>
-          <AnimatePresence initial={false} mode="popLayout">
-            <motion.div
-              key={project.slug}
-              className="stage-info-body"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: out ? 1 : 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: reduce ? 0 : 0.22, ease: 'easeOut' }}
-            >
-              <Title className="stage-info-name">{project.name}</Title>
-              <p className="stage-info-meta">{meta}</p>
-              <Link to={`/proyectos/${project.slug}`} className="stage-info-go" tabIndex={out ? 0 : -1} aria-label={`${t.verProyecto}: ${project.name}`}>
-                {t.verProyecto} <span aria-hidden="true">→</span>
-              </Link>
-            </motion.div>
-          </AnimatePresence>
-          {out && <span className="sr-only" aria-live="polite">{project.name}</span>}
-        </div>
-      </>
-    )
-  }
   const grow = { duration: reduce ? 0 : out ? SLOW : CLOSE_S, ease: EASE_EXPO }
   const hiddenPose = geo ? { scale: origin.w / geo.fw, x: origin.dx, opacity: 0 } : {}
   const partBox = geo && { width: geo.fw, height: geo.fh, left: -geo.fw / 2, top: -geo.fh / 2 }
@@ -607,22 +473,17 @@ function FolderStage({ id, group, items, level, out, collapsed, held, reduce, or
   )
 }
 
-/** Los proyectos: tres carpetas que no se mueven nunca. Al pulsar una, debajo se abre su escenario. */
-const INFO_H = 124
-
-export default function ProjectFolders({ level = 3 }) {
+/** Móvil y tableta (menos de 1024 px): las carpetas no se mueven nunca. Al pulsar una, debajo se abre su escenario. */
+function MobileFolders({ level }) {
   const { projectGroups, featuredProjects } = useContent()
   const reduce = useReducedMotion()
-  const [desk, setDesk] = useState(() => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches)
-  const [m, setM] = useState(null)
-  const [up, setUp] = useState(0)
   const [selected, setSelected] = useState(null) // lo que el botón anuncia
   const [shownId, setShownId] = useState(null) // la carpeta cuyo escenario está en pantalla
   const [out, setOut] = useState(false)
   const buttons = useRef({})
   const root = useRef(null)
   const timer = useRef(0)
-  const anchor = useRef(null) // móvil: al cambiar el escenario de sitio, la carpeta pulsada no se mueve de la pantalla
+  const anchor = useRef(null) // al cambiar el escenario de sitio, la carpeta pulsada no se mueve de la pantalla
   const viaKeyboard = useRef(false)
   const held = useRef(0)
   const closeRef = useRef(null)
@@ -641,80 +502,7 @@ export default function ProjectFolders({ level = 3 }) {
   }
   closeRef.current = close
 
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 1024px)')
-    const on = () => setDesk(mq.matches)
-    mq.addEventListener('change', on)
-    return () => mq.removeEventListener('change', on)
-  }, [])
-
-  useLayoutEffect(() => {
-    const el = root.current
-    if (!desk || !el) return undefined
-    const measure = () => {
-      const cs = [...el.querySelectorAll(':scope > .folder-cell')]
-      if (!cs.length) return
-      setM({ W: el.clientWidth, w: cs[0].offsetWidth, H: cs[0].offsetHeight, lefts: cs.map((c) => c.offsetLeft), vh: window.innerHeight })
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    window.addEventListener('resize', measure)
-    return () => {
-      ro.disconnect()
-      window.removeEventListener('resize', measure)
-    }
-  }, [desk])
-
-  // Como la demo: crece hacia el centro (1.25 a 1.85 veces) intentando que el abanico y la ficha quepan en pantalla
-  const bigS = m ? Math.max(1.25, Math.min(1.85, (m.vh - 72 - 96 - INFO_H) / (m.H + 0.45 * m.w), (m.W - 24) / m.w / 1.3)) : 1
-  const selIdx = projectGroups.findIndex((g) => g.id === selected)
-  const cellPose = (i) => {
-    if (!desk || !m || selIdx < 0) return { x: 0, y: 0, scale: 1, opacity: 1 }
-    if (i === selIdx) return { x: m.W / 2 - (m.lefts[i] + m.w / 2), y: (m.H * (bigS - 1)) / 2, scale: bigS, opacity: 1 }
-    return { x: 0, y: 0, scale: 0.85, opacity: 0.35 }
-  }
-  // La que se cierra sigue delante de las otras hasta terminar de volver a su sitio
-  const [front, setFront] = useState(null)
-  useEffect(() => {
-    if (selected) {
-      setFront(selected)
-      return undefined
-    }
-    const id = setTimeout(() => setFront(null), SLOW * 1000)
-    return () => clearTimeout(id)
-  }, [selected])
-
-  // Escritorio: la página baja solo lo justo para que el abanico y la ficha se vean
-  useEffect(() => {
-    if (!desk || !selected || !m || !root.current) return undefined
-    const nav = document.querySelector('.sticky.top-0')?.offsetHeight ?? 0
-    const top = root.current.getBoundingClientRect().top
-    const over = top + 16 + up + m.H * bigS + INFO_H + 16 - window.innerHeight
-    const shift = Math.min(over, top - nav - 8)
-    if (shift <= 1) return undefined
-    const from = window.scrollY
-    if (reduce) {
-      window.scrollTo({ top: from + shift, behavior: 'instant' })
-      return undefined
-    }
-    const run = animate(0, shift, { duration: SLOW, ease: EASE_EXPO, onUpdate: (v) => window.scrollTo({ top: from + v, behavior: 'instant' }) })
-    const stop = () => run.stop()
-    window.addEventListener('wheel', stop, { passive: true })
-    return () => {
-      run.stop()
-      window.removeEventListener('wheel', stop)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [desk, selected, up])
-
   const toggle = (id, keyboard) => {
-    if (desk) {
-      viaKeyboard.current = keyboard
-      if (selected === id) close()
-      else setSelected(id)
-      return
-    }
     if (selected === id) {
       close()
       return
@@ -758,7 +546,7 @@ export default function ProjectFolders({ level = 3 }) {
     }
     // Clic fuera: cualquier sitio que no sea una carpeta, una portada o la ficha del proyecto
     const onClick = (e) => {
-      if (!e.target.isConnected || e.target.closest('.folder, .fan-cover, .stage-info-body, .big-back, .folder-front, .desk-info')) return
+      if (!e.target.isConnected || e.target.closest('.folder, .fan-cover, .stage-info-body, .big-back, .folder-front')) return
       closeRef.current()
     }
     document.addEventListener('keydown', onKey)
@@ -779,44 +567,24 @@ export default function ProjectFolders({ level = 3 }) {
     return { w: a?.width ?? 300, dx: a && b ? a.left + a.width / 2 - (b.left + b.width / 2) : 0, order: projectGroups.findIndex((g) => g.id === shownId) * 2 + 1 }
   }
 
-  const ease = { duration: reduce ? 0 : SLOW, ease: EASE_EXPO }
   return (
     <div ref={root} className="folders" data-active={selected ? 'true' : undefined}>
-      <motion.div className="desk-spacer" style={{ gridRow: 1 }} initial={false} animate={{ height: desk && selected ? up : 0 }} transition={ease} aria-hidden="true" />
       {projectGroups.map((g, i) => (
-        <motion.div key={g.id} className="folder-cell" style={{ zIndex: (selected ?? front) === g.id ? 3 : 1 }} initial={false} animate={cellPose(i)} transition={ease}>
-          <Folder
-            group={g}
-            items={itemsOf(g)}
-            isOpen={selected === g.id}
-            stageId={stageId}
-            onToggle={(keyboard) => toggle(g.id, keyboard)}
-            buttonRef={(n) => {
-              buttons.current[g.id] = n
-            }}
-            level={level}
-            order={i * 2}
-          />
-          {desk && m && (
-            <FolderStage
-              id={stageId}
-              group={g}
-              items={itemsOf(g)}
-              level={level}
-              out={selected === g.id}
-              reduce={reduce}
-              focusFirst={viaKeyboard.current}
-              onClose={close}
-              held={held}
-              desk
-              deskBox={{ W: m.W, w: m.w, H: m.H, s: bigS }}
-              onReserve={setUp}
-            />
-          )}
-        </motion.div>
+        <Folder
+          key={g.id}
+          group={g}
+          items={itemsOf(g)}
+          isOpen={selected === g.id}
+          stageId={stageId}
+          onToggle={(keyboard) => toggle(g.id, keyboard)}
+          buttonRef={(n) => {
+            buttons.current[g.id] = n
+          }}
+          level={level}
+          order={i * 2}
+        />
       ))}
-      <motion.div className="desk-spacer" style={{ gridRow: 3 }} initial={false} animate={{ height: desk && selected && m ? m.H * (bigS - 1) + INFO_H : 0 }} transition={ease} aria-hidden="true" />
-      {!desk && shownGroup && (
+      {shownGroup && (
         <FolderStage
           key={shownGroup.id}
           id={stageId}
@@ -834,4 +602,627 @@ export default function ProjectFolders({ level = 3 }) {
       )}
     </div>
   )
+}
+
+/* ---------- Escritorio (1024 px o más): capa fija centrada, sin mover la fila ni el scroll ---------- */
+
+const EXPO = cubicBezier(0.16, 1, 0.3, 1)
+const IN_OUT = cubicBezier(0.65, 0, 0.35, 1)
+const HOME = cubicBezier(0.5, 0, 0.15, 1)
+const MAX_SCALE = 1.75
+
+function FolderFace({ group, count }) {
+  const t = useUi()
+  return (
+    <>
+      <span className="folder-tab">
+        <span className="folder-tab-text">
+          {group.label}
+          <span className="font-medium"> · {t.nProyectos(count)}</span>
+        </span>
+        <TabShoulder />
+      </span>
+      <span className="folder-back">
+        <span className="folder-inner">
+          <span className="folder-waves" aria-hidden="true" />
+        </span>
+      </span>
+    </>
+  )
+}
+
+/** La carpeta de la fila: siempre en su sitio. Mientras está levantada, la capa la oculta (data-lifted) y solo deja su hueco. */
+function DeskFolder({ group, items, isOpen, onToggle, buttonRef, level }) {
+  const t = useUi()
+  const Heading = `h${level}`
+  return (
+    <Heading className="folder-slot">
+      <button
+        ref={buttonRef}
+        type="button"
+        className={`folder folder--${group.color}`}
+        data-sheets={items.length}
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
+        aria-label={`${group.label} · ${t.nProyectos(items.length)}: ${items.map((p) => p.name).join(', ')}. ${t.abrir}`}
+        onClick={onToggle}
+      >
+        <FolderFace group={group} count={items.length} />
+        {items.map((p) => (
+          <img key={p.slug} src={p.cover} alt="" className="folder-sheet" draggable={false} />
+        ))}
+        <span className="folder-front">
+          <span className="folder-flap">
+            <span className="folder-waves" aria-hidden="true" />
+          </span>
+          <span className="folder-pocket">
+            <span className="folder-state">
+              {t.abrir}
+              <span className="folder-plus" />
+            </span>
+          </span>
+        </span>
+      </button>
+    </Heading>
+  )
+}
+
+/** Foto exacta de la carpeta cerrada, leída del propio CSS: de aquí sale todo y aquí vuelve todo. */
+function measure(button) {
+  const r = button.getBoundingClientRect()
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
+  const seen = []
+  const sheets = [...button.querySelectorAll('.folder-sheet')].map((im) => {
+    const cs = getComputedStyle(im)
+    const aspect = im.naturalWidth ? im.naturalWidth / im.naturalHeight : 4 / 3
+    if (cs.display === 'none') return { hidden: true, aspect }
+    const s = { l: parseFloat(cs.left), t: parseFloat(cs.top), w: parseFloat(cs.width), h: parseFloat(cs.height), rotate: parseFloat(cs.rotate) || 0, aspect }
+    seen.push(s)
+    return s
+  })
+  return {
+    x: r.left,
+    y: r.top,
+    w: r.width,
+    h: r.height,
+    frontTop: parseFloat(getComputedStyle(button.querySelector('.folder-front')).top),
+    cut: parseFloat(getComputedStyle(button).getPropertyValue('--cut')) * rem,
+    sheets: sheets.map((s) => (s.hidden ? { ...seen[seen.length - 1], aspect: s.aspect, hidden: true } : s)),
+  }
+}
+
+const viewport = () => ({
+  W: document.documentElement.clientWidth,
+  H: window.innerHeight,
+  nav: document.querySelector('header.sticky')?.offsetHeight ?? 0,
+})
+
+/** Composición abierta: la carpeta, tan grande como permite la pantalla, y las portadas encima y solapadas con ella. Las portadas van en coordenadas de la carpeta. */
+function stageLayout({ W, H, nav }, geo, infoH, active) {
+  const n = geo.sheets.length
+  const many = n >= MANY
+  const bottom = H - 8 - infoH - 6
+  const S = Math.min(MAX_SCALE, (bottom - nav - 8) / geo.h, (W - 48) / geo.w)
+  const fw = geo.w * S
+  const fx = (W - fw) / 2
+  const fy = bottom - geo.h * S
+  const flapRight = fy + geo.frontTop * S
+  const flapLeft = flapRight + geo.cut * S
+  const top = 12
+  const baseline = flapLeft + 6 * S // la activa entra en el bolsillo aunque la solapa baje hacia la izquierda
+  const cx = W / 2
+  const ang = many ? 8 : 10
+  const rad = (ang * Math.PI) / 180
+  const boxes = geo.sheets.map((s) => {
+    const ch = Math.min(baseline - top, (fw * (n > 1 ? 0.86 : 0.92)) / s.aspect)
+    return { ch, cw: ch * s.aspect }
+  })
+  const reach = (b, k) => ({
+    x: k * ((b.cw / 2) * Math.cos(rad) + (b.ch / 2) * Math.sin(rad)),
+    y: k * ((b.ch / 2) * Math.cos(rad) + (b.cw / 2) * Math.sin(rad)),
+  })
+  const zone = flapRight - 2 - top
+  const scales = boxes.map((b) => Math.min(many ? 0.68 : 0.78, zone / (2 * reach(b, 1).y)))
+  const maxD = Math.min(2, n - 1)
+  const spread = n > 1 ? Math.min(...boxes.map((b, i) => Math.min(b.cw * (many ? 0.42 : 0.62), (W / 2 - 8 - reach(b, scales[i]).x) / maxD))) : 0
+  const covers = boxes.map((b, i) => {
+    const d = i - active
+    const cw = b.cw / S
+    const ch = b.ch / S
+    if (d === 0) return { cw, ch, d, x: (cx - b.cw / 2 - fx) / S, y: (baseline - b.ch - fy) / S, r: 0, s: 1, o: 1 }
+    const k = Math.max(-2, Math.min(2, d))
+    // Las laterales terminan por encima de la línea de la solapa: nunca quedan cortadas en el aire
+    return { cw, ch, d, x: (cx + k * spread - b.cw / 2 - fx) / S, y: (flapRight - 2 - reach(b, scales[i]).y - b.ch / 2 - fy) / S, r: k * ang, s: scales[i], o: Math.abs(d) > 2 ? 0 : 1 }
+  })
+  return { fx, fy, S, covers, closeTop: top }
+}
+
+/** Corte de las portadas, en coordenadas de la carpeta: su borde inferior es la línea inclinada de la solapa, 2 px dentro de ella. */
+function clipOf(geo) {
+  const far = 4000
+  const right = geo.frontTop + 2
+  const left = right + geo.cut
+  return `polygon(${-far}px ${-far}px, ${geo.w + far}px ${-far}px, ${geo.w + far}px ${right}px, ${geo.w}px ${right}px, 0px ${left}px, ${-far}px ${left}px)`
+}
+
+const shutPose = (geo, stage) => {
+  const p = { fx: geo.x, fy: geo.y, fs: 1, scrim: 0, ui: 0, label: 0, plus: 0 }
+  stage.covers.forEach((c, i) => {
+    const s = geo.sheets[i]
+    p[`x${i}`] = s.l + s.w / 2 - c.cw / 2
+    p[`y${i}`] = s.t + s.h / 2 - c.ch / 2
+    p[`r${i}`] = s.rotate
+    p[`s${i}`] = s.w / c.cw
+    p[`o${i}`] = s.hidden ? 0 : 1
+    p[`e${i}`] = 0
+  })
+  return p
+}
+
+const openPose = (stage) => {
+  const p = { fx: stage.fx, fy: stage.fy, fs: stage.S, scrim: 1, ui: 1, label: 1, plus: 45 }
+  stage.covers.forEach((c, i) => {
+    p[`x${i}`] = c.x
+    p[`y${i}`] = c.y
+    p[`r${i}`] = c.r
+    p[`s${i}`] = c.s
+    p[`o${i}`] = c.o
+    p[`e${i}`] = 1
+  })
+  return p
+}
+
+/** Coreografía de apertura. Cada pista: [clave, inicio, duración, curva]. */
+function openTracks(n) {
+  const tracks = [['fx', 0, 0.9, EXPO], ['fy', 0, 0.9, EXPO], ['fs', 0, 0.9, EXPO], ['scrim', 0, 0.5, IN_OUT], ['ui', 0.35, 0.45, IN_OUT], ['label', 0, 0.35, IN_OUT], ['plus', 0, 0.6, EXPO]]
+  for (let i = 0; i < n; i++) {
+    const at = 0.135 + i * 0.045
+    // Primero sube; el lateral y el giro llegan después: sale del bolsillo antes de abrirse
+    tracks.push([`y${i}`, at, 0.8, EXPO], [`s${i}`, at, 0.8, EXPO], [`x${i}`, at + 0.05, 0.82, EXPO], [`r${i}`, at + 0.08, 0.9, EXPO], [`o${i}`, at, 0.2, IN_OUT], [`e${i}`, at + 0.3, 0.5, IN_OUT])
+  }
+  return tracks
+}
+
+/** Coreografía de cierre: las portadas entran a la vez detrás de la solapa y luego la carpeta vuelve a casa. */
+function closeTracks(n) {
+  const tracks = [['fx', 0.34, 0.51, HOME], ['fy', 0.34, 0.51, HOME], ['fs', 0.34, 0.51, HOME], ['scrim', 0.4, 0.45, IN_OUT], ['ui', 0, 0.2, IN_OUT], ['label', 0.2, 0.4, IN_OUT], ['plus', 0.1, 0.5, IN_OUT]]
+  for (let i = 0; i < n; i++) {
+    tracks.push([`x${i}`, 0, 0.45, IN_OUT], [`y${i}`, 0, 0.45, IN_OUT], [`r${i}`, 0, 0.45, IN_OUT], [`s${i}`, 0, 0.45, IN_OUT], [`o${i}`, 0.25, 0.2, IN_OUT], [`e${i}`, 0, 0.2, IN_OUT])
+  }
+  return tracks
+}
+
+/** La capa: un solo padre transformado con la carpeta en tres pisos (fondo, portadas, solapa). Un único reloj mueve todo sin renders de React. */
+function FolderLift({ group, items, level, geo: firstGeo, button, open, reduce, onClose, onGone }) {
+  const t = useUi()
+  const { projectPages } = useProjectPages()
+  const Title = `h${level + 1}`
+  const n = items.length
+  const root = useRef(null)
+  const folderEl = useRef(null)
+  const scrimEl = useRef(null)
+  const infoRef = useRef(null)
+  const closeBtn = useRef(null)
+  const labelShut = useRef(null)
+  const labelOpen = useRef(null)
+  const plusEl = useRef(null)
+  const coverEls = useRef([])
+  const edgeEls = useRef([])
+  const links = useRef([])
+  const gesture = useRef(null)
+  const swiped = useRef(false)
+  const pose = useRef(null)
+  const run = useRef(null)
+  const timeline = useRef(null)
+  const last = useRef({})
+  const goneRef = useRef(onGone)
+  goneRef.current = onGone
+  const clock = useMotionValue(0)
+  const [geo, setGeo] = useState(firstGeo)
+  const [vp, setVp] = useState(viewport)
+  const [infoH, setInfoH] = useState(null)
+  const [active, setActive] = useState(n >= MANY ? Math.floor(n / 2) : 0)
+  const ready = infoH !== null
+  const geoRef = useRef(geo)
+  geoRef.current = geo
+
+  const write = () => {
+    const p = pose.current
+    // El padre transformado vive en un píxel entero y la carpeta conserva dentro la fracción de la fila: la capa no redondea distinto y el estampado no salta
+    const g = geoRef.current
+    const ox = Math.floor(g.x)
+    const oy = Math.floor(g.y)
+    folderEl.current.style.transform = `translate(${p.fx - ox - p.fs * (g.x - ox)}px, ${p.fy - oy - p.fs * (g.y - oy)}px) scale(${p.fs})`
+    scrimEl.current.style.opacity = p.scrim
+    closeBtn.current.style.opacity = p.ui
+    infoRef.current.style.opacity = p.ui
+    labelShut.current.style.opacity = 1 - p.label
+    labelOpen.current.style.opacity = p.label
+    plusEl.current.style.rotate = `${p.plus}deg`
+    for (let i = 0; i < n; i++) {
+      const el = coverEls.current[i]
+      if (!el) continue
+      el.style.transform = `translate(${p[`x${i}`]}px, ${p[`y${i}`]}px) rotate(${p[`r${i}`]}deg) scale(${p[`s${i}`]})`
+      el.style.opacity = p[`o${i}`]
+      edgeEls.current[i].style.opacity = p[`e${i}`]
+    }
+  }
+
+  const setOrder = (fan, covers) => {
+    covers.forEach((c, i) => {
+      const el = coverEls.current[i]
+      if (el) el.style.zIndex = fan ? (c.d === 0 ? 50 : 20 - Math.abs(c.d) * 2) : i < 3 ? 10 + i : 5
+    })
+  }
+
+  // El reloj es el único que escribe en el DOM: todo va a la par y se puede interrumpir desde donde esté
+  useEffect(
+    () =>
+      clock.on('change', (time) => {
+        const line = timeline.current
+        if (!line) return
+        for (const [key, at, dur, ease] of line.tracks) {
+          const u = Math.max(0, Math.min(1, (time - at) / dur))
+          pose.current[key] = line.from[key] + (line.to[key] - line.from[key]) * ease(u)
+        }
+        // La carpeta solo es capa propia en pleno movimiento: en el primer y el último tramo pinta igual que la fila
+        const layered = time >= 0.03 && time < line.until
+        if (layered !== line.layered) {
+          line.layered = layered
+          if (layered) root.current.dataset.layered = ''
+          else delete root.current.dataset.layered
+        }
+        if (line.flip && time >= line.flip.at) {
+          line.flip.run()
+          line.flip = null
+        }
+        write()
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [clock],
+  )
+
+  const finish = (isOpen) => {
+    delete root.current?.dataset.moving
+    delete root.current?.dataset.layered
+    if (!isOpen) goneRef.current()
+  }
+
+  const play = (to, tracks, isOpen, flip) => {
+    run.current?.stop()
+    const total = Math.max(...tracks.map(([, at, dur]) => at + dur))
+    if (reduce) {
+      pose.current = { ...to }
+      flip?.run()
+      write()
+      finish(isOpen)
+      return
+    }
+    timeline.current = null
+    clock.jump(0)
+    timeline.current = { from: { ...pose.current }, to, tracks, flip, until: isOpen ? total : total - 0.1, layered: false }
+    root.current.dataset.moving = ''
+    run.current = animate(clock, total, {
+      duration: total,
+      ease: 'linear',
+      onComplete: () => {
+        pose.current = { ...to } // la última pose es la exacta, sin restos de redondeo
+        write()
+        timeline.current = null
+        finish(isOpen)
+      },
+    })
+  }
+
+  useLayoutEffect(() => {
+    setInfoH(infoRef.current.offsetHeight)
+    const onResize = () => {
+      setVp(viewport())
+      setGeo(measure(button))
+      setInfoH(infoRef.current.offsetHeight)
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [button])
+
+  // Va antes que el efecto de abajo: si se desmonta, la fila reaparece en la misma confirmación que quita la capa
+  useLayoutEffect(
+    () => () => {
+      run.current?.stop()
+      timeline.current = null
+      pose.current = null
+      delete button.dataset.lifted
+    },
+    [button],
+  )
+
+  const stage = stageLayout(vp, geo, infoH ?? 0, active)
+  const sizeKey = `${vp.W},${vp.H},${infoH},${geo.x},${geo.y},${geo.w}`
+
+  useLayoutEffect(() => {
+    if (!ready) return
+    const shut = shutPose(geo, stage)
+    const out = openPose(stage)
+    const was = last.current
+    last.current = { open, active, sizeKey }
+    if (!pose.current) {
+      // Primer fotograma: la capa, ya idéntica a la fila, sustituye a la fila antes de pintar
+      pose.current = shut
+      setOrder(false, stage.covers)
+      write()
+      button.dataset.lifted = ''
+      play(out, openTracks(n), true, { at: 0.16, run: () => setOrder(true, stage.covers) })
+      return
+    }
+    if (was.open !== open) {
+      if (open) play(out, openTracks(n), true, { at: 0.16, run: () => setOrder(true, stage.covers) })
+      else play(shut, closeTracks(n), false, { at: 0.2, run: () => setOrder(false, stage.covers) })
+      return
+    }
+    if (was.sizeKey !== sizeKey) {
+      run.current?.stop()
+      timeline.current = null
+      pose.current = open ? out : shut
+      setOrder(open, stage.covers)
+      write()
+      finish(open)
+      return
+    }
+    if (was.active !== active && open) {
+      setOrder(true, stage.covers)
+      play(out, Object.keys(out).map((k) => [k, 0, 0.5, EXPO]), true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, open, active, sizeKey])
+
+  useEffect(() => {
+    if (open) closeBtn.current?.focus({ preventScroll: true })
+  }, [open])
+
+  const move = (next) => {
+    const i = Math.max(0, Math.min(n - 1, next))
+    setActive(i)
+    return i
+  }
+
+  useEffect(() => {
+    if (!open) return undefined
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose()
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault()
+        const onCover = links.current.includes(document.activeElement)
+        const i = move(active + (e.key === 'ArrowRight' ? 1 : -1))
+        if (onCover) links.current[i]?.focus({ preventScroll: true })
+      } else if (e.key === 'Tab') {
+        const all = [...root.current.querySelectorAll('a[href], button')].filter((el) => el.tabIndex >= 0 && getComputedStyle(el).visibility === 'visible')
+        const at = all.indexOf(document.activeElement)
+        if (e.shiftKey ? at <= 0 : at === all.length - 1) {
+          e.preventDefault()
+          all[e.shiftKey ? all.length - 1 : 0]?.focus({ preventScroll: true })
+        }
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, active])
+
+  const onPointerDown = (e) => {
+    swiped.current = false
+    gesture.current = e.button === 0 ? { x: e.clientX, y: e.clientY } : null
+  }
+  const onPointerUp = (e) => {
+    const g = gesture.current
+    gesture.current = null
+    if (!g) return
+    const dx = e.clientX - g.x
+    if (Math.abs(dx) > 8 || Math.abs(e.clientY - g.y) > 8) swiped.current = true
+    if (Math.abs(dx) > SWIPE && n > 1) move(active + (dx < 0 ? 1 : -1))
+  }
+  const onClickCapture = (e) => {
+    if (!swiped.current) return
+    swiped.current = false
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  return createPortal(
+    <div
+      ref={root}
+      className="lift"
+      role="dialog"
+      aria-modal="true"
+      aria-label={group.label}
+      inert={!open}
+      data-closing={open ? undefined : true}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
+      onPointerCancel={() => {
+        gesture.current = null
+      }}
+      onClickCapture={onClickCapture}
+    >
+      <div ref={scrimEl} className="lift-scrim" style={{ opacity: 0 }} onClick={onClose} />
+      <div ref={folderEl} className="lift-origin" style={{ left: Math.floor(geo.x), top: Math.floor(geo.y) }}>
+      <div className={`lift-folder folder--${group.color}`} style={{ left: geo.x - Math.floor(geo.x), top: geo.y - Math.floor(geo.y), width: geo.w, height: geo.h }}>
+        <span className="folder lift-layer lift-back" aria-hidden="true" onClick={onClose}>
+          <FolderFace group={group} count={n} />
+        </span>
+        <div className="lift-covers" style={{ clipPath: clipOf(geo) }}>
+          {ready &&
+            items.map((p, i) => {
+              const c = stage.covers[i]
+              const reachable = open && c.o === 1
+              return (
+                <div
+                  key={p.slug}
+                  ref={(el) => {
+                    coverEls.current[i] = el
+                  }}
+                  className="lift-cover"
+                  data-side={c.d !== 0 || undefined}
+                  style={{ width: c.cw, height: c.ch, '--k': c.cw / geo.sheets[i].w, pointerEvents: reachable ? undefined : 'none' }}
+                >
+                  <Link
+                    ref={(el) => {
+                      links.current[i] = el
+                    }}
+                    to={`/proyectos/${p.slug}`}
+                    draggable={false}
+                    tabIndex={reachable ? 0 : -1}
+                    aria-current={c.d === 0 ? 'true' : undefined}
+                    onClick={(e) => {
+                      if (c.d === 0) return
+                      e.preventDefault()
+                      setActive(i)
+                    }}
+                  >
+                    <img src={p.cover} alt={t.portadaDe(p.name)} draggable={false} decoding="sync" />
+                    <span
+                      ref={(el) => {
+                        edgeEls.current[i] = el
+                      }}
+                      className="lift-edge"
+                    />
+                  </Link>
+                </div>
+              )
+            })}
+        </div>
+        <span className="folder lift-layer lift-front" aria-hidden="true">
+          <span className="folder-front" onClick={onClose}>
+            <span className="folder-flap">
+              <span className="folder-waves" aria-hidden="true" />
+            </span>
+            <span className="folder-pocket">
+              <span className="folder-state">
+                <span className="lift-label">
+                  <span ref={labelShut}>{t.abrir}</span>
+                  <span ref={labelOpen} className="lift-label-open">{t.cerrar}</span>
+                </span>
+                <span ref={plusEl} className="folder-plus" />
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+      </div>
+      <button ref={closeBtn} type="button" className="lift-close" style={{ top: stage.closeTop, opacity: 0 }} onClick={onClose}>
+        {t.cerrar}
+        <span className="folder-plus" aria-hidden="true" />
+      </button>
+      <div ref={infoRef} className="lift-info" style={{ opacity: 0 }}>
+        {items.map((p, i) => (
+          <div key={p.slug} className="lift-info-body" data-on={i === active || undefined}>
+            <Title className="lift-name">{p.name}</Title>
+            <p className="lift-meta">{[p.category, projectPages[p.slug]?.context?.split(' · ')[0]].filter(Boolean).join(' · ')}</p>
+            <Link to={`/proyectos/${p.slug}`} className="lift-go" aria-label={`${t.verProyecto}: ${p.name}`}>
+              {t.verProyecto} <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        ))}
+        <span className="sr-only" aria-live="polite">{items[active].name}</span>
+      </div>
+    </div>,
+    document.body,
+  )
+}
+
+/** Escritorio: la fila no se mueve nunca. Al pulsar una carpeta, sube a la capa fija y vuelve al cerrar. */
+function DeskFolders({ level }) {
+  const { projectGroups, featuredProjects } = useContent()
+  const reduce = useReducedMotion()
+  const [openId, setOpenId] = useState(null)
+  const [live, setLive] = useState([]) // carpetas en la capa: la abierta y las que aún vuelven a su sitio
+  const buttons = useRef({})
+  const decoded = useRef([])
+  const itemsOf = (g) => g.slugs.map((s) => featuredProjects.find((p) => p.slug === s))
+  const locked = live.length > 0
+
+  // Las portadas, ya descodificadas antes de que nadie pulse: el primer fotograma no espera a la imagen
+  useEffect(() => {
+    decoded.current = featuredProjects.filter((p) => p.cover).map((p) => {
+      const im = new Image()
+      im.src = p.cover
+      im.decode?.().catch(() => {})
+      return im
+    })
+  }, [featuredProjects])
+
+  // La página no se mueve mientras haya capa; el hueco de la barra de scroll se compensa
+  useLayoutEffect(() => {
+    if (!locked) return undefined
+    const { documentElement: html, body } = document
+    const gutter = window.innerWidth - html.clientWidth
+    const prev = [html.style.overflow, body.style.paddingRight]
+    html.style.overflow = 'hidden'
+    body.style.paddingRight = `${gutter}px`
+    return () => {
+      html.style.overflow = prev[0]
+      body.style.paddingRight = prev[1]
+    }
+  }, [locked])
+
+  const close = (id) => {
+    setOpenId((cur) => (cur === id ? null : cur))
+    buttons.current[id]?.focus({ preventScroll: true })
+  }
+  const toggle = (id) => {
+    if (openId === id) {
+      close(id)
+      return
+    }
+    const geo = measure(buttons.current[id])
+    setOpenId(id)
+    setLive((l) => (l.some((e) => e.id === id) ? l : [...l, { id, geo }]))
+  }
+
+  return (
+    <div className="folders">
+      {projectGroups.map((g) => (
+        <DeskFolder
+          key={g.id}
+          group={g}
+          items={itemsOf(g)}
+          isOpen={openId === g.id}
+          onToggle={() => toggle(g.id)}
+          buttonRef={(el) => {
+            buttons.current[g.id] = el
+          }}
+          level={level}
+        />
+      ))}
+      {live.map(({ id, geo }) => {
+        const g = projectGroups.find((x) => x.id === id)
+        return (
+          <FolderLift
+            key={id}
+            group={g}
+            items={itemsOf(g)}
+            level={level}
+            geo={geo}
+            button={buttons.current[id]}
+            open={openId === id}
+            reduce={reduce}
+            onClose={() => close(id)}
+            onGone={() => setLive((l) => l.filter((e) => e.id !== id))}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+const DESK_QUERY = '(min-width: 1024px)'
+const subscribeDesk = (cb) => {
+  const mq = window.matchMedia(DESK_QUERY)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
+
+/** Dos componentes separados: por debajo de 1024 px, el escenario bajo la carpeta; desde ahí, la capa fija. */
+export default function ProjectFolders({ level = 3 }) {
+  const desk = useSyncExternalStore(subscribeDesk, () => window.matchMedia(DESK_QUERY).matches, () => false)
+  return desk ? <DeskFolders level={level} /> : <MobileFolders level={level} />
 }
