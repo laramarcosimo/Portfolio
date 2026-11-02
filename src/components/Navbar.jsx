@@ -113,7 +113,7 @@ export default function Navbar() {
         className="sticky top-0 z-50 bg-page"
       >
         <nav className="flex h-16 items-center justify-between px-4 sm:px-8 md:pr-24" aria-label={t.navPrincipal}>
-          <Logo mono variant="auto" className="h-9" />
+          <Logo mono variant="auto" className="h-10 md:h-9" />
 
           <ul className="hidden items-center gap-10 md:flex">
             {navLinks.map((l) => (

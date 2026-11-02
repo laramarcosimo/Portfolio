@@ -23,7 +23,7 @@ export default function HomeTop() {
       <section
         ref={rootRef}
         id="inicio"
-        className="home-top relative isolate px-4 pb-10 pt-3 sm:px-8 lg:pb-14 lg:pt-4"
+        className="home-top relative isolate px-4 pb-10 pt-7 sm:px-8 lg:pb-14 lg:pt-4"
       >
         <FolderThreads rootRef={rootRef} nameRef={nameRef} blockRef={introRef} />
 

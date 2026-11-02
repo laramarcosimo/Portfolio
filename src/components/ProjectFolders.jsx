@@ -192,7 +192,7 @@ function FanCover({ project, index, angle, geo, aspect, out, entered, lifted, re
 }
 
 /** Lo que se abre bajo la fila: la carpeta grande, su abanico y, debajo, el proyecto que se está mirando. */
-function FolderStage({ id, group, items, level, out, collapsed, held, reduce, origin, focusFirst, onClose }) {
+function FolderStage({ id, group, items, level, out, collapsed, held, scrollHome, reduce, origin, focusFirst, onClose }) {
   const t = useUi()
   const { projectPages } = useProjectPages()
   const Title = `h${level + 1}`
@@ -262,17 +262,25 @@ function FolderStage({ id, group, items, level, out, collapsed, held, reduce, or
     const shift = Math.min(over, top - nav - peek)
     if (shift <= 1) return undefined
     const from = window.scrollY
+    scrollHome.current ??= from // al cerrar, la página vuelve aquí
     if (reduce) {
       window.scrollTo({ top: from + shift, behavior: 'instant' })
       return undefined
     }
     const run = animate(0, shift, { duration: SLOW, ease: EASE_EXPO, onUpdate: (v) => window.scrollTo({ top: from + v, behavior: 'instant' }) })
     const stop = () => run.stop()
-    window.addEventListener('wheel', stop, { passive: true })
+    // Si la persona se mueve por su cuenta, la página ya no vuelve sola al cerrar
+    const moved = () => {
+      run.stop()
+      scrollHome.current = null
+    }
+    window.addEventListener('wheel', moved, { passive: true })
+    window.addEventListener('touchmove', moved, { passive: true })
     window.addEventListener('touchstart', stop, { passive: true })
     return () => {
       run.stop()
-      window.removeEventListener('wheel', stop)
+      window.removeEventListener('wheel', moved)
+      window.removeEventListener('touchmove', moved)
       window.removeEventListener('touchstart', stop)
     }
   }, [out, height, reduce])
@@ -486,6 +494,8 @@ function MobileFolders({ level }) {
   const anchor = useRef(null) // al cambiar el escenario de sitio, la carpeta pulsada no se mueve de la pantalla
   const viaKeyboard = useRef(false)
   const held = useRef(0)
+  const scrollHome = useRef(null) // dónde estaba la página antes de bajar para enseñar el escenario
+  const scrollRun = useRef(null)
   const closeRef = useRef(null)
   const itemsOf = (g) => g.slugs.map((s) => featuredProjects.find((p) => p.slug === s))
 
@@ -493,6 +503,16 @@ function MobileFolders({ level }) {
     clearTimeout(timer.current)
     setSelected(null)
     setOut(false)
+    // Deshace a la vez, y con el mismo ritmo, lo que la página bajó al abrir
+    const home = scrollHome.current
+    scrollHome.current = null
+    scrollRun.current?.stop()
+    if (home !== null && !reduce) {
+      const stop = () => scrollRun.current?.stop()
+      window.addEventListener('touchmove', stop, { passive: true, once: true })
+      window.addEventListener('wheel', stop, { passive: true, once: true })
+      scrollRun.current = animate(window.scrollY, home, { duration: CLOSE_S, ease: EASE_EXPO, onUpdate: (v) => window.scrollTo({ top: v, behavior: 'instant' }), onComplete: () => { window.removeEventListener('touchmove', stop); window.removeEventListener('wheel', stop) } })
+    } else if (home !== null) window.scrollTo({ top: home, behavior: 'instant' })
     const gone = () => {
       held.current = 0
       setShownId(null)
@@ -517,6 +537,7 @@ function MobileFolders({ level }) {
     }
     // Cambio directo: las portadas vuelven a entrar y aparece la carpeta nueva
     const swap = () => {
+      scrollHome.current = null
       anchor.current = { id, top: buttons.current[id].getBoundingClientRect().top }
       setShownId(id)
       setOut(true)
@@ -557,7 +578,10 @@ function MobileFolders({ level }) {
     }
   }, [selected])
 
-  useEffect(() => () => clearTimeout(timer.current), [])
+  useEffect(() => () => {
+    clearTimeout(timer.current)
+    scrollRun.current?.stop()
+  }, [])
 
   const shownGroup = projectGroups.find((g) => g.id === shownId)
   const stageId = 'carpeta-escenario'
@@ -594,6 +618,7 @@ function MobileFolders({ level }) {
           out={out}
           collapsed={!selected}
           held={held}
+          scrollHome={scrollHome}
           reduce={reduce}
           origin={originOf()}
           focusFirst={viaKeyboard.current}
@@ -676,7 +701,9 @@ function measure(button) {
     const cs = getComputedStyle(im)
     const aspect = im.naturalWidth ? im.naturalWidth / im.naturalHeight : 4 / 3
     if (cs.display === 'none') return { hidden: true, aspect }
-    const s = { l: parseFloat(cs.left), t: parseFloat(cs.top), w: parseFloat(cs.width), h: parseFloat(cs.height), rotate: parseFloat(cs.rotate) || 0, aspect }
+    // Al aplanar la carpeta, la portada se recoloca con `translate`: también cuenta para saber dónde está
+    const moved = cs.translate === 'none' ? 0 : parseFloat(cs.translate.split(' ')[1]) || 0
+    const s = { l: parseFloat(cs.left), t: parseFloat(cs.top) + moved, w: parseFloat(cs.width), h: parseFloat(cs.height), rotate: parseFloat(cs.rotate) || 0, aspect }
     seen.push(s)
     return s
   })
