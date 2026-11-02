@@ -8,13 +8,16 @@ const LANDING_PATH = window.location.pathname // solo cuenta la página por la q
 const FONT_WAIT_MS = 1500
 const LOGO_W = 555 // caja de los trazos, la misma proporción que el monograma
 const LOGO_H = 556
-const INK = 60 // grosor con el que cada trazo descubre el logo real
+const INK = 80 // grosor con el que cada trazo descubre su parte del logo; cada parte es una imagen propia y no puede destapar a las demás
 
-// Los tres trazos del monograma, siguiendo su forma: L y ola exterior, L y ola interior, M y S.
+// Los trazos del monograma, siguiendo su forma: L exterior, ola, L interior, ola, M y S.
 const STROKES = [
-  [[58, 0], [8, 100], [22, 190], [55, 290], [58, 400], [12, 500], [23, 516], [150, 470], [285, 505], [415, 548], [543, 495]],
-  [[121, 30], [84, 130], [118, 240], [145, 340], [108, 441], [215, 408], [325, 440], [425, 470], [518, 426]],
-  [[135, 40], [128, 120], [175, 210], [258, 253], [343, 208], [395, 98], [463, 50], [493, 60], [430, 130], [495, 270], [548, 400], [453, 501]],
+  [[63, 23], [23, 87], [11, 163], [33, 258], [66, 325], [80, 382], [66, 448], [20, 496]],
+  [[37, 507], [94, 472], [175, 467], [270, 496], [365, 529], [451, 534], [529, 489]],
+  [[123, 52], [92, 111], [90, 182], [123, 273], [149, 325], [149, 382], [109, 441]],
+  [[109, 441], [139, 420], [185, 408], [270, 420], [346, 453], [422, 462], [500, 426]],
+  [[135, 61], [130, 125], [161, 201], [246, 256], [318, 225], [365, 144], [411, 83], [446, 70]],
+  [[476, 79], [427, 102], [411, 154], [451, 235], [508, 325], [531, 401], [508, 462], [439, 499]],
 ]
 
 /** Une los puntos con un spline Catmull-Rom. */
@@ -31,7 +34,12 @@ const STROKE_PATHS = STROKES.map(spline)
 const clamp = (n) => Math.min(1, Math.max(0, n))
 const smooth = (n) => n * n * (3 - 2 * n)
 const span = (t, from, to) => smooth(clamp((t - from) / (to - from)))
-const dash = (el, from, to, total) => el.setAttribute('stroke-dasharray', `0 ${from} ${Math.max(0, to - from)} ${total + 1}`)
+// Tramo visible de una línea. Sin tramo se oculta: con punta redonda, un trazo de largo 0 pintaría un punto
+const dash = (el, from, to, total) => {
+  el.setAttribute('stroke-dasharray', `${Math.max(0, to - from)} ${total + 1}`)
+  el.setAttribute('stroke-dashoffset', -from)
+  el.setAttribute('visibility', to - from > 0.01 ? 'visible' : 'hidden')
+}
 
 /** Cada vez que se carga o recarga una página con hilos, arriba del todo; no al navegar dentro de la web. */
 export function shouldPlayIntro(reduce) {
@@ -51,7 +59,7 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
   const [scene, setScene] = useState(null)
   const veilRef = useRef(null)
   const logoRef = useRef(null)
-  const imageRef = useRef(null)
+  const imageRefs = useRef([])
   const strokeRefs = useRef([])
   const maskRefs = useRef([])
   const threadRefs = useRef([])
@@ -101,6 +109,9 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
     const threaded = scene.threads.length > 0
     const slots = [...rootRef.current.querySelectorAll('.folder-slot')]
     slots.forEach((slot) => { slot.style.opacity = '0' })
+    // El logo real espera oculto bajo el que viaja: al aparecer la web no se ve doble
+    const mark = document.querySelector('header img[src*="monograma"]')
+    if (mark) mark.style.visibility = 'hidden'
     const risen = new Set()
     const rise = (slot) => {
       risen.add(slot)
@@ -120,31 +131,35 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
       return probe.getTotalLength()
     })
     // Cada hilo llega a su carpeta un poco después que el anterior
-    const arrivals = threaded ? [0.84, 0.87, 0.9] : [0.68, 0.73, 0.78]
+    const arrivals = threaded ? [0.86, 0.89, 0.92] : [0.68, 0.73, 0.78]
 
     const paint = (t) => {
-      maskRefs.current.forEach((el, i) => dash(el, 0, inkLens[i] * span(t, 0.02 + i * 0.03, 0.22 + i * 0.04), inkLens[i]))
+      if (!veilRef.current) return // ya desmontada: al pararse, la animación aún da un último paso
+      maskRefs.current.forEach((el, i) => {
+        dash(el, 0, inkLens[i] * span(t, 0.02 + i * 0.015, 0.2 + i * 0.02), inkLens[i])
+        el.setAttribute('stroke-width', INK + 50 * span(t, 0.27, 0.3)) // cierra cualquier borde al terminar, antes de las líneas
+      })
       strokeRefs.current.forEach((el, i) => {
         const at = 0.31 + i * 0.015
         dash(el, sweepLens[i] * span(t, at + 0.05, at + 0.2), sweepLens[i] * span(t, at, at + 0.15), sweepLens[i])
         el.style.opacity = t > at && t < at + 0.2 ? 1 : 0
       })
       // Al pasar las líneas por el centro, el logo queda entero y limpio
-      if (t > 0.38) imageRef.current.removeAttribute('mask')
+      if (t > 0.38) imageRefs.current.forEach((el) => el.removeAttribute('mask'))
 
       const move = span(t, 0.5, 0.66)
       const box = Object.fromEntries(['x', 'y', 'w', 'h'].map((k) => [k, scene.start[k] + (scene.end[k] - scene.start[k]) * move]))
       logoRef.current.setAttribute('transform', `translate(${box.x} ${box.y}) scale(${box.w / LOGO_W} ${box.h / LOGO_H})`)
 
       threadRefs.current.forEach((el, i) => {
-        const head = threadLens[i] * span(t, 0.62, arrivals[i])
-        dash(el, leadLens[i] * span(t, 0.64, 0.78), head, threadLens[i])
+        const head = threadLens[i] * span(t, 0.58, arrivals[i])
+        dash(el, leadLens[i] * span(t, 0.62, 0.71), head, threadLens[i])
         el.style.opacity = head > 0 ? 0.8 : 0
       })
       arrivals.forEach((at, i) => {
         if (t >= at - 0.02 && slots[i] && !risen.has(slots[i])) rise(slots[i])
       })
-      veilRef.current.style.opacity = 1 - span(t, 0.66, 0.84)
+      veilRef.current.style.opacity = 1 - span(t, 0.7, 0.86)
     }
     paint(0)
     const controls = animate(0, 1, {
@@ -156,6 +171,7 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
     return () => {
       controls.stop()
       slots.forEach((slot) => { slot.style.opacity = '' })
+      if (mark) mark.style.visibility = ''
     }
   }, [scene, rootRef, onDone])
 
@@ -177,12 +193,14 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
             />
           ))}
           <g ref={logoRef}>
-            <mask id="threads-intro-ink" maskUnits="userSpaceOnUse" x="-40" y="-40" width={LOGO_W + 80} height={LOGO_H + 80}>
-              {STROKE_PATHS.map((d, i) => (
-                <path key={d} ref={(el) => { maskRefs.current[i] = el }} d={d} fill="none" stroke="#fff" strokeWidth={INK} strokeLinecap="round" />
-              ))}
-            </mask>
-            <image ref={imageRef} href={img('brand/monograma')} width={LOGO_W} height={LOGO_H} preserveAspectRatio="none" mask="url(#threads-intro-ink)" />
+            {STROKE_PATHS.map((d, i) => (
+              <g key={d}>
+                <mask id={`threads-intro-ink-${i}`} maskUnits="userSpaceOnUse" x="-60" y="-60" width={LOGO_W + 120} height={LOGO_H + 120}>
+                  <path ref={(el) => { maskRefs.current[i] = el }} d={d} fill="none" stroke="#fff" strokeWidth={INK} strokeLinecap="round" />
+                </mask>
+                <image ref={(el) => { imageRefs.current[i] = el }} href={img(`brand/trazos/${i + 1}`)} width={LOGO_W} height={LOGO_H} preserveAspectRatio="none" mask={`url(#threads-intro-ink-${i})`} />
+              </g>
+            ))}
           </g>
           {scene.sweeps.map((d, i) => (
             <path
