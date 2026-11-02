@@ -4,8 +4,8 @@ import ThreadsIntro, { shouldPlayIntro } from './ThreadsIntro'
 import { EASE_EXPO } from '../lib/motion'
 
 const LINES = ['var(--color-ink)', 'var(--color-lilac)', 'var(--color-sky)'] // el color de cada carpeta, en su orden
-const SPREAD = 11 // px entre hilos al nacer: salen casi paralelos y se separan después
-const SAMPLES = 12
+const GAP = 14 // px entre hilos al nacer
+const PULL = 0.62 // cuánto baja cada hilo en vertical antes de curvarse y al llegar
 
 /** Posición sin transformaciones: los hilos apuntan a donde la pestaña acaba, aunque aún esté subiendo. */
 function offsetIn(root, el) {
@@ -18,19 +18,11 @@ function offsetIn(root, el) {
   return { x, y }
 }
 
-/** S suave con tangente vertical en ambos extremos, muestreada y unida con un spline Catmull-Rom: sin quiebros. */
+/** Un solo trazo en S, vertical al salir y al llegar: la misma curva en todos, sin puntos intermedios. */
 function flowingPath(sx, sy, ex, ey) {
-  const pts = Array.from({ length: SAMPLES + 1 }, (_, i) => {
-    const u = i / SAMPLES
-    return [sx + (ex - sx) * (u * u * (3 - 2 * u)), sy + (ey - sy) * u]
-  })
   const f = (n) => n.toFixed(1)
-  let d = `M${f(sx)} ${f(sy)}`
-  for (let i = 0; i < SAMPLES; i += 1) {
-    const [p0, p1, p2, p3] = [pts[Math.max(0, i - 1)], pts[i], pts[i + 1], pts[Math.min(SAMPLES, i + 2)]]
-    d += `C${f(p1[0] + (p2[0] - p0[0]) / 6)} ${f(p1[1] + (p2[1] - p0[1]) / 6)} ${f(p2[0] - (p3[0] - p1[0]) / 6)} ${f(p2[1] - (p3[1] - p1[1]) / 6)} ${f(p2[0])} ${f(p2[1])}`
-  }
-  return d
+  const pull = (ey - sy) * PULL
+  return `M${f(sx)} ${f(sy)}C${f(sx)} ${f(sy + pull)} ${f(ex)} ${f(ey - pull)} ${f(ex)} ${f(ey)}`
 }
 
 /** Solo con las carpetas en fila de escritorio: nacen juntos bajo el bloque de título y acaban en cada pestaña. */
@@ -44,7 +36,7 @@ function tracePaths(root, name, block) {
   const inset = Math.min(...tabs.map((tab) => tab.offsetWidth)) / 2
   const threads = tabs.map((tab, i) => {
     const p = offsetIn(root, tab)
-    const sx = cx + (i - 1) * SPREAD
+    const sx = cx + (i - 1) * GAP
     return { start: [sx, sy], d: flowingPath(sx, sy, p.x + inset, p.y) }
   })
   return { w: root.offsetWidth, h: root.offsetHeight, threads }

@@ -104,7 +104,9 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
       const box = item.slot.getBoundingClientRect()
       const copy = item.slot.cloneNode(true)
       copy.setAttribute('inert', '')
-      copy.style.cssText = `position:absolute;left:${box.left}px;top:${box.top}px;width:${box.width}px;height:${box.height}px;margin:0;opacity:0;--folder-h:${getComputedStyle(item.slot).getPropertyValue('--folder-h')};will-change:transform`
+      copy.style.cssText = `position:absolute;left:${box.left}px;top:${box.top}px;width:${box.width}px;height:${box.height}px;margin:0;opacity:0;will-change:transform`
+      // Fuera de la portada no le llega su altura aplanada: la copia lleva la misma que la carpeta real
+      copy.querySelector('.folder')?.style.setProperty('--folder-h', `${item.slot.querySelector('.folder')?.offsetHeight}px`)
       stackRef.current.appendChild(copy)
       item.copy = copy
       item.box = box
