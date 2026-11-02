@@ -219,6 +219,9 @@
 
 /* Portada: nombre grande, resumen alineado a la tercera carpeta y las carpetas ya en la primera pantalla */
 .home-line { transition: opacity var(--dur-quick) ease-out; }
+.threads-intro { position: fixed; inset: 0; z-index: 100; pointer-events: none; overflow: hidden; }
+.threads-intro-veil { position: absolute; inset: 0; background: var(--color-page); }
+[data-theme="dark"] .threads-intro image { filter: brightness(0) invert(1); }
 .home-head { display: grid; row-gap: 1rem; }
 .projects-folders { margin-top: 2rem; }
 @media (min-width: 1024px) { .projects-folders { margin-top: clamp(2.5rem, 7svh, 4rem); } }

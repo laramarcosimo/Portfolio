@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import ThreadsIntro, { shouldPlayIntro } from './ThreadsIntro'
 import { EASE_EXPO } from '../lib/motion'
 
 const LINES = ['var(--color-ink)', 'var(--color-lilac)', 'var(--color-sky)'] // el color de cada carpeta, en su orden
@@ -41,11 +42,12 @@ function tracePaths(root, name, block) {
   const cx = offsetIn(root, name).x + name.offsetWidth * 0.22
   // Mismo punto de llegada en cada pestaña (no su centro, que varía con el texto): los hilos quedan equidistantes
   const inset = Math.min(...tabs.map((tab) => tab.offsetWidth)) / 2
-  const paths = tabs.map((tab, i) => {
+  const threads = tabs.map((tab, i) => {
     const p = offsetIn(root, tab)
-    return flowingPath(cx + (i - 1) * SPREAD, sy, p.x + inset, p.y)
+    const sx = cx + (i - 1) * SPREAD
+    return { start: [sx, sy], d: flowingPath(sx, sy, p.x + inset, p.y) }
   })
-  return { w: root.offsetWidth, h: root.offsetHeight, paths }
+  return { w: root.offsetWidth, h: root.offsetHeight, threads }
 }
 
 /**
@@ -57,6 +59,10 @@ export default function FolderThreads({ rootRef, nameRef, blockRef }) {
   const [box, setBox] = useState(null)
   const [hovered, setHovered] = useState(-1)
   const [opened, setOpened] = useState(-1)
+  const [intro, setIntro] = useState(() => shouldPlayIntro(reduce))
+  const [introPlayed] = useState(intro)
+  const trace = useCallback(() => tracePaths(rootRef.current, nameRef.current, blockRef.current), [rootRef, nameRef, blockRef])
+  const endIntro = useCallback(() => setIntro(false), [])
 
   useEffect(() => {
     const root = rootRef.current
@@ -96,10 +102,11 @@ export default function FolderThreads({ rootRef, nameRef, blockRef }) {
     }
   }, [rootRef, nameRef, blockRef])
 
+  if (intro) return <ThreadsIntro trace={trace} rootRef={rootRef} colors={LINES} onDone={endIntro} />
   if (!box) return null
   return (
     <svg width={box.w} height={box.h} viewBox={`0 0 ${box.w} ${box.h}`} className="folder-threads pointer-events-none absolute inset-0" aria-hidden="true">
-      {box.paths.map((d, i) => (
+      {box.threads.map(({ d }, i) => (
         <g key={LINES[i]} className="home-line" style={{ opacity: hovered === i || opened === i ? 1 : 0.8 }}>
           <motion.path
             d={d}
@@ -107,7 +114,7 @@ export default function FolderThreads({ rootRef, nameRef, blockRef }) {
             style={{ stroke: LINES[i] }}
             strokeWidth={1.75}
             strokeLinecap="round"
-            initial={reduce ? false : { pathLength: 0 }}
+            initial={reduce || introPlayed ? false : { pathLength: 0 }}
             animate={{ pathLength: 1 }}
             transition={{ duration: 0.75, delay: 0.3 + i * 0.06, ease: EASE_EXPO }}
           />
