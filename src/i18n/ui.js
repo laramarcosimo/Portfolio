@@ -49,7 +49,7 @@ export const ui = {
     intereses: 'INTERESES',
     habilidadesEstrategicas: 'Habilidades Estratégicas',
     portadaDe: (name) => `Portada de ${name}`,
-    statement: 'Diseño identidades visuales con mirada de publicista.',
+    statement: 'Diseño y comunicación visual con ideas propias.',
     firma: 'Lara Marco Simó — Diseñadora gráfica y publicista · Tenerife',
     trabajoSeleccionado: 'Trabajo seleccionado',
     sobreMiCorto:
@@ -127,7 +127,7 @@ export const ui = {
     intereses: 'INTERESTS',
     habilidadesEstrategicas: 'Strategic Skills',
     portadaDe: (name) => `Cover of ${name}`,
-    statement: "I design visual identities with an advertiser's eye.",
+    statement: 'Design and visual communication with ideas of my own.',
     firma: 'Lara Marco Simó — Graphic designer & advertiser · Tenerife',
     trabajoSeleccionado: 'Selected work',
     sobreMiCorto:

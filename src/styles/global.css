@@ -177,8 +177,8 @@
   .folder[data-lifted] > * { visibility: hidden; }
   .folder[data-lifted] .folder-plus { transition: none; }
   /* Portada: la carpeta se achata según la altura de pantalla para que el botón Abrir se vea sin scroll */
-  .home-top .folder { --folder-h: clamp(64cqw, calc(100svh - 370px), 112cqw); }
-  .projects-folders .folder { --folder-h: clamp(64cqw, calc(100svh - 420px), 112cqw); }
+  .home-top .folder { --folder-h: clamp(64cqw, calc(100svh - 410px), 112cqw); }
+  .projects-folders .folder { --folder-h: clamp(64cqw, calc(100svh - 460px), 112cqw); }
   .home-top .folder, .projects-folders .folder, .threads-intro .folder { height: var(--folder-h); }
   .home-top .folder-front, .projects-folders .folder-front, .threads-intro .folder-front { inset: calc(var(--folder-h) * 0.536) 0 0 0; }
   .home-top .folder-sheet, .projects-folders .folder-sheet, .threads-intro .folder-sheet { translate: 0 calc(var(--folder-h) * 0.536 - 60cqw); }
