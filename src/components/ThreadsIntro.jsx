@@ -29,7 +29,10 @@ function spline(pts) {
   }
   return d
 }
-const STROKE_PATHS = STROKES.map(spline)
+// Igual que la animación original del logo: todo nace en la esquina de abajo a la izquierda. Las L suben y las olas
+// van hacia la derecha; cuando van por la mitad, la M entra por arriba y la S sube desde su punta inferior.
+const STROKE_PATHS = STROKES.map((pts, i) => spline([0, 2, 5].includes(i) ? [...pts].reverse() : pts))
+const DRAW = [[0.02, 0.17], [0.02, 0.21], [0.03, 0.17], [0.03, 0.21], [0.15, 0.35], [0.15, 0.35]]
 
 const clamp = (n) => Math.min(1, Math.max(0, n))
 const smooth = (n) => n * n * (3 - 2 * n)
@@ -117,13 +120,13 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
     const paint = (t) => {
       if (!veilRef.current) return // ya desmontada: al pararse, la animación aún da un último paso
       maskRefs.current.forEach((el, i) => {
-        dash(el, 0, inkLens[i] * span(t, 0.02 + i * 0.015, 0.22 + i * 0.02), inkLens[i])
-        el.setAttribute('stroke-width', INK + 50 * span(t, 0.3, 0.33)) // cierra cualquier borde al terminar
+        dash(el, 0, inkLens[i] * span(t, DRAW[i][0], DRAW[i][1]), inkLens[i])
+        el.setAttribute('stroke-width', INK + 50 * span(t, 0.34, 0.36)) // cierra cualquier borde al terminar
       })
-      if (t > 0.34) imageRefs.current.forEach((el) => el.removeAttribute('mask'))
+      if (t > 0.36) imageRefs.current.forEach((el) => el.removeAttribute('mask'))
 
       // El montón se copia aquí, con las carpetas reales ya asentadas
-      if (t >= 0.36 && !laid) {
+      if (t >= 0.38 && !laid) {
         laid = true
         layDown()
       }
@@ -139,7 +142,7 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
         copy.style.transform = `translate(${dx * (1 - spread)}px, ${dy * (1 - spread)}px) rotate(${tilt * (1 - spread)}deg) scale(${small + (1 - small) * spread})`
         if (t > 0.9) slot.style.opacity = 1 // relevo: debajo ya están las reales, idénticas
       })
-      logoRef.current.style.opacity = 1 - span(t, 0.36, 0.44)
+      logoRef.current.style.opacity = 1 - span(t, 0.38, 0.45)
       veilRef.current.style.opacity = 1 - span(t, 0.62, 0.84)
       threadRefs.current.forEach((el, i) => {
         dash(el, 0, threadLens[i] * span(t, 0.84 + i * 0.01, 0.99), threadLens[i])
