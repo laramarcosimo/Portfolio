@@ -48,21 +48,26 @@ export function shouldPlayIntro(reduce) {
   return true
 }
 
+/** Entrada y salida suaves y amplias. */
+const flow = (t, from, to) => {
+  const n = clamp((t - from) / (to - from))
+  return n < 0.5 ? 8 * n ** 4 : 1 - (-2 * n + 2) ** 4 / 2
+}
+
 /**
- * Entrada de la web: el monograma se dibuja solo en el centro, las tres líneas pasan por encima
- * y lo dejan limpio, viaja a su sitio en la barra y de él se sueltan los hilos, que hacen subir
- * cada carpeta al llegar a ella.
- * En móvil no hay hilos: las carpetas suben en cuanto el monograma se coloca.
- * trace: mide los hilos (null si no hay) · rootRef: su contenedor · colors: color de cada línea.
+ * Pantalla de carga: el monograma se dibuja en el centro, se apaga, aparece un montón de carpetas
+ * cerradas y estas se reparten hasta su sitio mientras la web aparece alrededor. Son copias de las
+ * carpetas reales, así que al terminar el relevo no se nota. En escritorio se dibujan luego los hilos.
+ * trace: mide los hilos (null si no hay) · rootRef: su contenedor · colors: color de cada hilo.
  */
 export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
   const [scene, setScene] = useState(null)
   const veilRef = useRef(null)
   const logoRef = useRef(null)
   const imageRefs = useRef([])
-  const strokeRefs = useRef([])
   const maskRefs = useRef([])
   const threadRefs = useRef([])
+  const stackRef = useRef(null)
 
   useEffect(() => {
     let alive = true
@@ -72,98 +77,76 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
     Promise.race([fonts, timeout]).then(() => {
       if (!alive) return
       const box = trace()
-      const top = box ? rootRef.current.getBoundingClientRect().top : 0
-      const mark = document.querySelector('header img[src*="monograma"]')?.getBoundingClientRect()
-      const end = mark?.width ? { x: mark.left, y: mark.top, w: mark.width, h: mark.height } : { x: 16, y: 14, w: 36, h: 36 }
-      const h = Math.min(window.innerHeight * 0.36, window.innerWidth * (window.innerWidth < 768 ? 0.36 : 0.6), 300)
-      const w = h * (end.w / end.h)
       const vw = window.innerWidth
-      const midY = window.innerHeight / 2
+      const vh = window.innerHeight
+      const h = Math.min(vh * 0.36, vw * (vw < 768 ? 0.36 : 0.6), 300)
       setScene({
-        w: window.innerWidth,
-        h: window.innerHeight,
-        top,
-        start: { x: (window.innerWidth - w) / 2, y: (window.innerHeight - h) / 2, w, h },
-        end,
-        // Pasada de limpieza: tres olas paralelas que cruzan el logo de lado a lado
-        sweeps: colors.map((_, i) => {
-          const y = midY + (i - 1) * h * 0.3
-          return `M${vw + 20} ${y}C${vw * 0.7} ${y - 70} ${vw * 0.35} ${y + 70} -20 ${y}`
-        }),
-        threads: box
-          ? box.threads.map(({ start: [sx, sy], d }, i) => {
-              // Sale de la base del monograma y baja hasta el arranque de su hilo
-              const lx = end.x + end.w * (0.3 + i * 0.2)
-              const ly = end.y + end.h - top
-              const lead = `M${lx.toFixed(1)} ${ly.toFixed(1)}C${lx.toFixed(1)} ${(ly + 50).toFixed(1)} ${sx.toFixed(1)} ${(sy - 60).toFixed(1)} ${sx.toFixed(1)} ${sy.toFixed(1)}`
-              return { lead, full: lead + d.slice(d.indexOf('C')) }
-            })
-          : [],
+        w: vw,
+        h: vh,
+        top: box ? rootRef.current.getBoundingClientRect().top : 0,
+        logo: { x: (vw - h) / 2, y: (vh - h) / 2, size: h },
+        threads: box ? box.threads.map(({ d }) => d) : [],
       })
-    })
+    }).catch(onDone) // si algo falla, la web se muestra igualmente
     return () => { alive = false }
-  }, [trace, rootRef, colors])
+  }, [trace, rootRef, onDone])
 
   useEffect(() => {
     if (!scene) return undefined
     const threaded = scene.threads.length > 0
     const slots = [...rootRef.current.querySelectorAll('.folder-slot')]
     slots.forEach((slot) => { slot.style.opacity = '0' })
-    // El logo real espera oculto bajo el que viaja: al aparecer la web no se ve doble
-    const mark = document.querySelector('header img[src*="monograma"]')
-    if (mark) mark.style.visibility = 'hidden'
-    const risen = new Set()
-    const rise = (slot) => {
-      risen.add(slot)
-      slot.style.opacity = ''
-      slot.animate(
-        [{ opacity: 0, transform: 'translateY(46px)' }, { opacity: 1, transform: 'none' }],
-        { duration: 750, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
-      )
-    }
 
     const inkLens = maskRefs.current.map((el) => el.getTotalLength())
-    const sweepLens = strokeRefs.current.map((el) => el.getTotalLength())
     const threadLens = threadRefs.current.map((el) => el.getTotalLength())
-    const leadLens = scene.threads.map(({ lead }) => {
-      const probe = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-      probe.setAttribute('d', lead)
-      return probe.getTotalLength()
+    const stack = slots.slice(0, 3).map((slot) => ({ slot, copy: null, box: null }))
+    const layDown = () => stack.forEach((item, i) => {
+      const box = item.slot.getBoundingClientRect()
+      const copy = item.slot.cloneNode(true)
+      copy.setAttribute('inert', '')
+      copy.style.cssText = `position:absolute;left:${box.left}px;top:${box.top}px;width:${box.width}px;height:${box.height}px;margin:0;opacity:0;--folder-h:${getComputedStyle(item.slot).getPropertyValue('--folder-h')};will-change:transform`
+      stackRef.current.appendChild(copy)
+      item.copy = copy
+      item.box = box
+      item.tilt = (i - 1) * 4
     })
-    // Cada hilo llega a su carpeta un poco después que el anterior
-    const arrivals = threaded ? [0.86, 0.89, 0.92] : [0.68, 0.73, 0.78]
+    let laid = false
 
     const paint = (t) => {
       if (!veilRef.current) return // ya desmontada: al pararse, la animación aún da un último paso
       maskRefs.current.forEach((el, i) => {
-        dash(el, 0, inkLens[i] * span(t, 0.02 + i * 0.015, 0.2 + i * 0.02), inkLens[i])
-        el.setAttribute('stroke-width', INK + 50 * span(t, 0.27, 0.3)) // cierra cualquier borde al terminar, antes de las líneas
+        dash(el, 0, inkLens[i] * span(t, 0.02 + i * 0.015, 0.22 + i * 0.02), inkLens[i])
+        el.setAttribute('stroke-width', INK + 50 * span(t, 0.3, 0.33)) // cierra cualquier borde al terminar
       })
-      strokeRefs.current.forEach((el, i) => {
-        const at = 0.31 + i * 0.015
-        dash(el, sweepLens[i] * span(t, at + 0.05, at + 0.2), sweepLens[i] * span(t, at, at + 0.15), sweepLens[i])
-        el.style.opacity = t > at && t < at + 0.2 ? 1 : 0
+      if (t > 0.34) imageRefs.current.forEach((el) => el.removeAttribute('mask'))
+
+      // El montón se copia aquí, con las carpetas reales ya asentadas
+      if (t >= 0.36 && !laid) {
+        laid = true
+        layDown()
+      }
+      const size = scene.logo.size * 1.3
+      stack.forEach(({ copy, box, tilt, slot }, i) => {
+        if (!copy) return
+        const shown = span(t, 0.42 + (2 - i) * 0.012, 0.52)
+        const spread = flow(t, 0.52 + i * 0.02, 0.82 + i * 0.02)
+        const small = Math.min(1, size / box.width)
+        const dx = scene.logo.x + scene.logo.size / 2 - (box.left + box.width / 2)
+        const dy = scene.logo.y + scene.logo.size / 2 - (box.top + box.height / 2) + 24 * (1 - shown)
+        copy.style.opacity = shown
+        copy.style.transform = `translate(${dx * (1 - spread)}px, ${dy * (1 - spread)}px) rotate(${tilt * (1 - spread)}deg) scale(${small + (1 - small) * spread})`
+        if (t > 0.9) slot.style.opacity = 1 // relevo: debajo ya están las reales, idénticas
       })
-      // Al pasar las líneas por el centro, el logo queda entero y limpio
-      if (t > 0.38) imageRefs.current.forEach((el) => el.removeAttribute('mask'))
-
-      const move = span(t, 0.5, 0.66)
-      const box = Object.fromEntries(['x', 'y', 'w', 'h'].map((k) => [k, scene.start[k] + (scene.end[k] - scene.start[k]) * move]))
-      logoRef.current.setAttribute('transform', `translate(${box.x} ${box.y}) scale(${box.w / LOGO_W} ${box.h / LOGO_H})`)
-
+      logoRef.current.style.opacity = 1 - span(t, 0.36, 0.44)
+      veilRef.current.style.opacity = 1 - span(t, 0.62, 0.84)
       threadRefs.current.forEach((el, i) => {
-        const head = threadLens[i] * span(t, 0.58, arrivals[i])
-        dash(el, leadLens[i] * span(t, 0.62, 0.71), head, threadLens[i])
-        el.style.opacity = head > 0 ? 0.8 : 0
+        dash(el, 0, threadLens[i] * span(t, 0.84 + i * 0.01, 0.99), threadLens[i])
+        el.style.opacity = 0.8
       })
-      arrivals.forEach((at, i) => {
-        if (t >= at - 0.02 && slots[i] && !risen.has(slots[i])) rise(slots[i])
-      })
-      veilRef.current.style.opacity = 1 - span(t, 0.7, 0.86)
     }
     paint(0)
     const controls = animate(0, 1, {
-      duration: threaded ? 3.8 : 3,
+      duration: threaded ? 4 : 3.6,
       ease: 'linear',
       onUpdate: paint,
       onComplete: onDone,
@@ -171,7 +154,6 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
     return () => {
       controls.stop()
       slots.forEach((slot) => { slot.style.opacity = '' })
-      if (mark) mark.style.visibility = ''
     }
   }, [scene, rootRef, onDone])
 
@@ -179,41 +161,35 @@ export default function ThreadsIntro({ trace, rootRef, colors, onDone }) {
     <div className="threads-intro" aria-hidden="true">
       <div ref={veilRef} className="threads-intro-veil" />
       {scene && (
-        <svg width={scene.w} height={scene.h} className="absolute inset-0">
-          {scene.threads.map(({ full }, i) => (
-            <path
-              key={colors[i]}
-              ref={(el) => { threadRefs.current[i] = el }}
-              d={full}
-              transform={`translate(0 ${scene.top})`}
-              fill="none"
-              style={{ stroke: colors[i], opacity: 0 }}
-              strokeWidth={1.75}
-              strokeLinecap="round"
-            />
-          ))}
-          <g ref={logoRef}>
-            {STROKE_PATHS.map((d, i) => (
-              <g key={d}>
-                <mask id={`threads-intro-ink-${i}`} maskUnits="userSpaceOnUse" x="-60" y="-60" width={LOGO_W + 120} height={LOGO_H + 120}>
-                  <path ref={(el) => { maskRefs.current[i] = el }} d={d} fill="none" stroke="#fff" strokeWidth={INK} strokeLinecap="round" />
-                </mask>
-                <image ref={(el) => { imageRefs.current[i] = el }} href={img(`brand/trazos/${i + 1}`)} width={LOGO_W} height={LOGO_H} preserveAspectRatio="none" mask={`url(#threads-intro-ink-${i})`} />
-              </g>
+        <>
+          <div ref={stackRef} />
+          <svg width={scene.w} height={scene.h} className="absolute inset-0">
+            <g ref={logoRef} transform={`translate(${scene.logo.x} ${scene.logo.y}) scale(${scene.logo.size / LOGO_W} ${scene.logo.size / LOGO_H})`}>
+              {STROKE_PATHS.map((d, i) => (
+                <g key={d}>
+                  <mask id={`threads-intro-ink-${i}`} maskUnits="userSpaceOnUse" x="-60" y="-60" width={LOGO_W + 120} height={LOGO_H + 120}>
+                    <path ref={(el) => { maskRefs.current[i] = el }} d={d} fill="none" stroke="#fff" strokeWidth={INK} strokeLinecap="round" />
+                  </mask>
+                  <image ref={(el) => { imageRefs.current[i] = el }} href={img(`brand/trazos/${i + 1}`)} width={LOGO_W} height={LOGO_H} preserveAspectRatio="none" mask={`url(#threads-intro-ink-${i})`} />
+                </g>
+              ))}
+            </g>
+          </svg>
+          <svg width={scene.w} height={scene.h} className="absolute inset-0">
+            {scene.threads.map((d, i) => (
+              <path
+                key={colors[i]}
+                ref={(el) => { threadRefs.current[i] = el }}
+                d={d}
+                transform={`translate(0 ${scene.top})`}
+                fill="none"
+                style={{ stroke: colors[i] }}
+                strokeWidth={1.75}
+                strokeLinecap="round"
+              />
             ))}
-          </g>
-          {scene.sweeps.map((d, i) => (
-            <path
-              key={d}
-              ref={(el) => { strokeRefs.current[i] = el }}
-              d={d}
-              fill="none"
-              style={{ stroke: colors[i], opacity: 0 }}
-              strokeWidth={2.5}
-              strokeLinecap="round"
-            />
-          ))}
-        </svg>
+          </svg>
+        </>
       )}
     </div>,
     document.body,
