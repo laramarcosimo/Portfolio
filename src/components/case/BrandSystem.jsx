@@ -1,0 +1,81 @@
+import { useState } from 'react'
+import ShowcaseGrid, { Rise } from './ShowcaseGrid'
+
+/** Muestra tipográfica: cada estilo es un botón que aplica su familia y su peso al texto de ejemplo. */
+function Specimen({ ty, stylesLabel, role }) {
+  const [active, setActive] = useState(0)
+  const extra = Array.isArray(ty.extra) ? ty.extra.join(' ') : ty.extra
+  const faceOf = (x) => ({ fontFamily: `${x.family}, sans-serif`, fontWeight: x.weight })
+  const face = faceOf(ty.weights[active] ?? ty.weights[0])
+  return (
+    <div className="cs-specimen">
+      <div>
+        {role && <p className="cs-specimen-role">{role}</p>}
+        <div className="cs-specimen-head">
+          <p className="cs-specimen-name" style={face}>{ty.title}</p>
+          <p className="cs-specimen-aa" style={face} aria-hidden="true">Aa</p>
+        </div>
+      </div>
+      <div>
+        <div className="cs-specimen-styles" role="group" aria-label={`${stylesLabel} ${ty.title}`}>
+          {ty.weights.map((x, i) => (
+            <button key={x.label} type="button" className="cs-style" style={faceOf(x)} aria-pressed={i === active} onClick={() => setActive(i)}>
+              {x.label}
+            </button>
+          ))}
+        </div>
+        <p className="cs-specimen-chars" style={face}>{ty.chars.join(' ')}</p>
+        <p className="cs-specimen-chars" style={face}>{extra}</p>
+      </div>
+    </div>
+  )
+}
+
+/** Sistema de marca: logotipo, color, tipografía y patrón, en un solo recorrido. */
+export default function BrandSystem({ slug, page, parts, specimens, t }) {
+  const L = page.labels
+  return (
+    <section className="cs-section">
+      <div className="cs-wrap">
+        <h2 className="cs-heading">{L.brand}</h2>
+        <div className="cs-block">
+          <h3 className="cs-label">{L.logo}</h3>
+          <ShowcaseGrid blocks={parts.logo} />
+        </div>
+        <div className="cs-block">
+          <h3 className="cs-label">{t.color}</h3>
+          <Rise className={`cs-palette${parts.swatch ? ` cs-palette--${parts.swatch}` : ''}`}>
+            {page.colors.map((c) => (
+              parts.swatch === 'logo' ? (
+                <figure key={c.bg} style={{ color: c.dark ? '#10131A' : '#FFFFFF' }}>
+                  <div className="cs-logo-swatch" style={{ background: c.bg, maskImage: `url(${c.logos[0].src})`, WebkitMaskImage: `url(${c.logos[0].src})` }} />
+                  <figcaption>
+                    <p className="cs-swatch-name">{c.name}</p>
+                    <p className="cs-swatch-hex">{c.bg.toUpperCase()}</p>
+                  </figcaption>
+                </figure>
+              ) : (
+                <div key={c.bg} style={{ background: c.bg, color: c.dark ? '#10131A' : '#FFFFFF', boxShadow: c.bordered ? 'inset 0 0 0 1px rgb(16 19 26 / 0.2)' : undefined }}>
+                  <p className="cs-swatch-name">{c.name}</p>
+                  <p className="cs-swatch-hex">{c.bg.toUpperCase()}</p>
+                </div>
+              )
+            ))}
+          </Rise>
+        </div>
+        <div className="cs-block" key={slug}>
+          <h3 className="cs-label">{t.tipografia}</h3>
+          <div className={specimens.length > 1 ? 'cs-specimen-pair' : undefined}>
+            {specimens.map((ty, i) => <Specimen key={ty.title} ty={ty} stylesLabel={L.styles} role={specimens.length > 1 ? (i === 0 ? L.primary : L.secondary) : undefined} />)}
+          </div>
+        </div>
+        {parts.patterns && (
+          <div className="cs-block">
+            <h3 className="cs-label">{L.pattern}</h3>
+            <ShowcaseGrid blocks={parts.patterns} />
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

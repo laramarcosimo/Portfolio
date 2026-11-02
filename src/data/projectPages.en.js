@@ -21,7 +21,7 @@ const alphabet = ['Aa', 'Bb', 'Cc', 'Dd', 'Ee', 'Ff', 'Gg', 'Hh', 'Ii', 'Jj', 'K
 const ph = (path, alt) => ({ src: img(path), alt })
 
 // Labels of the shared case-study template.
-const labels = { story: 'Story', brand: 'Brand system', logo: 'Logo', pattern: 'Pattern', applications: 'Applications', styles: 'Styles of' }
+const labels = { story: 'Story', brand: 'Brand system', logo: 'Logo', pattern: 'Pattern', applications: 'Mockups', primary: 'Primary', secondary: 'Secondary', styles: 'Styles of' }
 
 export const projectPages = {
   'marca-personal': {
@@ -194,7 +194,7 @@ export const projectPages = {
       packagingDelante: ph('casa-ricardo/packaging-delante', 'Packaging 1'),
       packagingDetras: ph('casa-ricardo/packaging-detras', 'Packaging 2'),
       bolsas: ph('casa-ricardo/bolsas', 'Casa Ricardo Bags'),
-      tarjeta: ph('casa-ricardo/tarjeta', 'Business Card'),
+      tarjeta: ph('casa-ricardo/tarjeta-fondo', 'Business Card'),
       valla: ph('casa-ricardo/valla', 'Casa Ricardo Billboard'),
       mupi: ph('casa-ricardo/mupi', 'Casa Ricardo Street Poster'),
     },

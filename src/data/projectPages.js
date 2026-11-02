@@ -18,7 +18,7 @@ const alphabet = ['Aa', 'Bb', 'Cc', 'Dd', 'Ee', 'Ff', 'Gg', 'Hh', 'Ii', 'Jj', 'K
 const ph = (path, alt) => ({ src: img(path), alt })
 
 // Etiquetas de la plantilla común de los casos de estudio.
-const labels = { story: 'Historia', brand: 'Sistema de marca', logo: 'Logotipo', pattern: 'Patrón', applications: 'Aplicaciones', styles: 'Estilos de' }
+const labels = { story: 'Historia', brand: 'Sistema de marca', logo: 'Logotipo', pattern: 'Patrón', applications: 'Mockups', primary: 'Principal', secondary: 'Secundaria', styles: 'Estilos de' }
 
 // Tipografía de cada página de proyecto: `body` para el texto y `heading` para los títulos.
 // Toda la web usa Quicksand salvo estas páginas, que usan la tipografía del propio proyecto.
@@ -201,7 +201,7 @@ export const projectPages = {
       packagingDelante: ph('casa-ricardo/packaging-delante', 'Packaging 1'),
       packagingDetras: ph('casa-ricardo/packaging-detras', 'Packaging 2'),
       bolsas: ph('casa-ricardo/bolsas', 'Bolsas Casa Ricardo'),
-      tarjeta: ph('casa-ricardo/tarjeta', 'Tarjeta Visita'),
+      tarjeta: ph('casa-ricardo/tarjeta-fondo', 'Tarjeta Visita'),
       valla: ph('casa-ricardo/valla', 'Valla Casa Ricardo'),
       mupi: ph('casa-ricardo/mupi', 'MUPI Casa Ricardo'),
     },
