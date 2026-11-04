@@ -3,7 +3,7 @@ import { useContactRoutes } from '../components/useContactRoutes'
 import { useContent } from '../data/useContent'
 import { useUi } from '../i18n/ui'
 
-const TONES = { mail: 'navy', wa: 'sky', li: 'lilac', ig: 'navy' }
+const TONES = { mail: 'white', wa: 'sky', li: 'lilac', ig: 'navy' }
 
 function Card({ Icon, name }) {
   return (

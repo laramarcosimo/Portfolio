@@ -50,7 +50,7 @@ export default function RibbonBanner({ height = 170, className = '' }) {
 
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`} style={{ height }} aria-hidden="true">
-      <svg width={w} height={height} viewBox={`0 0 ${w || 1} ${height}`} className="absolute inset-0">
+      <svg width={w} height={height} viewBox={`0 0 ${w || 1} ${height}`} className="ribbon-band absolute inset-0">
         {colors.map((c, i) => (
           <path key={c} ref={(el) => (paths.current[i] = el)} fill={c} />
         ))}
