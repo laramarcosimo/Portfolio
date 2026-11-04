@@ -55,8 +55,9 @@ export const ui = {
     sobreMiCorto:
       'Estudio el doble grado en Diseño Gráfico Digital y Publicidad en la Universidad Europea. Combino identidad visual, tipografía y color con una estrategia de comunicación clara, y he trabajado en agencia creando piezas para campañas. Fuera del diseño, me encanta leer, casi siempre en mi e-book.',
     verCurriculum: 'Ver currículum',
+    aboutWords: ['Aprender', 'Crecer', 'Evolucionar', 'Curiosa', 'Lectora', 'Constante'],
     perfilCv:
-      'Publicista y diseñadora gráfica en formación. He hecho prácticas en agencia (Arco Comunicación), gestiono las redes de una clínica de medicina estética y edito contenido audiovisual.',
+      'Estudio el doble grado en Diseño Gráfico Digital y Publicidad en la Universidad Europea. Combino identidad visual, tipografía y color con una estrategia de comunicación clara.',
     perfil: 'Perfil',
     proyectoN: (n) => `Proyecto ${n}`,
     destacados: 'Proyectos destacados',
@@ -65,7 +66,7 @@ export const ui = {
     cierreCv: 'Ver currículum',
     contactoIntro:
       'Estoy abierta a ofertas de empleo y prácticas como diseñadora gráfica y publicista junior en estudios, agencias o equipos de marca. La forma más rápida de contactarme es por correo.',
-    imprimir: 'Imprimir / Guardar PDF',
+    imprimir: 'Descargar CV',
     contactoCvTitulo: 'Contacto',
     datos: 'Datos',
     ubicacion: 'Ubicación',
@@ -133,8 +134,9 @@ export const ui = {
     sobreMiCorto:
       'I am studying a double degree in Digital Graphic Design and Advertising at Universidad Europea. I combine visual identity, typography and colour with a clear communication strategy, and I have worked at an agency producing pieces for campaigns. Away from design, I love reading, usually on my e-reader.',
     verCurriculum: 'View CV',
+    aboutWords: ['Learn', 'Grow', 'Evolve', 'Curious', 'Reader', 'Consistent'],
     perfilCv:
-      'Advertiser and graphic designer in training. I interned at an agency (Arco Comunicación), I manage social media for an aesthetic medicine clinic and I edit audiovisual content.',
+      'I am studying a double degree in Digital Graphic Design and Advertising at Universidad Europea. I combine visual identity, typography and colour with a clear communication strategy.',
     perfil: 'Profile',
     proyectoN: (n) => `Project ${n}`,
     destacados: 'Featured projects',
@@ -143,7 +145,7 @@ export const ui = {
     cierreCv: 'View CV',
     contactoIntro:
       "I'm open to junior graphic design and advertising roles and internships in studios, agencies or in-house brand teams. Email is the quickest way to reach me.",
-    imprimir: 'Print / Save as PDF',
+    imprimir: 'Download CV',
     contactoCvTitulo: 'Contact',
     datos: 'Details',
     ubicacion: 'Location',

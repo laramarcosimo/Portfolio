@@ -31,35 +31,32 @@ export const about = {
 
 // ---------- Resume ----------
 export const cv = {
-  subtitle: 'Double degree in digital graphic design and advertising',
+  subtitle: 'Advertising professional and graphic designer',
   personal: [
     { label: 'Location', value: 'Santa Cruz de Tenerife' },
     { label: 'Licence', value: 'B' },
+    { label: 'Languages', value: 'English B1 (Oxford certificate)' },
   ],
   education: [
-    { title: 'Double degree in digital graphic design and advertising', date: '2022 - Present', role: 'Universidad Europea | Santa Cruz de Tenerife' },
-    { title: '1st year of Interactive Technologies degree', date: '2022', role: 'UPV | Valencia' },
+    { title: 'Double degree in digital graphic design and advertising', date: '2022 – present', role: 'Universidad Europea | Santa Cruz de Tenerife' },
   ],
   experience: [
-    {
-      title: 'Ageless Medicina Estética',
-      href: 'https://www.instagram.com/ageless.medicinaestetica?igsh=MXEzYXduYnBnYjVzcQ%3D%3D&utm_source=qr',
-      date: '2026',
-      role: 'Social Media Management',
-      desc: 'Social media management and strategy for an aesthetic medicine clinic.',
-    },
     {
       title: 'Arco Comunicación',
       href: 'https://arcocomunicacion.com/',
       date: '2025',
-      role: 'Professional Internship | Advertising Agency',
-      desc: 'Development of graphic pieces and support executing creative advertising campaigns.',
+      role: 'Graphic and creative design intern | Advertising agency, Santa Cruz de Tenerife',
+      desc: [
+        'Developed visual identities and rebrands, creating logos, key visuals and corporate stationery.',
+        'Designed posters, advertising pieces, mockups and animated content for brands in the Canary Islands market.',
+        'Got 2 design proposals approved by the client.',
+      ],
     },
     {
-      title: 'Podcast editing',
+      title: 'Podcast editing «Desde Mi Experiencia»',
       href: 'https://www.youtube.com/@DesdeMiExperienciaPodcast?app=desktop',
       date: '2024',
-      role: 'Desde Mi Experiencia | Santa Cruz de Tenerife',
+      role: 'Santa Cruz de Tenerife',
       desc: 'Collaborative project ensuring high-quality audio production and professional editing.',
     },
   ],

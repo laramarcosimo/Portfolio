@@ -1,9 +1,9 @@
 import { useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import AboutRing from './AboutRing'
 import FolderThreads from '../components/FolderThreads'
 import ProjectFolders from '../components/ProjectFolders'
-import Reveal from '../components/Reveal'
 import { useContent } from '../data/useContent'
 import { useUi } from '../i18n/ui'
 import { EASE_EXPO } from '../lib/motion'
@@ -50,15 +50,7 @@ export default function HomeTop() {
         </div>
       </section>
 
-      <section id="sobre-mi" aria-labelledby="sobre-mi-titulo" className="px-4 py-10 sm:px-8 lg:py-16">
-        <Reveal className="grid gap-x-6 gap-y-3 lg:grid-cols-3">
-          <h2 id="sobre-mi-titulo" className="text-3xl font-bold tracking-[-0.025em] lg:text-[2.5rem] lg:leading-[1.1]">{about.title}</h2>
-          <div className="lg:col-span-2">
-            <p className="max-w-[62ch] text-lg leading-[1.6] text-ink/90">{t.sobreMiCorto}</p>
-            <Link to="/curriculum" className="text-link mt-2">{t.verCurriculum}</Link>
-          </div>
-        </Reveal>
-      </section>
+      <AboutRing />
     </>
   )
 }

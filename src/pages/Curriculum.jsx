@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Car, Mail, MapPin, Phone, Printer, RotateCw } from 'lucide-react'
+import { Car, Download, Languages, Mail, MapPin, Phone, RotateCw } from 'lucide-react'
 import { InstagramIcon, LinkedInIcon } from '../components/BrandIcons'
 import RibbonBanner from '../components/RibbonBanner'
 import { useContent } from '../data/useContent'
@@ -74,7 +74,13 @@ function Entry({ date, title, href, role, desc }) {
         )}
       </h3>
       <p className="mt-0.5 text-[13px] font-medium text-ink/75">{role}</p>
-      {desc && <p className="mt-2 max-w-[60ch] text-[15px] leading-relaxed text-ink/75">{desc}</p>}
+      {Array.isArray(desc) ? (
+        <ul className="mt-2 max-w-[60ch] list-disc space-y-1 pl-4 text-[15px] leading-relaxed text-ink/75">
+          {desc.map((d) => <li key={d}>{d}</li>)}
+        </ul>
+      ) : (
+        desc && <p className="mt-2 max-w-[60ch] text-[15px] leading-relaxed text-ink/75">{desc}</p>
+      )}
     </li>
   )
 }
@@ -91,7 +97,7 @@ const Timeline = ({ items }) => (
 export default function Curriculum() {
   const { cv, img, site, skills } = useContent()
   const t = useUi()
-  const [loc, lic] = cv.personal
+  const [loc, lic, lang] = cv.personal
 
   const contact = [
     { icon: Mail, label: site.email, href: `mailto:${site.email}` },
@@ -103,13 +109,14 @@ export default function Curriculum() {
   return (
     <main className="cv-page mx-auto max-w-6xl px-4 pb-20 pt-8 sm:px-8 sm:pb-28 sm:pt-12">
       <div className="no-print mb-6 flex justify-end">
-        <button
-          type="button"
-          onClick={() => window.print()}
+        {/* El PDF vive en public/cv: al cambiarlo, basta con sustituir ese archivo con el mismo nombre */}
+        <a
+          href={`${import.meta.env.BASE_URL}cv/Lara-Marco-Simo-CV.pdf`}
+          download
           className="inline-flex min-h-11 items-center gap-2 border border-ink/25 px-5 text-sm font-semibold text-ink transition-colors hover:border-ink hover:text-ink"
         >
-          <Printer size={16} aria-hidden="true" /> {t.imprimir}
-        </button>
+          <Download size={16} aria-hidden="true" /> {t.imprimir}
+        </a>
       </div>
 
       <article className="cv-sheet overflow-hidden bg-surface ring-1 ring-edge">
@@ -153,18 +160,11 @@ export default function Curriculum() {
                 <li className="flex items-center gap-2.5">
                   <Car size={15} className="shrink-0 text-ink/75" aria-hidden="true" /> {t.carnet}: {lic.value}
                 </li>
-              </ul>
-            </section>
-
-            <section className="mt-8">
-              <Heading>{t.software}</Heading>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {skills.map((s) => (
-                  <li key={s.tool} className="flex items-center gap-1.5 bg-surface py-1 pl-1 pr-3 text-[13px] font-medium text-ink ring-1 ring-edge">
-                    <img src={img(`tools/${s.tool}`)} alt="" className="h-5 w-5" />
-                    {s.label}
+                {lang && (
+                  <li className="flex items-center gap-2.5">
+                    <Languages size={15} className="shrink-0 text-ink/75" aria-hidden="true" /> {lang.value}
                   </li>
-                ))}
+                )}
               </ul>
             </section>
 
@@ -188,7 +188,6 @@ export default function Curriculum() {
             <section>
               <Heading>{t.perfil}</Heading>
               <p className="mt-4 max-w-[60ch] text-[17px] leading-relaxed text-ink">{t.perfilCv}</p>
-              <p className="mt-2 text-[14px] text-ink/75">{cv.subtitle}</p>
             </section>
 
             <section>

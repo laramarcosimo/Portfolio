@@ -41,35 +41,32 @@ export const about = {
 
 // ---------- Currículum ----------
 export const cv = {
-  subtitle: 'Doble grado en diseño gráfico digital y publicidad',
+  subtitle: 'Publicista y diseñadora gráfica',
   personal: [
     { label: 'Ubicación', value: 'Santa Cruz de Tenerife' },
     { label: 'Carnet', value: 'B' },
+    { label: 'Idiomas', value: 'Inglés B1 (certificado de Oxford)' },
   ],
   education: [
-    { title: 'Doble grado en diseño gráfico digital y publicidad', date: '2022 - Hoy', role: 'Universidad Europea | Santa Cruz de Tenerife' },
-    { title: '1º Curso del grado en Tecnologías Interactivas', date: '2022', role: 'UPV | Valencia' },
+    { title: 'Doble grado en diseño gráfico digital y publicidad', date: '2022 – actualidad', role: 'Universidad Europea | Santa Cruz de Tenerife' },
   ],
   experience: [
-    {
-      title: 'Ageless Medicina Estética',
-      href: 'https://www.instagram.com/ageless.medicinaestetica?igsh=MXEzYXduYnBnYjVzcQ%3D%3D&utm_source=qr',
-      date: '2026',
-      role: 'Gestión de Redes Sociales',
-      desc: 'Gestión y estrategia de redes sociales para clínica de medicina estética.',
-    },
     {
       title: 'Arco Comunicación',
       href: 'https://arcocomunicacion.com/',
       date: '2025',
-      role: 'Prácticas Profesionales | Agencia de Publicidad',
-      desc: 'Desarrollo de piezas gráficas y apoyo en la ejecución de campañas publicitarias creativas.',
+      role: 'Diseñadora gráfica y creativa en prácticas | Agencia de publicidad, Santa Cruz de Tenerife',
+      desc: [
+        'Desarrollé identidades visuales y rebrandings, creando logotipos, key visuals y papelería corporativa.',
+        'Diseñé carteles, piezas publicitarias, mockups y contenidos animados para marcas del mercado canario.',
+        'Logré que 2 propuestas de diseño fueran aprobadas por el cliente.',
+      ],
     },
     {
-      title: 'Edición de podcast',
+      title: 'Edición de podcast «Desde Mi Experiencia»',
       href: 'https://www.youtube.com/@DesdeMiExperienciaPodcast?app=desktop',
       date: '2024',
-      role: 'Desde Mi Experiencia | Santa Cruz de Tenerife',
+      role: 'Santa Cruz de Tenerife',
       desc: 'Proyecto colaborativo asegurando una producción de audio de alta calidad y edición profesional.',
     },
   ],
