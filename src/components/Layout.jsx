@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
-import { MotionConfig } from 'framer-motion'
-import { Outlet, useLocation } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { MotionConfig, motion } from 'framer-motion'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import Navbar from './Navbar'
 import Footer from '../sections/Footer'
 import { useLanguage } from '../i18n/LanguageContext'
+import { EASE_EXPO } from '../lib/motion'
 
 const TITLES = {
   es: 'Lara Marco Simó — Portafolio',
@@ -36,16 +37,50 @@ function ScrollToTop() {
   return null
 }
 
+/** Paso entre páginas: la nueva entra con un fundido y una subida corta. La primera carga no se anima (ya tiene su entrada). */
+function PageTransition({ children }) {
+  const { pathname } = useLocation()
+  const first = useRef(true)
+  useEffect(() => {
+    first.current = false
+  }, [])
+  return (
+    <motion.div
+      key={pathname}
+      initial={first.current ? false : { opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, ease: EASE_EXPO }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+// Al abrir o recargar la web, siempre se empieza en Inicio y arriba del todo.
+function StartAtHome() {
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+    if (pathname !== '/') navigate('/', { replace: true })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return null
+}
+
 export default function Layout() {
   const { pathname } = useLocation()
   const isContact = pathname.replace(/\/$/, '') === '/contacto' // el cartel ya es el contacto
   return (
     <MotionConfig reducedMotion="user">
+      <StartAtHome />
       <ScrollToTop />
       <DocumentMeta />
       <Navbar />
-      <Outlet />
-      {!isContact && <Footer />}
+      <PageTransition>
+        <Outlet />
+        {!isContact && <Footer />}
+      </PageTransition>
     </MotionConfig>
   )
 }

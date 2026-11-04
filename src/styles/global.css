@@ -597,3 +597,4 @@
 .about--still .about-arc { position: static; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; width: auto; height: auto; margin-top: 1rem; }
 .about--still .about-card { position: static; }
 @media (max-width: 767px) { .about-stage { --w: 7.5rem; } .about-arc { --about-r: 36rem; } .about-text { font-size: 0.875rem; } }
+

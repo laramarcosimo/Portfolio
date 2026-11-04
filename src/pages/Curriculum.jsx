@@ -180,7 +180,7 @@ export default function Curriculum() {
               </ul>
             </section>
 
-            <img src={img('brand/monograma')} alt="" className="cv-mono mt-10 h-10 w-auto opacity-80" />
+            <img src={img('brand/monograma')} alt="" className="cv-mono mt-10 hidden h-10 w-auto opacity-80 lg:block" />
           </aside>
 
           {/* Columna principal */}
