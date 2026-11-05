@@ -5,7 +5,7 @@ import { img } from '../data/content'
 import { useContent } from '../data/useContent'
 import { useUi } from '../i18n/ui'
 
-const PHOTOS = ['about/color1', 'about/color2', 'about/color3', 'about/curiosa', 'about/color5', 'about/color6']
+const PHOTOS = ['about/color1', 'about/color2', 'about/color3', 'about/curiosa', 'about/color5', 'about/color6', 'about/creativa']
 const WHOLE = new Set(['about/curiosa']) // fotos con fondo blanco: se muestran enteras, sin recortar
 const STEP = 13 // grados entre tarjetas sobre el arco
 const RADIUS = 'var(--about-r)'

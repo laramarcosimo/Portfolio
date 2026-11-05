@@ -55,7 +55,7 @@ export const ui = {
     sobreMiCorto:
       'Estudio el doble grado en Diseño Gráfico Digital y Publicidad en la Universidad Europea. Combino identidad visual, tipografía y color con una estrategia de comunicación clara, y he trabajado en agencia creando piezas para campañas. Fuera del diseño, me encanta leer, casi siempre en mi e-book.',
     verCurriculum: 'Ver currículum',
-    aboutWords: ['Aprender', 'Crecer', 'Evolucionar', 'Curiosa', 'Lectora', 'Constante'],
+    aboutWords: ['Aprender', 'Crecer', 'Evolucionar', 'Curiosa', 'Lectora', 'Constante', 'Creativa'],
     perfilCv:
       'Estudio el doble grado en Diseño Gráfico Digital y Publicidad en la Universidad Europea. Combino identidad visual, tipografía y color con una estrategia de comunicación clara.',
     perfil: 'Perfil',
@@ -134,7 +134,7 @@ export const ui = {
     sobreMiCorto:
       'I am studying a double degree in Digital Graphic Design and Advertising at Universidad Europea. I combine visual identity, typography and colour with a clear communication strategy, and I have worked at an agency producing pieces for campaigns. Away from design, I love reading, usually on my e-reader.',
     verCurriculum: 'View CV',
-    aboutWords: ['Learn', 'Grow', 'Evolve', 'Curious', 'Reader', 'Consistent'],
+    aboutWords: ['Learn', 'Grow', 'Evolve', 'Curious', 'Reader', 'Consistent', 'Creative'],
     perfilCv:
       'I am studying a double degree in Digital Graphic Design and Advertising at Universidad Europea. I combine visual identity, typography and colour with a clear communication strategy.',
     perfil: 'Profile',
