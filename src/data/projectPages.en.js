@@ -30,9 +30,9 @@ export const projectPages = {
     cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/portada'), alt: 'Personal Brand cover' },
     context: 'Personal project',
     story: [
-      { key: 'partida', text: "My visual identity is the meeting point between who I am and what I do." },
-      { key: 'concepto', text: "The logo is born from the organic fusion of my initials (L, M and S), interwoven in a stroke that pays homage to my two great passions: the depth of reading and my passion for design." },
-      { key: 'resultado', text: "It is a design that seeks the perfect balance between dynamism and elegance, where every line flows to represent communication with purpose, soul and technical rigor." },
+      { key: 'partida', text: "I wanted a brand that spoke about me before anyone read my name." },
+      { key: 'concepto', text: "My initials L, M and S in a single stroke, like a wave and like the page of a book: reading and design, my two passions." },
+      { key: 'resultado', text: "A symbol that works on its own, in motion and on paper, with a palette of blues and lavender I now use everywhere, this website included." },
     ],
     videos: { single: marcaExplicacion, wide: marcaFondo, pair: [marcaLogoBlanco, marcaLogoAzul] },
     colors: [
@@ -57,17 +57,34 @@ export const projectPages = {
         logos: [ph('marca-personal/logo-azul', 'Blue Logo'), ph('marca-personal/logo-blanco', 'White Logo')],
       },
     ],
-    typography: {
-      title: 'Quicksand',
-      chars: alphabet,
-      extra: '1234567890!@#$%*',
-      weights: [
-        { label: 'Bold', weight: 700, family: "'Quicksand'" },
-        { label: 'SemiBold', weight: 600, family: "'Quicksand'" },
-        { label: 'Medium', weight: 500, family: "'Quicksand'" },
-        { label: 'Regular', weight: 400, family: "'Quicksand'" },
-        { label: 'Light', weight: 300, family: "'Quicksand'" },
+    typographyPair: [
+      {
+        title: 'Quicksand',
+        chars: alphabet,
+        extra: '1234567890!@#$%*',
+        weights: [
+          { label: 'Bold', weight: 700, family: "'Quicksand'" },
+          { label: 'SemiBold', weight: 600, family: "'Quicksand'" },
+          { label: 'Medium', weight: 500, family: "'Quicksand'" },
+          { label: 'Regular', weight: 400, family: "'Quicksand'" },
+          { label: 'Light', weight: 300, family: "'Quicksand'" },
+        ],
+      },      {
+        title: 'Cormorant Garamond',
+        chars: alphabet,
+        extra: '1234567890!@#$%*',
+        weights: [
+          { label: 'SemiBold Italic', weight: 600, style: 'italic', family: "'Cormorant Garamond'" },
+          { label: 'Bold Italic', weight: 700, style: 'italic', family: "'Cormorant Garamond'" },
+        ],
+      }
+    ],
+    typeGuide: {
+      rows: [
+        { use: 'Headlines', sample: 'Idea and heart', font: 'Cormorant Garamond Italic', detail: 'SemiBold for large · Bold for small', face: { fontFamily: "'Cormorant Garamond'", fontStyle: 'italic', fontWeight: 600 } },
+        { use: 'Text', sample: 'Clarity in every detail', font: 'Quicksand', detail: 'Paragraphs, buttons and details', face: { fontFamily: "'Quicksand'", fontWeight: 600 } },
       ],
+      why: 'They contrast in stroke and share the softness of their curves, like the symbol.',
     },
     shots: {
       libretas: ph('marca-personal/libretas', 'Notebooks'),
@@ -78,6 +95,12 @@ export const projectPages = {
       patronAzul: { src: patronAzul, alt: 'Blue brand pattern', tile: '#FFFFFF' },
       patronBlanco: { src: patronBlanco, alt: 'White brand pattern', tile: '#192A56' },
     },
+    usage: { main: img('marca-personal/logo-azul-trim'), versions: [
+      { kind: 'positivo', bg: '#FFFFFF', src: img('marca-personal/logo-azul-trim') },
+      { kind: 'negativo', bg: '#192A56', src: img('marca-personal/logo-blanco-trim') },
+      { kind: 'color', bg: '#9690E4', src: img('marca-personal/logo-blanco-trim') },
+      { kind: 'tinta', bg: '#FFFFFF', ink: '#192A56', src: img('marca-personal/logo-azul-trim') },
+    ] },
     tools: ['illustrator', 'photoshop', 'after-effects'],
   },
 
@@ -87,8 +110,9 @@ export const projectPages = {
     cover: { desktop: img('identidad-visual/portada-interior'), mobile: img('identidad-visual/portada-interior'), alt: 'Visual Identity inner cover' },
     context: 'Commission · Personal brand for an engineer',
     story: [
-      { key: 'concepto', text: "This identity is born from the integration of the engineer's initials, designed under a concept of interconnectivity." },
-      { key: 'resultado', text: "The result is a minimalist, structured monogram that reflects the ability to solve complex problems through clean solutions, giving his personal brand a solid, professional visual foundation." },
+      { key: 'reto', text: "An engineer needed a serious personal brand that conveyed precision without feeling cold." },
+      { key: 'concepto', text: "His initials connected like parts of a system, each stroke resting on the one before." },
+      { key: 'resultado', text: "A clean monogram that works from a mug to his website, in black, white and a green that gives it character." },
     ],
     videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro] },
     colors: [
@@ -114,17 +138,26 @@ export const projectPages = {
         logos: [ph('identidad-visual/logotipo-negro', 'Black Logo')],
       },
     ],
-    typography: {
-      title: 'Fieldwork',
-      chars: alphabet,
-      extra: '1234567890!@#$%*',
-      weights: [
-        { label: 'Geo Bold', weight: 600, family: "'Fieldwork Geo'" },
-        { label: 'Hum Regular', weight: 400, family: "'Fieldwork Hum'" },
-        { label: 'Hum Light', weight: 300, family: "'Fieldwork Hum'" },
-        { label: 'Hum Hair', weight: 100, family: "'Fieldwork Hum'" },
-      ],
-    },
+    typographyPair: [
+      {
+        title: 'Fieldwork Geo',
+        chars: alphabet,
+        extra: '1234567890!@#$%*',
+        weights: [
+          { label: 'Bold', weight: 600, family: "'Fieldwork Geo'" },
+        ],
+      },
+      {
+        title: 'Fieldwork Hum',
+        chars: alphabet,
+        extra: '1234567890!@#$%*',
+        weights: [
+          { label: 'Regular', weight: 400, family: "'Fieldwork Hum'" },
+          { label: 'Light', weight: 300, family: "'Fieldwork Hum'" },
+          { label: 'Hair', weight: 100, family: "'Fieldwork Hum'" },
+        ],
+      },
+    ],
     shots: {
       tarjeta: ph('identidad-visual/tarjeta', 'Business Card'),
       boligrafo: ph('identidad-visual/boligrafo', 'Pen'),
@@ -132,6 +165,12 @@ export const projectPages = {
       taza: ph('identidad-visual/taza', 'Mug'),
       web: ph('identidad-visual/web', 'Jaime Website'),
     },
+    usage: { main: img('identidad-visual/logotipo-negro-trim'), versions: [
+      { kind: 'positivo', bg: '#FFFFFF', src: img('identidad-visual/logotipo-negro-trim') },
+      { kind: 'negativo', bg: '#000000', src: img('identidad-visual/logotipo-blanco-trim') },
+      { kind: 'color', bg: '#00C896', src: img('identidad-visual/logotipo-negro-trim') },
+      { kind: 'tinta', bg: '#FFFFFF', ink: '#00A07A', src: img('identidad-visual/logotipo-negro-trim') },
+    ] },
     tools: ['illustrator', 'photoshop', 'after-effects'],
     webTools: ['UI', 'UX', 'AI'],
     link: 'https://jaimemartglez.vercel.app',
@@ -143,9 +182,9 @@ export const projectPages = {
     cover: { desktop: img('casa-ricardo/logo'), mobile: img('casa-ricardo/logo'), alt: 'Casa Ricardo cover', contain: true },
     context: 'Internship at Arco Comunicación · 2025',
     story: [
-      { key: 'reto', text: "During my internship I worked on redesigning the visual identity of Casa Ricardo, a shop selling sweets and nuts. The goal was to modernise the logo without losing the brand's close, traditional essence." },
-      { key: 'proceso', text: "Legibility, composition and adaptation to different formats were improved." },
-      { key: 'resultado', text: "The result was a more current, cleaner image while keeping the business's recognisable personality." },
+      { key: 'reto', text: "During my internship at Arco I was asked to modernise the logo of Casa Ricardo, a sweets and nuts shop, without its regular customers losing sight of it." },
+      { key: 'proceso', text: "I simplified the composition, improved legibility and adapted it to everything: bags, stickers, billboard and street poster." },
+      { key: 'resultado', text: "A cleaner, more current image that still feels like the one they have always known." },
     ],
     comparison: { old: ph('casa-ricardo/logo-viejo', 'Old Casa Ricardo Logo'), new: ph('casa-ricardo/logo', 'New Casa Ricardo Logo'), before: 'Before', after: 'After' },
     colors: [
@@ -198,6 +237,12 @@ export const projectPages = {
       valla: ph('casa-ricardo/valla', 'Casa Ricardo Billboard'),
       mupi: ph('casa-ricardo/mupi', 'Casa Ricardo Street Poster'),
     },
+    usage: { main: img('casa-ricardo/logo-trim'), versions: [
+      { kind: 'positivo', bg: '#FFFFFF', src: img('casa-ricardo/logo-trim') },
+      { kind: 'color', bg: '#DB251E', src: img('casa-ricardo/logo-trim') },
+      { kind: 'color', bg: '#0032A0', src: img('casa-ricardo/logo-trim') },
+      { kind: 'color', bg: '#DDAA55', src: img('casa-ricardo/logo-trim') },
+    ] },
     tools: ['illustrator', 'photoshop'],
     typekit: 'https://use.typekit.net/sjx7ptx.css',
   },

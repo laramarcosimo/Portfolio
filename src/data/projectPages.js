@@ -23,11 +23,12 @@ const labels = { story: 'Historia', brand: 'Sistema de marca', logo: 'Logotipo',
 // Tipografía de cada página de proyecto: `body` para el texto y `heading` para los títulos.
 // Toda la web usa Quicksand salvo estas páginas, que usan la tipografía del propio proyecto.
 const Q = "'Quicksand', sans-serif"
+const S = "'Cormorant Garamond', 'Quicksand', sans-serif" // titulares de la marca de Lara
 export const projectFonts = {
-  'marca-personal': { body: Q, heading: Q },
+  'marca-personal': { body: Q, heading: S },
   'identidad-visual': { body: "'Fieldwork Hum', 'Quicksand', sans-serif", heading: "'Fieldwork Geo', 'Quicksand', sans-serif" },
   'casa-ricardo': { body: "'depot-new-condensed-web', 'Quicksand', sans-serif", heading: "'ella-roman', 'Quicksand', serif" },
-  'proyecto-video': { body: Q, heading: Q },
+  'proyecto-video': { body: Q, heading: S },
 }
 
 export const projectPages = {
@@ -37,9 +38,9 @@ export const projectPages = {
     cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/portada'), alt: 'Portada Marca Personal' },
     context: 'Proyecto personal',
     story: [
-      { key: 'partida', text: "Mi identidad visual es el punto de encuentro entre quién soy y lo que hago." },
-      { key: 'concepto', text: "El logotipo nace de la fusión orgánica de mis iniciales (L, M y S), entrelazadas en un trazo que rinde homenaje a mis dos grandes pasiones: la profundidad de la lectura y la pasión por el diseño." },
-      { key: 'resultado', text: "Es un diseño que busca el equilibrio perfecto entre dinamismo y elegancia, donde cada línea fluye para representar una comunicación con propósito, alma y rigor técnico." },
+      { key: 'partida', text: "Quería una marca que hablara de mí antes de leer mi nombre." },
+      { key: 'concepto', text: "Mis iniciales L, M y S en un solo trazo, como una ola y como la página de un libro: lectura y diseño, mis dos pasiones." },
+      { key: 'resultado', text: "Un símbolo que funciona solo, en movimiento y en papel, con una paleta de azules y lavanda que ya uso en todo, incluida esta web." },
     ],
     videos: { single: marcaExplicacion, wide: marcaFondo, pair: [marcaLogoBlanco, marcaLogoAzul] },
     colors: [
@@ -64,17 +65,34 @@ export const projectPages = {
         logos: [ph('marca-personal/logo-azul', 'Logo Azul'), ph('marca-personal/logo-blanco', 'Logo Blanco')],
       },
     ],
-    typography: {
-      title: 'Quicksand',
-      chars: alphabet,
-      extra: '1234567890!@#$%*',
-      weights: [
-        { label: 'Bold', weight: 700, family: "'Quicksand'" },
-        { label: 'SemiBold', weight: 600, family: "'Quicksand'" },
-        { label: 'Medium', weight: 500, family: "'Quicksand'" },
-        { label: 'Regular', weight: 400, family: "'Quicksand'" },
-        { label: 'Light', weight: 300, family: "'Quicksand'" },
+    typographyPair: [
+      {
+        title: 'Quicksand',
+        chars: alphabet,
+        extra: '1234567890!@#$%*',
+        weights: [
+          { label: 'Bold', weight: 700, family: "'Quicksand'" },
+          { label: 'SemiBold', weight: 600, family: "'Quicksand'" },
+          { label: 'Medium', weight: 500, family: "'Quicksand'" },
+          { label: 'Regular', weight: 400, family: "'Quicksand'" },
+          { label: 'Light', weight: 300, family: "'Quicksand'" },
+        ],
+      },      {
+        title: 'Cormorant Garamond',
+        chars: alphabet,
+        extra: '1234567890!@#$%*',
+        weights: [
+          { label: 'SemiBold Italic', weight: 600, style: 'italic', family: "'Cormorant Garamond'" },
+          { label: 'Bold Italic', weight: 700, style: 'italic', family: "'Cormorant Garamond'" },
+        ],
+      }
+    ],
+    typeGuide: {
+      rows: [
+        { use: 'Titulares', sample: 'Idea y corazón', font: 'Cormorant Garamond Italic', detail: 'SemiBold en los grandes · Bold en los pequeños', face: { fontFamily: "'Cormorant Garamond'", fontStyle: 'italic', fontWeight: 600 } },
+        { use: 'Texto', sample: 'Claridad en cada dato', font: 'Quicksand', detail: 'Párrafos, botones y datos', face: { fontFamily: "'Quicksand'", fontWeight: 600 } },
       ],
+      why: 'Contrastan en el trazo y comparten la suavidad de las curvas, como el símbolo.',
     },
     shots: {
       libretas: ph('marca-personal/libretas', 'Libretas'),
@@ -85,6 +103,12 @@ export const projectPages = {
       patronAzul: { src: patronAzul, alt: 'Patrón azul de la marca', tile: '#FFFFFF' },
       patronBlanco: { src: patronBlanco, alt: 'Patrón blanco de la marca', tile: '#192A56' },
     },
+    usage: { main: img('marca-personal/logo-azul-trim'), versions: [
+      { kind: 'positivo', bg: '#FFFFFF', src: img('marca-personal/logo-azul-trim') },
+      { kind: 'negativo', bg: '#192A56', src: img('marca-personal/logo-blanco-trim') },
+      { kind: 'color', bg: '#9690E4', src: img('marca-personal/logo-blanco-trim') },
+      { kind: 'tinta', bg: '#FFFFFF', ink: '#192A56', src: img('marca-personal/logo-azul-trim') },
+    ] },
     tools: ['illustrator', 'photoshop', 'after-effects'],
   },
 
@@ -94,8 +118,9 @@ export const projectPages = {
     cover: { desktop: img('identidad-visual/portada-interior'), mobile: img('identidad-visual/portada-interior'), alt: 'Portada Interior Identidad Visual' },
     context: 'Encargo · Marca personal de un ingeniero',
     story: [
-      { key: 'concepto', text: "Esta identidad nace de la integración de las iniciales del ingeniero, diseñadas bajo un concepto de interconectividad." },
-      { key: 'resultado', text: "El resultado es un monograma minimalista y estructurado que refleja la capacidad de resolver problemas complejos a través de soluciones limpias, aportando una base visual sólida y profesional a su marca personal." },
+      { key: 'reto', text: "Un ingeniero necesitaba una marca personal seria, que transmitiera precisión sin parecer fría." },
+      { key: 'concepto', text: "Sus iniciales conectadas como piezas de un sistema, cada trazo apoyado en el anterior." },
+      { key: 'resultado', text: "Un monograma limpio que funciona desde una taza hasta su web, en negro, blanco y un verde que le da carácter." },
     ],
     videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro] },
     colors: [
@@ -121,17 +146,26 @@ export const projectPages = {
         logos: [ph('identidad-visual/logotipo-negro', 'Logotipo Negro')],
       },
     ],
-    typography: {
-      title: 'Fieldwork',
-      chars: alphabet,
-      extra: '1234567890!@#$%*',
-      weights: [
-        { label: 'Geo Bold', weight: 600, family: "'Fieldwork Geo'" },
-        { label: 'Hum Regular', weight: 400, family: "'Fieldwork Hum'" },
-        { label: 'Hum Light', weight: 300, family: "'Fieldwork Hum'" },
-        { label: 'Hum Hair', weight: 100, family: "'Fieldwork Hum'" },
-      ],
-    },
+    typographyPair: [
+      {
+        title: 'Fieldwork Geo',
+        chars: alphabet,
+        extra: '1234567890!@#$%*',
+        weights: [
+          { label: 'Bold', weight: 600, family: "'Fieldwork Geo'" },
+        ],
+      },
+      {
+        title: 'Fieldwork Hum',
+        chars: alphabet,
+        extra: '1234567890!@#$%*',
+        weights: [
+          { label: 'Regular', weight: 400, family: "'Fieldwork Hum'" },
+          { label: 'Light', weight: 300, family: "'Fieldwork Hum'" },
+          { label: 'Hair', weight: 100, family: "'Fieldwork Hum'" },
+        ],
+      },
+    ],
     shots: {
       tarjeta: ph('identidad-visual/tarjeta', 'Tarjeta de Visita'),
       boligrafo: ph('identidad-visual/boligrafo', 'Bolígrafo'),
@@ -139,6 +173,12 @@ export const projectPages = {
       taza: ph('identidad-visual/taza', 'Taza'),
       web: ph('identidad-visual/web', 'Web Jaime'),
     },
+    usage: { main: img('identidad-visual/logotipo-negro-trim'), versions: [
+      { kind: 'positivo', bg: '#FFFFFF', src: img('identidad-visual/logotipo-negro-trim') },
+      { kind: 'negativo', bg: '#000000', src: img('identidad-visual/logotipo-blanco-trim') },
+      { kind: 'color', bg: '#00C896', src: img('identidad-visual/logotipo-negro-trim') },
+      { kind: 'tinta', bg: '#FFFFFF', ink: '#00A07A', src: img('identidad-visual/logotipo-negro-trim') },
+    ] },
     tools: ['illustrator', 'photoshop', 'after-effects'],
     webTools: ['UI', 'UX', 'AI'],
     link: 'https://jaimemartglez.vercel.app',
@@ -150,9 +190,9 @@ export const projectPages = {
     cover: { desktop: img('casa-ricardo/logo'), mobile: img('casa-ricardo/logo'), alt: 'Portada Casa Ricardo', contain: true },
     context: 'Prácticas en Arco Comunicación · 2025',
     story: [
-      { key: 'reto', text: "Durante mis prácticas trabajé en el rediseño de la identidad visual de Casa Ricardo, una tienda de chuches y frutos secos. El objetivo era modernizar el logotipo sin perder la esencia cercana y tradicional de la marca." },
-      { key: 'proceso', text: "Se mejoró la legibilidad, la composición y su adaptación a distintos formatos." },
-      { key: 'resultado', text: "El resultado fue una imagen más actual y limpia, manteniendo la personalidad reconocible del negocio." },
+      { key: 'reto', text: "En mis prácticas en Arco me encargaron modernizar el logo de Casa Ricardo, una tienda de chuches y frutos secos, sin que sus clientes de siempre dejaran de reconocerla." },
+      { key: 'proceso', text: "Simplifiqué la composición, mejoré la legibilidad y lo adapté a todo: bolsas, pegatinas, valla y mupi." },
+      { key: 'resultado', text: "Una imagen más actual y limpia que sigue siendo «la de siempre»." },
     ],
     comparison: { old: ph('casa-ricardo/logo-viejo', 'Logo Viejo Casa Ricardo'), new: ph('casa-ricardo/logo', 'Logo Nuevo Casa Ricardo'), before: 'Antes', after: 'Después' },
     colors: [
@@ -205,6 +245,12 @@ export const projectPages = {
       valla: ph('casa-ricardo/valla', 'Valla Casa Ricardo'),
       mupi: ph('casa-ricardo/mupi', 'MUPI Casa Ricardo'),
     },
+    usage: { main: img('casa-ricardo/logo-trim'), versions: [
+      { kind: 'positivo', bg: '#FFFFFF', src: img('casa-ricardo/logo-trim') },
+      { kind: 'color', bg: '#DB251E', src: img('casa-ricardo/logo-trim') },
+      { kind: 'color', bg: '#0032A0', src: img('casa-ricardo/logo-trim') },
+      { kind: 'color', bg: '#DDAA55', src: img('casa-ricardo/logo-trim') },
+    ] },
     tools: ['illustrator', 'photoshop'],
     typekit: 'https://use.typekit.net/sjx7ptx.css',
   },
