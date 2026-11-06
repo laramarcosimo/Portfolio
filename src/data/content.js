@@ -119,7 +119,7 @@ export const projects = [
   { slug: 'marca-personal', number: '01', name: 'Marca Personal', cover: img('marca-personal/portada'), hero: img('marca-personal/libretas'), heroAlt: 'Libretas de la marca personal en marino, lavanda y azul cielo', concept: 'Un monograma que entrelaza las iniciales L, M y S.' },
   { slug: 'identidad-visual', number: '02', name: 'Identidad Visual', cover: img('identidad-visual/portada'), hero: img('identidad-visual/tarjeta'), heroAlt: 'Tarjetas de visita con el monograma JMG', concept: 'Monograma minimalista para la marca personal de un ingeniero.' },
   { slug: 'casa-ricardo', number: '03', name: 'Casa Ricardo', cover: img('casa-ricardo/portada'), hero: img('casa-ricardo/packaging-delante'), heroAlt: 'Packaging de frutos secos Casa Ricardo', concept: 'Rediseño de la identidad de una tienda de chuches y frutos secos.' },
-  { slug: 'proyecto-video', number: '04', name: 'Proyecto de Vídeo', cover: img('video/portada'), hero: img('video/portada'), heroAlt: 'Portada del videoclip SloMo × Lola Índigo', concept: 'Videoclip que une «SloMo» de Chanel con el baile de Lola Índigo.' },
+  { slug: 'proyecto-video', number: '04', name: 'SloMo × Lola Índigo', cover: img('video/portada'), hero: img('video/portada'), heroAlt: 'Portada del videoclip SloMo × Lola Índigo', concept: 'Videoclip que une «SloMo» de Chanel con el baile de Lola Índigo.' },
 ]
 
 // Disciplina de cada proyecto (deducida del texto de cada página de proyecto)

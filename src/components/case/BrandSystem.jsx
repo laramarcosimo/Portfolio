@@ -38,10 +38,12 @@ export default function BrandSystem({ slug, page, parts, specimens, t }) {
     <section className="cs-section">
       <div className="cs-wrap">
         <h2 className="cs-heading">{L.brand}</h2>
-        <div className="cs-block">
-          <h3 className="cs-label">{L.logo}</h3>
-          <ShowcaseGrid blocks={parts.logo} />
-        </div>
+        {parts.logo.length > 0 && (
+          <div className="cs-block">
+            <h3 className="cs-label">{L.logo}</h3>
+            <ShowcaseGrid blocks={parts.logo} />
+          </div>
+        )}
         <div className="cs-block">
           <h3 className="cs-label">{t.color}</h3>
           <Rise className={`cs-palette${parts.swatch ? ` cs-palette--${parts.swatch}` : ''}`}>

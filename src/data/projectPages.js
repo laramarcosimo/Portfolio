@@ -148,7 +148,7 @@ export const projectPages = {
     labels,
     title: 'Casa Ricardo',
     cover: { desktop: img('casa-ricardo/logo'), mobile: img('casa-ricardo/logo'), alt: 'Portada Casa Ricardo', contain: true },
-    context: 'Prácticas',
+    context: 'Prácticas en Arco Comunicación · 2025',
     story: [
       { key: 'reto', text: "Durante mis prácticas trabajé en el rediseño de la identidad visual de Casa Ricardo, una tienda de chuches y frutos secos. El objetivo era modernizar el logotipo sin perder la esencia cercana y tradicional de la marca." },
       { key: 'proceso', text: "Se mejoró la legibilidad, la composición y su adaptación a distintos formatos." },
@@ -211,7 +211,7 @@ export const projectPages = {
 
   'proyecto-video': {
     labels,
-    title: 'Proyecto Video',
+    title: 'SloMo × Lola Índigo',
     context: 'Proyecto audiovisual',
     intro: { lead: 'SloMo × Lola Índigo.', text: 'Reinterpretación audiovisual nacida de la unión entre la música de Chanel y el universo visual de Lola Índigo para crear un nuevo videoclip.' },
     video: videoLola,

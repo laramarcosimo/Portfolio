@@ -6,6 +6,8 @@ import ProjectHeader from '../components/case/ProjectHeader'
 import ProjectNavigation from '../components/case/ProjectNavigation'
 import ProjectStory from '../components/case/ProjectStory'
 import ShowcaseGrid from '../components/case/ShowcaseGrid'
+import BeforeAfter from '../components/case/BeforeAfter'
+import { Link } from 'react-router-dom'
 import { composeProject } from '../data/projectsData'
 import { useContent, useProjectPages } from '../data/useContent'
 import { useUi } from '../i18n/ui'
@@ -41,7 +43,7 @@ export default function ProjectPage() {
   const vars = { '--font-sans': fonts.body, '--font-serif': fonts.heading, '--font-display': fonts.heading, '--cs-heading': fonts.heading, '--cs-heading-weight': HEADING_WEIGHT[slug] ?? 700 }
   const name = project?.name ?? page.title
   const parts = composeProject(slug, page, project, t)
-  const paragraphs = page.video ? [page.intro.lead, page.intro.text] : page.story.map((s) => s.text)
+  const paragraphs = page.video ? [page.intro.lead, page.intro.text] : page.story
   const specimens = page.typographyPair ?? (page.typography ? [page.typography] : [])
   const L = page.labels
 
@@ -49,11 +51,19 @@ export default function ProjectPage() {
     <MotionConfig reducedMotion="user">
       <main className="cs" style={vars} data-project={slug}>
         <ProjectHeader name={name} project={project} page={page} hero={parts.hero} toolLabels={toolLabels} t={t} />
-        <ProjectStory title={L.story} paragraphs={paragraphs} band={parts.band} />
+        <ProjectStory title={L.story} paragraphs={paragraphs} band={parts.band} keys={t.storyKeys} />
+        {page.comparison && <BeforeAfter cmp={page.comparison} label={t.antesDespues} />}
         {parts.logo && <BrandSystem slug={slug} page={page} parts={parts} specimens={specimens} t={t} />}
         <section className="cs-section">
           <div className="cs-wrap"><h2 className="cs-heading">{L.applications}</h2></div>
           <div className="cs-wrap cs-block"><ShowcaseGrid blocks={parts.applications} /></div>
+        </section>
+        <section className="cs-section cs-cta">
+          <div className="cs-wrap">
+            <h2 className="cs-heading">{t.cierreTitulo}</h2>
+            <p className="cs-text">{t.cierreTexto}</p>
+            <Link to="/contacto" className="cs-cta-btn">{t.cierreBoton}</Link>
+          </div>
         </section>
         <ProjectNavigation slug={slug} projects={projects} t={t} />
       </main>

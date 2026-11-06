@@ -52,9 +52,7 @@ export function composeProject(slug, page, project, t) {
       band: page.colors[2],
       swatch: 'logo',
       hero: shot(s.tarjeta, SIZE.tarjetaCasa),
-      logo: [
-        logos(mark(cmp.old, '#FFFFFF', SIZE.logoViejo, cmp.before), { ...mark(cmp.new, '#DB251E', SIZE.logoCasa, cmp.after), scale: 1.75 }),
-      ],
+      logo: [], // el antes y después va en el comparador grande, tras la historia
       logoSize: SIZE.logoCasa,
       applications: [
         grid(shot(s.packagingDelante, SIZE.packaging), shot(s.packagingDetras, SIZE.packaging), shot(s.valla, SIZE.valla), shot(s.mupi, SIZE.mupi)),

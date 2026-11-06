@@ -29,11 +29,11 @@ export default function HomeTop() {
 
         <div className="home-head">
           <div ref={introRef} className="lg:col-span-2">
-            <motion.h1 ref={nameRef} {...enter(0)} className="home-name">{site.name}</motion.h1>
-            <motion.p {...enter(0.1)} className="home-statement">{t.statement}</motion.p>
+            <motion.h1 ref={nameRef} {...enter(0)} className="home-name"><span className="home-hello">{t.hola}</span> {site.name}</motion.h1>
+            <motion.p {...enter(0.1)} className="home-statement">{t.statement[0]}<mark className="home-mark">{t.statement[1]}</mark>{t.statement[2]}</motion.p>
           </div>
           <motion.div {...enter(0.2)} className="home-brief">
-            <figure className="portrait home-photo">
+            <figure className="portrait home-photo home-polaroid">
               <img src={img('about/retrato')} alt={site.name} />
             </figure>
             <div className="min-w-0">

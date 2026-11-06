@@ -141,7 +141,7 @@ export const projectPages = {
     labels,
     title: 'Casa Ricardo',
     cover: { desktop: img('casa-ricardo/logo'), mobile: img('casa-ricardo/logo'), alt: 'Casa Ricardo cover', contain: true },
-    context: 'Internship',
+    context: 'Internship at Arco Comunicación · 2025',
     story: [
       { key: 'reto', text: "During my internship I worked on redesigning the visual identity of Casa Ricardo, a shop selling sweets and nuts. The goal was to modernise the logo without losing the brand's close, traditional essence." },
       { key: 'proceso', text: "Legibility, composition and adaptation to different formats were improved." },
@@ -204,7 +204,7 @@ export const projectPages = {
 
   'proyecto-video': {
     labels,
-    title: 'Video Project',
+    title: 'SloMo × Lola Índigo',
     context: 'Audiovisual project',
     intro: { lead: 'SloMo × Lola Índigo.', text: "Audiovisual reinterpretation born from the union of Chanel's music and Lola Índigo's visual universe to create a new music video." },
     video: videoLola,
