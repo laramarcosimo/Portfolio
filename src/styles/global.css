@@ -599,8 +599,6 @@
 .about--still .about-stage { height: auto; }
 .about--still .about-arc { position: static; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; width: auto; height: auto; margin-top: 1rem; }
 .about--still .about-card { position: static; }
-/* En tablet el arco es más cerrado: las tarjetas laterales bajan más y necesitan sitio antes del texto */
-@media (min-width: 768px) and (max-width: 1279px) { .about-stage { height: calc(var(--w) * 1.75 + 5.5rem); } }
 @media (max-width: 767px) { .about-stage { --w: 7.5rem; } .about-arc { --about-r: 36rem; } .about-text { font-size: 0.875rem; } }
 
 
@@ -735,3 +733,7 @@
 .manual-pages { display: grid; gap: clamp(0.75rem, 2vw, 1.5rem); }
 .manual-page { display: block; width: 100%; height: auto; border-radius: 0.375rem; box-shadow: 0 6px 24px rgb(15 27 60 / 0.12); background: #fff; }
 
+
+
+/* Carpeta abierta en escritorio, como en el móvil: las portadas por delante del bolsillo (al cerrar vuelven a entrar) */
+@media (min-width: 768px) { .lift-covers { z-index: 3; transition: clip-path 0.7s cubic-bezier(0.33, 1, 0.68, 1); } .lift-layer.lift-front { z-index: 2; } .lift-close, .lift-info { z-index: 5; } }

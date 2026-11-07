@@ -738,12 +738,15 @@ function stageLayout({ W, H, nav }, geo, infoH, active) {
   const flapRight = fy + geo.frontTop * S
   const flapLeft = flapRight + geo.cut * S
   const top = 12
-  const baseline = flapLeft + 6 * S // la activa entra en el bolsillo aunque la solapa baje hacia la izquierda
+  // Escritorio, como en el móvil: las portadas quedan por delante del bolsillo y la activa baja casi hasta el fondo de la carpeta
+  const wide = W >= 768
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
+  const baseline = wide ? fy + geo.h * S - (3.75 * rem + 12) * S : flapLeft + 6 * S // en móvil la activa entra en el bolsillo
   const cx = W / 2
   const ang = many ? 8 : 10
   const rad = (ang * Math.PI) / 180
   const boxes = geo.sheets.map((s) => {
-    const ch = Math.min(baseline - top, (fw * (n > 1 ? 0.86 : 0.92)) / s.aspect)
+    const ch = Math.min(baseline - top - (wide ? 3 * rem * S : 0), (fw * (wide ? 0.62 : n > 1 ? 0.86 : 0.92)) / s.aspect)
     return { ch, cw: ch * s.aspect }
   })
   const reach = (b, k) => ({
@@ -767,10 +770,11 @@ function stageLayout({ W, H, nav }, geo, infoH, active) {
 }
 
 /** Corte de las portadas, en coordenadas de la carpeta: su borde inferior es la línea inclinada de la solapa, 2 px dentro de ella. */
-function clipOf(geo) {
+// `free`: el corte baja hasta el borde inferior de la carpeta, nunca más: las hojas no se salen del marco. Mismos puntos en ambos casos para que el corte se pueda animar.
+function clipOf(geo, free = false) {
   const far = 4000
-  const right = geo.frontTop + 2
-  const left = right + geo.cut
+  const right = free ? geo.h : geo.frontTop + 2
+  const left = free ? geo.h : right + geo.cut
   return `polygon(${-far}px ${-far}px, ${geo.w + far}px ${-far}px, ${geo.w + far}px ${right}px, ${geo.w}px ${right}px, 0px ${left}px, ${-far}px ${left}px)`
 }
 
@@ -1079,7 +1083,7 @@ function FolderLift({ group, items, level, geo: firstGeo, button, open, reduce, 
         <span className="folder lift-layer lift-back" aria-hidden="true" onClick={onClose}>
           <FolderFace group={group} count={n} />
         </span>
-        <div className="lift-covers" style={{ clipPath: clipOf(geo) }}>
+        <div className="lift-covers" style={{ clipPath: clipOf(geo, open && window.innerWidth >= 768) }}>
           {ready &&
             items.map((p, i) => {
               const c = stage.covers[i]
@@ -1127,7 +1131,8 @@ function FolderLift({ group, items, level, geo: firstGeo, button, open, reduce, 
             })}
         </div>
         <span className="folder lift-layer lift-front" aria-hidden="true">
-          <span className="folder-front" onClick={onClose}>
+          {/* El bolsillo de la capa, a la misma altura que el de la carpeta de la fila: al cambiar una por otra, la solapa no salta */}
+          <span className="folder-front" style={{ top: geo.frontTop }} onClick={onClose}>
             <span className="folder-flap">
               <span className="folder-waves" aria-hidden="true" />
             </span>

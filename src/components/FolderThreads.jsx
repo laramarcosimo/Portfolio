@@ -100,15 +100,18 @@ export default function FolderThreads({ rootRef, nameRef, blockRef }) {
     <svg width={box.w} height={box.h} viewBox={`0 0 ${box.w} ${box.h}`} className="folder-threads pointer-events-none absolute inset-0" aria-hidden="true">
       {box.threads.map(({ d }, i) => (
         <g key={LINES[i]} className="home-line" style={{ opacity: hovered === i || opened === i ? 1 : 0.8 }}>
+          {/* El trazado también se anima: cuando la carpeta vuelve a su sitio, el hilo sube con ella en vez de saltar */}
           <motion.path
-            d={d}
             fill="none"
             style={{ stroke: LINES[i] }}
             strokeWidth={1.75}
             strokeLinecap="round"
-            initial={reduce || introPlayed ? false : { pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 0.75, delay: 0.3 + i * 0.06, ease: EASE_EXPO }}
+            initial={reduce || introPlayed ? { d } : { pathLength: 0, d }}
+            animate={{ pathLength: 1, d }}
+            transition={{
+              pathLength: { duration: 0.75, delay: 0.3 + i * 0.06, ease: EASE_EXPO },
+              d: { duration: reduce ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] },
+            }}
           />
         </g>
       ))}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { img } from '../data/content'
@@ -39,6 +39,44 @@ export default function AboutRing() {
   const t = useUi()
   const reduce = useReducedMotion()
   const ref = useRef(null)
+  const stageRef = useRef(null)
+  const copyRef = useRef(null)
+  useLayoutEffect(() => {
+    const stage = stageRef.current
+    const copy = copyRef.current
+    if (!stage || !copy || reduce) return undefined
+    const fit = () => {
+      const arc = stage.querySelector('.about-arc')
+      const card = stage.querySelector('.about-card')
+      if (!arc || !card) return
+      const w = card.offsetWidth
+      const h = card.offsetHeight
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
+      const R = arc.offsetTop - (w * 0.8 + rem) // top del arco = about-top + radio
+      const cy = -0.7 * w + h / 2 // centro de la tarjeta respecto al centro del arco
+      stage.style.marginBottom = '0px'
+      const textBox = copy.getBoundingClientRect()
+      const arcBox = arc.getBoundingClientRect()
+      const half = textBox.width / 2
+      const textTop = textBox.top - arcBox.top // en coordenadas del centro del arco
+      let worst = -Infinity
+      for (let a = -46; a <= 46; a += 0.5) {
+        const op = Math.max(0, 1 - Math.max(0, Math.abs(a) - 34) / 12)
+        if (op < 0.15) continue
+        const t = (a * Math.PI) / 180
+        const xs = [-w / 2, w / 2].map((x) => Math.cos(t) * x - Math.sin(t) * (h / 2 - R))
+        if (Math.max(...xs) < -half || Math.min(...xs) > half) continue
+        for (const x of [-w / 2, w / 2]) worst = Math.max(worst, cy + Math.sin(t) * x + Math.cos(t) * (h / 2 - R))
+      }
+      const gap = 1.25 * rem
+      stage.style.marginBottom = Math.max(0, worst + gap - textTop) + 'px'
+    }
+    fit()
+    const ro = new ResizeObserver(fit)
+    ro.observe(document.documentElement)
+    document.fonts?.ready.then(fit)
+    return () => ro.disconnect()
+  }, [reduce])
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   // En móvil y tablet también se puede girar el arco arrastrando con el dedo; el scroll sigue moviéndolo igual
   const spin = useMotionValue(0)
@@ -68,7 +106,7 @@ export default function AboutRing() {
     <section ref={ref} id="sobre-mi" aria-labelledby="sobre-mi-titulo" className={`about${reduce ? ' about--still' : ''}`}>
       <div className="about-sticky">
         <h2 id="sobre-mi-titulo" className="about-title">{about.title}</h2>
-        <div className="about-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
+        <div ref={stageRef} className="about-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
           <ul className="about-arc">
             {reduce
               ? PHOTOS.map((p, i) => (
@@ -81,7 +119,7 @@ export default function AboutRing() {
                 ))}
           </ul>
         </div>
-        <div className="about-copy">
+        <div ref={copyRef} className="about-copy">
           <p className="about-text">{t.sobreMiCorto}</p>
           <Link to="/curriculum" className="text-link">{t.verCurriculum}</Link>
         </div>
