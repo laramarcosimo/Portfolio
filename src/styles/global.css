@@ -736,4 +736,5 @@
 
 
 /* Carpeta abierta en escritorio, como en el móvil: las portadas por delante del bolsillo (al cerrar vuelven a entrar) */
-@media (min-width: 768px) { .lift-covers { z-index: 3; transition: clip-path 0.7s cubic-bezier(0.33, 1, 0.68, 1); } .lift-layer.lift-front { z-index: 2; } .lift-close, .lift-info { z-index: 5; } }
+@media (min-width: 768px) { .lift-covers { z-index: 3; transition: clip-path 0.7s cubic-bezier(0.33, 1, 0.68, 1); }
+  .lift:not([data-closing]) .lift-covers { transition: clip-path 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.12s; } .lift-layer.lift-front { z-index: 2; } .lift-close, .lift-info { z-index: 5; } }

@@ -854,6 +854,12 @@ function FolderLift({ group, items, level, geo: firstGeo, button, open, reduce, 
   const [geo, setGeo] = useState(firstGeo)
   const [vp, setVp] = useState(viewport)
   const [infoH, setInfoH] = useState(null)
+  // Al montar, las hojas empiezan recortadas por la solapa; un fotograma después se libera el corte y la transición las deja salir del bolsillo
+  const [freed, setFreed] = useState(false)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setFreed(true)))
+    return () => cancelAnimationFrame(id)
+  }, [])
   const [active, setActive] = useState(n >= MANY ? Math.floor(n / 2) : 0)
   const ready = infoH !== null
   const geoRef = useRef(geo)
@@ -1083,7 +1089,7 @@ function FolderLift({ group, items, level, geo: firstGeo, button, open, reduce, 
         <span className="folder lift-layer lift-back" aria-hidden="true" onClick={onClose}>
           <FolderFace group={group} count={n} />
         </span>
-        <div className="lift-covers" style={{ clipPath: clipOf(geo, open && window.innerWidth >= 768) }}>
+        <div className="lift-covers" style={{ clipPath: clipOf(geo, freed && open && window.innerWidth >= 768) }}>
           {ready &&
             items.map((p, i) => {
               const c = stage.covers[i]
