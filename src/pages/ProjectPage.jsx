@@ -8,6 +8,7 @@ import ProjectStory from '../components/case/ProjectStory'
 import ShowcaseGrid from '../components/case/ShowcaseGrid'
 import BeforeAfter from '../components/case/BeforeAfter'
 import ProcessStrip from '../components/case/ProcessStrip'
+import ReadingProgress from '../components/case/ReadingProgress'
 import { Link } from 'react-router-dom'
 import { composeProject } from '../data/projectsData'
 import { useContent, useProjectPages } from '../data/useContent'
@@ -51,6 +52,7 @@ export default function ProjectPage() {
   return (
     <MotionConfig reducedMotion="user">
       <main className="cs" style={vars} data-project={slug}>
+        <ReadingProgress />
         <ProjectHeader name={name} project={project} page={page} hero={parts.hero} toolLabels={toolLabels} t={t} />
         <ProjectStory title={L.story} paragraphs={paragraphs} band={parts.band} keys={t.storyKeys} />
         {page.process && <ProcessStrip process={page.process} />}
@@ -63,16 +65,17 @@ export default function ProjectPage() {
         {page.manual && (
           <section className="cs-section">
             <div className="cs-wrap cs-manual">
-              <Link to={`/proyectos/${slug}/manual`} className="cs-cta-btn">{t.verManual} →</Link>
-              <span>{t.manualNota}</span>
+              <Link to={`/proyectos/${slug}/manual`} className="cs-btn-outline">{t.verManual} <span className="cs-btn-note">({t.manualNota})</span> →</Link>
             </div>
           </section>
         )}
-        <section className="cs-section cs-cta">
-          <div className="cs-wrap">
-            <h2 className="cs-heading">{t.cierreTitulo}</h2>
-            <p className="cs-text">{t.cierreTexto}</p>
-            <Link to="/contacto" className="cs-cta-btn">{t.cierreBoton}</Link>
+        <section className="cs-cta-band">
+          <div className="cs-wrap cs-cta-inner">
+            <div>
+              <h2 className="cs-cta-title">{t.cierreTitulo}</h2>
+              <p className="cs-cta-text">{t.cierreTexto}</p>
+            </div>
+            <Link to="/contacto" className="cs-cta-btn cs-cta-btn--lilac">{t.cierreBoton} →</Link>
           </div>
         </section>
         <ProjectNavigation slug={slug} projects={projects} t={t} />

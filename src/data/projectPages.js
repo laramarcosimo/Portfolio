@@ -46,7 +46,7 @@ export const projectPages = {
     colors: [
       {
         name: 'Lavanda Pervinca',
-        lines: ['HEX     #9690E4', 'RGB     150, 144, 228', 'CMYK    40, 38, 0, 0'],
+        lines: ['HEX     #9690E4', 'RGB     150, 144, 228', 'CMYK    48, 45, 0, 0'],
         bg: '#9690E4',
         dark: true,
         logos: [ph('marca-personal/logo-azul', 'Logo Azul'), ph('marca-personal/logo-blanco', 'Logo Blanco')],
@@ -59,10 +59,18 @@ export const projectPages = {
       },
       {
         name: 'Azul Pastel Vibrante',
-        lines: ['HEX     #96C9FF', 'RGB     150, 201, 255', 'CMYK    40, 15, 0, 0'],
+        lines: ['HEX     #96C9FF', 'RGB     150, 201, 255', 'CMYK    43, 13, 0, 0'],
         bg: '#96C9FF',
         dark: true,
         logos: [ph('marca-personal/logo-azul', 'Logo Azul'), ph('marca-personal/logo-blanco', 'Logo Blanco')],
+      },
+      {
+        name: 'Blanco Papel',
+        lines: ['HEX     #F0F0EE', 'RGB     240, 240, 238', 'CMYK    7, 5, 7, 0'],
+        bg: '#F0F0EE',
+        dark: true,
+        bordered: true,
+        logos: [ph('marca-personal/logo-azul', 'Logo Azul')],
       },
     ],
     typographyPair: [
@@ -89,8 +97,8 @@ export const projectPages = {
     ],
     typeGuide: {
       rows: [
-        { use: 'Titulares', sample: 'Idea y corazón', font: 'Cormorant Garamond Italic', detail: 'SemiBold en los grandes · Bold en los pequeños', face: { fontFamily: "'Cormorant Garamond'", fontStyle: 'italic', fontWeight: 600 } },
         { use: 'Texto', sample: 'Claridad en cada dato', font: 'Quicksand', detail: 'Párrafos, botones y datos', face: { fontFamily: "'Quicksand'", fontWeight: 600 } },
+        { use: 'Titulares', sample: 'Idea y corazón', font: 'Cormorant Garamond Italic', detail: 'SemiBold en los grandes · Bold en los pequeños', face: { fontFamily: "'Cormorant Garamond'", fontStyle: 'italic', fontWeight: 600 } },
       ],
       why: 'Contrastan en el trazo y comparten la suavidad de las curvas, como el símbolo.',
     },

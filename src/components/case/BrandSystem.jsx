@@ -34,6 +34,14 @@ function Specimen({ ty, stylesLabel, role }) {
 /** Sistema de marca: logotipo, color, tipografía y patrón, en un solo recorrido. */
 import LogoUsage from './LogoUsage'
 
+// "CMYK 100, 88, 37, 31" -> "C100 M88 Y37 K31"
+const cmykOf = (c) => {
+  const l = c.lines?.find((x) => /CMYK/i.test(x))
+  if (!l) return null
+  const v = l.replace(/CMYK[:s]*/i, '').split(',').map((n) => n.trim()).filter(Boolean)
+  return v.length === 4 ? v.map((n, i) => 'CMYK'[i] + n).join(' ') : null
+}
+
 export default function BrandSystem({ slug, page, parts, specimens, t }) {
   const L = page.labels
   return (
@@ -49,7 +57,7 @@ export default function BrandSystem({ slug, page, parts, specimens, t }) {
         {page.usage && <LogoUsage usage={page.usage} label={page.title} L={t.usoLogo} />}
         <div className="cs-block">
           <h3 className="cs-label">{t.color}</h3>
-          <Rise className={`cs-palette${parts.swatch ? ` cs-palette--${parts.swatch}` : ''}`}>
+          <Rise className={`cs-palette${parts.swatch ? ` cs-palette--${parts.swatch}` : ''}`} style={{ '--n': page.colors.length }}>
             {page.colors.map((c) => (
               parts.swatch === 'logo' ? (
                 <figure key={c.bg} style={{ color: c.dark ? '#10131A' : '#FFFFFF' }}>
@@ -57,12 +65,14 @@ export default function BrandSystem({ slug, page, parts, specimens, t }) {
                   <figcaption>
                     <p className="cs-swatch-name">{c.name}</p>
                     <p className="cs-swatch-hex">{c.bg.toUpperCase()}</p>
+                  {cmykOf(c) && <p className="cs-swatch-cmyk">{cmykOf(c)}</p>}
                   </figcaption>
                 </figure>
               ) : (
                 <div key={c.bg} style={{ background: c.bg, color: c.dark ? '#10131A' : '#FFFFFF', boxShadow: c.bordered ? 'inset 0 0 0 1px rgb(16 19 26 / 0.2)' : undefined }}>
                   <p className="cs-swatch-name">{c.name}</p>
                   <p className="cs-swatch-hex">{c.bg.toUpperCase()}</p>
+                  {cmykOf(c) && <p className="cs-swatch-cmyk">{cmykOf(c)}</p>}
                 </div>
               )
             ))}

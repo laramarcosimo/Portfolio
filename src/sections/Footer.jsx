@@ -31,6 +31,7 @@ export default function Footer() {
       <p className="footer-legal">
         <span>{t.heroUbicacion}</span>
         <span>{site.copyright}</span>
+        {site.creditos && <span className="footer-credits">{site.creditos}</span>}
       </p>
       <ul className="footer-cards">
         {routes.map(({ key, Icon, name, detail, href, external }) => (

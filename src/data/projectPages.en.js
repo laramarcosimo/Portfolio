@@ -38,7 +38,7 @@ export const projectPages = {
     colors: [
       {
         name: 'Periwinkle Lavender',
-        lines: ['HEX     #9690E4', 'RGB     150, 144, 228', 'CMYK    40, 38, 0, 0'],
+        lines: ['HEX     #9690E4', 'RGB     150, 144, 228', 'CMYK    48, 45, 0, 0'],
         bg: '#9690E4',
         dark: true,
         logos: [ph('marca-personal/logo-azul', 'Blue Logo'), ph('marca-personal/logo-blanco', 'White Logo')],
@@ -51,10 +51,18 @@ export const projectPages = {
       },
       {
         name: 'Vibrant Pastel Blue',
-        lines: ['HEX     #96C9FF', 'RGB     150, 201, 255', 'CMYK    40, 15, 0, 0'],
+        lines: ['HEX     #96C9FF', 'RGB     150, 201, 255', 'CMYK    43, 13, 0, 0'],
         bg: '#96C9FF',
         dark: true,
         logos: [ph('marca-personal/logo-azul', 'Blue Logo'), ph('marca-personal/logo-blanco', 'White Logo')],
+      },
+      {
+        name: 'Paper White',
+        lines: ['HEX     #F0F0EE', 'RGB     240, 240, 238', 'CMYK    7, 5, 7, 0'],
+        bg: '#F0F0EE',
+        dark: true,
+        bordered: true,
+        logos: [ph('marca-personal/logo-azul', 'Logo Azul')],
       },
     ],
     typographyPair: [
@@ -81,8 +89,8 @@ export const projectPages = {
     ],
     typeGuide: {
       rows: [
-        { use: 'Headlines', sample: 'Idea and heart', font: 'Cormorant Garamond Italic', detail: 'SemiBold for large · Bold for small', face: { fontFamily: "'Cormorant Garamond'", fontStyle: 'italic', fontWeight: 600 } },
         { use: 'Text', sample: 'Clarity in every detail', font: 'Quicksand', detail: 'Paragraphs, buttons and details', face: { fontFamily: "'Quicksand'", fontWeight: 600 } },
+        { use: 'Headlines', sample: 'Idea and heart', font: 'Cormorant Garamond Italic', detail: 'SemiBold for large · Bold for small', face: { fontFamily: "'Cormorant Garamond'", fontStyle: 'italic', fontWeight: 600 } },
       ],
       why: 'They contrast in stroke and share the softness of their curves, like the symbol.',
     },

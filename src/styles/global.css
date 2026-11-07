@@ -463,7 +463,7 @@
 .cs-logos .cs-caption { text-align: center; }
 .cs-logo-panel { display: flex; align-items: center; justify-content: center; aspect-ratio: 4 / 3; }
 .cs-logo-panel img { display: block; height: auto; }
-.cs-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cs-palette { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); }
 .cs-palette > div { display: flex; flex-direction: column; justify-content: flex-end; min-height: clamp(10rem, 22vw, 18rem); padding: 1.25rem; }
 .cs-specimen { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2rem, 6vw, 5rem); align-items: center; padding: 0; background: none; border-radius: 0; }
 .cs-specimen + .cs-specimen { margin-top: clamp(3rem, 6vw, 5rem); }
@@ -726,7 +726,7 @@
 
 /* Visor del manual de marca: páginas una debajo de otra, con barra para volver o descargar */
 .manual-viewer { max-width: 1200px; margin: 0 auto; padding: 1.5rem clamp(1rem, 3vw, 2rem) 4rem; }
-.manual-bar { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; background: var(--color-page); }
+.manual-bar { position: relative; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; background: var(--color-page); }
 .manual-bar .cs-back { margin: 0; }
 .manual-download { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.875rem; font-weight: 600; color: #192a56; }
 .manual-status { margin: 1rem 0; font-size: 0.875rem; text-align: center; opacity: 0.7; }
@@ -738,3 +738,43 @@
 /* Carpeta abierta en escritorio, como en el móvil: las portadas por delante del bolsillo (al cerrar vuelven a entrar) */
 @media (min-width: 768px) { .lift-covers { z-index: 3; transition: clip-path 0.7s cubic-bezier(0.33, 1, 0.68, 1); }
   .lift:not([data-closing]) .lift-covers { transition: clip-path 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.12s; } .lift-layer.lift-front { z-index: 2; } .lift-close, .lift-info { z-index: 5; } }
+
+/* Créditos de la web en el pie: discretos, debajo del copyright */
+.footer-credits { opacity: 0.7; font-style: italic; }
+
+
+/* Visor del manual: enlace fijo y discreto en el hueco izquierdo para volver al proyecto (solo si hay hueco a los lados) */
+.manual-back-fixed { position: fixed; left: 0; top: 0; z-index: 20; display: grid; place-items: center; width: 16px; height: 16px; color: var(--color-ink); will-change: transform; }
+.manual-back-fixed:hover { color: #6c64c9; }
+.manual-arrow-slot { display: inline-block; width: 16px; height: 16px; }
+/* Ola de color: una sombra muy suave dibuja el contorno, así el Blanco Papel se ve sobre el fondo del mismo tono */
+.cs-palette--wave { filter: drop-shadow(0 0 0.5px rgb(25 42 86 / 0.35)) drop-shadow(0 3px 8px rgb(25 42 86 / 0.08)); }
+
+/* Progreso de lectura en los proyectos: línea fina lavanda arriba del todo */
+.reading-progress { position: fixed; left: 0; right: 0; top: 0; z-index: 70; height: 3px; background: #9690e4; transform-origin: 0 50%; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .reading-progress { display: none; } }
+
+/* Cierre del proyecto (opción B): manual discreto, banda de contacto y tarjetas de anterior/siguiente */
+.cs-manual { margin-top: 0 !important; }
+.cs-btn-outline { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.7rem 1.4rem; border: 1.5px solid #192a56; border-radius: 99px; color: #192a56; font-weight: 700; font-size: 0.9375rem; transition: background 0.2s, color 0.2s; }
+.cs-btn-outline:hover { background: #192a56; color: #fff; }
+.cs-btn-note { font-weight: 500; opacity: 0.7; }
+.cs-cta-band { margin-top: var(--cs-section); background: #192a56; color: #fff; }
+.cs-cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem 3rem; flex-wrap: wrap; padding-block: clamp(2.5rem, 5vw, 4rem); }
+.cs-cta-title { font-family: var(--font-headline); font-style: italic; font-weight: 600; font-size: clamp(1.75rem, 3.2vw, 2.75rem); line-height: 1.1; }
+.cs-cta-text { margin-top: 0.5rem; font-size: 1rem; opacity: 0.85; }
+.cs-cta-btn--lilac { margin-top: 0; background: #9690e4; color: #fff; }
+.cs-cta-band + nav .cs-pager { margin-top: clamp(1.5rem, 3vw, 2.5rem); border-top: 0; padding-top: 0; }
+.cs-pager { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(0.75rem, 2vw, 1.25rem); }
+.cs-pager-link { display: flex; flex-direction: column; gap: 0.35rem; padding: clamp(1.25rem, 2.5vw, 2rem); border-radius: 0.75rem; background: #fff; box-shadow: inset 0 0 0 1px rgb(25 42 86 / 0.1); transition: transform 0.2s; }
+.cs-pager-link:hover { transform: translateY(-3px); }
+.cs-pager-link--next { align-items: flex-end; text-align: right; }
+.cs-pager-link .cs-pager-name { font-family: var(--font-headline); font-style: italic; font-weight: 600; font-size: clamp(1.25rem, 2.2vw, 1.75rem); }
+.cs-pager-link--next .cs-pager-label { color: inherit; opacity: 0.85; }
+@media (max-width: 640px) { .cs-cta-inner { flex-direction: column; align-items: flex-start; } .cs-pager { grid-template-columns: minmax(0, 1fr); } }
+.cs-btn-outline { max-width: 100%; flex-wrap: wrap; justify-content: center; text-align: center; }
+@media (max-width: 640px) { .cs-btn-outline { font-size: 0.875rem; padding: 0.65rem 1.1rem; border-radius: 1.5rem; } }
+
+/* CMYK de cada color: segunda línea pequeña y suave bajo el HEX */
+.cs-swatch-cmyk { margin-top: 0.125rem; font-size: 0.75rem; letter-spacing: 0.02em; opacity: 0.7; }
+@media (max-width: 640px) { .cs-swatch-cmyk { font-size: 0.625rem; } }

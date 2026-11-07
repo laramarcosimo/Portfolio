@@ -19,6 +19,7 @@ export const site = {
   instagram: 'https://www.instagram.com/laramarcosimo_?igsh=NXdwN2g5ZWd6b2pq&utm_source=qr',
   instagramHandle: '@laramarcosimo_',
   copyright: '© 2026 Lara Marco Simó. Todos los derechos reservados.',
+  creditos: 'Diseño y dirección creativa: Lara Marco Simó · Desarrollada con IA',
 }
 
 // Menú de la web original: Currículum, Proyectos y Contacto (el logotipo lleva al inicio).

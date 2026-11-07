@@ -10,6 +10,7 @@ export { img }
 export const site = {
   ...siteEs,
   copyright: '© 2026 Lara Marco Simó. All rights reserved.',
+  creditos: 'Design and creative direction: Lara Marco Simó · Built with AI',
 }
 
 export const navLinks = [
