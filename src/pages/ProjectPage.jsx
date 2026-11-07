@@ -7,6 +7,7 @@ import ProjectNavigation from '../components/case/ProjectNavigation'
 import ProjectStory from '../components/case/ProjectStory'
 import ShowcaseGrid from '../components/case/ShowcaseGrid'
 import BeforeAfter from '../components/case/BeforeAfter'
+import ProcessStrip from '../components/case/ProcessStrip'
 import { Link } from 'react-router-dom'
 import { composeProject } from '../data/projectsData'
 import { useContent, useProjectPages } from '../data/useContent'
@@ -52,12 +53,21 @@ export default function ProjectPage() {
       <main className="cs" style={vars} data-project={slug}>
         <ProjectHeader name={name} project={project} page={page} hero={parts.hero} toolLabels={toolLabels} t={t} />
         <ProjectStory title={L.story} paragraphs={paragraphs} band={parts.band} keys={t.storyKeys} />
+        {page.process && <ProcessStrip process={page.process} />}
         {page.comparison && <BeforeAfter cmp={page.comparison} label={t.antesDespues} />}
         {parts.logo && <BrandSystem slug={slug} page={page} parts={parts} specimens={specimens} t={t} />}
         <section className="cs-section">
           <div className="cs-wrap"><h2 className="cs-heading">{L.applications}</h2></div>
           <div className="cs-wrap cs-block"><ShowcaseGrid blocks={parts.applications} /></div>
         </section>
+        {page.manual && (
+          <section className="cs-section">
+            <div className="cs-wrap cs-manual">
+              <Link to={`/proyectos/${slug}/manual`} className="cs-cta-btn">{t.verManual} →</Link>
+              <span>{t.manualNota}</span>
+            </div>
+          </section>
+        )}
         <section className="cs-section cs-cta">
           <div className="cs-wrap">
             <h2 className="cs-heading">{t.cierreTitulo}</h2>

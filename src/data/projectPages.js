@@ -35,7 +35,7 @@ export const projectPages = {
   'marca-personal': {
     labels,
     title: 'Marca Personal',
-    cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/portada'), alt: 'Portada Marca Personal' },
+    cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/brand-board'), alt: 'Portada Marca Personal' },
     context: 'Proyecto personal',
     story: [
       { key: 'partida', text: "Quería una marca que hablara de mí antes de leer mi nombre." },
@@ -99,6 +99,7 @@ export const projectPages = {
       boligrafos: ph('marca-personal/boligrafos', 'Bolígrafos'),
       tarjeta: ph('marca-personal/tarjeta', 'Tarjeta de Visita'),
       carpeta: ph('marca-personal/carpeta', 'Carpeta'),
+      carpetaGomas: ph('marca-personal/carpeta-gomas', 'Carpeta con gomas'),
       sobre: ph('marca-personal/sobre', 'Sobre'),
       patronAzul: { src: patronAzul, alt: 'Patrón azul de la marca', tile: '#FFFFFF' },
       patronBlanco: { src: patronBlanco, alt: 'Patrón blanco de la marca', tile: '#192A56' },
@@ -109,6 +110,16 @@ export const projectPages = {
       { kind: 'color', bg: '#9690E4', src: img('marca-personal/logo-blanco-trim') },
       { kind: 'tinta', bg: '#FFFFFF', ink: '#192A56', src: img('marca-personal/logo-azul-trim') },
     ] },
+    process: {
+      title: 'Del boceto a la marca',
+      steps: [
+        { img: 'marca-personal/proceso-antes', label: 'Antes', text: 'Mi primer monograma: clásico, pero rígido.' },
+        { img: 'marca-personal/proceso-boceto', label: 'Boceto', text: 'Primeras ideas a mano con la L y la M.' },
+        { img: 'marca-personal/proceso-exploracion', label: 'Exploración', text: 'Las letras empiezan a unirse en un trazo.' },
+        { img: 'marca-personal/proceso-final', label: 'Final', text: 'Un solo trazo: lectura y diseño.' },
+      ],
+    },
+    manual: 'manual/Manual-de-identidad-Lara-Marco-Simo.pdf',
     tools: ['illustrator', 'photoshop', 'after-effects'],
   },
 

@@ -1,6 +1,6 @@
 // Tamaños naturales: reservan el hueco antes de cargar para que nada salte.
 const SIZE = {
-  libretas: [1200, 900], boligrafos: [1200, 900], tarjetaMarca: [1200, 676], carpeta: [1200, 900], sobre: [1200, 900], patron: [596, 842],
+  libretas: [1200, 900], boligrafos: [1200, 900], tarjetaMarca: [1200, 676], carpeta: [1200, 900], carpetaGomas: [2000, 1422], sobre: [1200, 900], patron: [596, 842],
   tarjetaJaime: [1200, 800], agenda: [1200, 900], boligrafo: [1200, 1200], taza: [1200, 576], web: [1400, 940],
   packaging: [1200, 960], pegatinas: [1200, 676], bolsas: [1200, 1066], tarjetaCasa: [1200, 900], valla: [1400, 1050], mupi: [1200, 900],
   logoCasa: [900, 506], logoMarca: [900, 506], poster: [1080, 1350], film: [640, 360], logoViejo: [900, 744], logoJaime: [600, 288],
@@ -30,7 +30,7 @@ export function composeProject(slug, page, project, t) {
       logo: [full(loop(v.single, [2000, 1000])), duo({ ...loop(v.pair[0], [1920, 1642]), frame: { scale: 1.6 } }, { ...loop(v.pair[1], [1920, 1646]), frame: { scale: 1 } }), logos(mark(page.colors[0].logos[0], '#FFFFFF', SIZE.logoMarca), mark(page.colors[1].logos[0], page.colors[1].bg, SIZE.logoMarca))],
       logoSize: SIZE.logoMarca,
       patterns: [squares(shot(s.patronAzul, SIZE.patron, s.patronAzul.tile), shot(s.patronBlanco, SIZE.patron, s.patronBlanco.tile))],
-      applications: [grid(shot(s.libretas, SIZE.libretas), shot(s.boligrafos, SIZE.boligrafos), shot(s.sobre, SIZE.sobre), shot(s.tarjeta, SIZE.tarjetaMarca)), full(loop(v.wide, [4000, 1000]))],
+      applications: [grid(shot(s.libretas, SIZE.libretas), shot(s.boligrafos, SIZE.boligrafos), shot(s.sobre, SIZE.sobre), shot(s.carpetaGomas, SIZE.carpetaGomas)), full(shot(s.tarjeta, SIZE.tarjetaMarca)), full(loop(v.wide, [4000, 1000]))],
     }
   }
   if (slug === 'identidad-visual') {

@@ -106,7 +106,7 @@ export const contactItems = [
 
 // ---------- Projects (list and carousel cards) ----------
 export const projects = [
-  { slug: 'marca-personal', number: '01', name: 'Personal Brand', cover: img('marca-personal/portada'), hero: img('marca-personal/libretas'), heroAlt: 'Personal brand notebooks in navy, lilac and sky blue', concept: 'A monogram interweaving the initials L, M and S.' },
+  { slug: 'marca-personal', number: '01', name: 'Personal Brand', cover: img('marca-personal/brand-board'), hero: img('marca-personal/libretas'), heroAlt: 'Personal brand notebooks in navy, lilac and sky blue', concept: 'A monogram interweaving the initials L, M and S.' },
   { slug: 'identidad-visual', number: '02', name: 'Visual Identity', cover: img('identidad-visual/portada'), hero: img('identidad-visual/tarjeta'), heroAlt: 'Business cards with the JMG monogram', concept: "A minimalist monogram for an engineer's personal brand." },
   { slug: 'casa-ricardo', number: '03', name: 'Casa Ricardo', cover: img('casa-ricardo/portada'), hero: img('casa-ricardo/packaging-delante'), heroAlt: 'Casa Ricardo nut packaging', concept: 'Redesigning the identity of a sweets and nuts shop.' },
   { slug: 'proyecto-video', number: '04', name: 'SloMo × Lola Índigo', cover: img('video/portada'), hero: img('video/portada'), heroAlt: 'Cover of the SloMo × Lola Índigo music video', concept: "A music video pairing Chanel's ‘SloMo’ with Lola Índigo's dance." },

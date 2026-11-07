@@ -1,4 +1,5 @@
 import './styles/global.css'
+import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
@@ -6,6 +7,8 @@ import Curriculum from './pages/Curriculum'
 import Projects from './pages/Projects'
 import ProjectPage from './pages/ProjectPage'
 import ContactPage from './pages/ContactPage'
+
+const ManualViewer = lazy(() => import('./pages/ManualViewer'))
 
 export default function App() {
   return (
@@ -15,6 +18,7 @@ export default function App() {
         <Route path="curriculum" element={<Curriculum />} />
         <Route path="proyectos" element={<Projects />} />
         <Route path="proyectos/:slug" element={<ProjectPage />} />
+        <Route path="proyectos/:slug/manual" element={<Suspense fallback={null}><ManualViewer /></Suspense>} />
         <Route path="contacto" element={<ContactPage />} />
         <Route path="*" element={<Home />} />
       </Route>

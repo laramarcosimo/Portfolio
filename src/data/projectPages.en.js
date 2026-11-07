@@ -27,7 +27,7 @@ export const projectPages = {
   'marca-personal': {
     labels,
     title: 'Personal Brand',
-    cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/portada'), alt: 'Personal Brand cover' },
+    cover: { desktop: img('marca-personal/portadas'), mobile: img('marca-personal/brand-board'), alt: 'Personal Brand cover' },
     context: 'Personal project',
     story: [
       { key: 'partida', text: "I wanted a brand that spoke about me before anyone read my name." },
@@ -91,6 +91,7 @@ export const projectPages = {
       boligrafos: ph('marca-personal/boligrafos', 'Pens'),
       tarjeta: ph('marca-personal/tarjeta', 'Business Card'),
       carpeta: ph('marca-personal/carpeta', 'Folder'),
+      carpetaGomas: ph('marca-personal/carpeta-gomas', 'Folder with elastic bands'),
       sobre: ph('marca-personal/sobre', 'Envelope'),
       patronAzul: { src: patronAzul, alt: 'Blue brand pattern', tile: '#FFFFFF' },
       patronBlanco: { src: patronBlanco, alt: 'White brand pattern', tile: '#192A56' },
@@ -101,6 +102,16 @@ export const projectPages = {
       { kind: 'color', bg: '#9690E4', src: img('marca-personal/logo-blanco-trim') },
       { kind: 'tinta', bg: '#FFFFFF', ink: '#192A56', src: img('marca-personal/logo-azul-trim') },
     ] },
+    process: {
+      title: 'From sketch to brand',
+      steps: [
+        { img: 'marca-personal/proceso-antes', label: 'Before', text: 'My first monogram: classic, but rigid.' },
+        { img: 'marca-personal/proceso-boceto', label: 'Sketch', text: 'First hand-drawn ideas with the L and the M.' },
+        { img: 'marca-personal/proceso-exploracion', label: 'Exploration', text: 'The letters start to join in one stroke.' },
+        { img: 'marca-personal/proceso-final', label: 'Final', text: 'A single stroke: reading and design.' },
+      ],
+    },
+    manual: 'manual/Manual-de-identidad-Lara-Marco-Simo.pdf',
     tools: ['illustrator', 'photoshop', 'after-effects'],
   },
 
