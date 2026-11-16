@@ -1,0 +1,147 @@
+/* Calet: página propia con la paleta de la marca (verde, crema, arena). Nunca texto crema sobre arena. */
+@font-face { font-family: "Fredoka"; font-weight: 300 700; font-display: swap; src: url("../assets/fonts/Fredoka-Variable.ttf") format("truetype"); }
+@font-face { font-family: "ABeeZee"; font-weight: 400; font-display: swap; src: url("../assets/fonts/ABeeZee-Regular.ttf") format("truetype"); }
+@font-face { font-family: "ABeeZee"; font-weight: 400; font-style: italic; font-display: swap; src: url("../assets/fonts/ABeeZee-Italic.ttf") format("truetype"); }
+
+.calet { --v: #224826; --cr: #FAEFCA; --ar: #D0A688; --tile: #FFF8E2; background: var(--cr); color: var(--v); font-family: "ABeeZee", "Quicksand", sans-serif; overflow-x: clip; }
+.calet-wrap { box-sizing: border-box; width: 100%; max-width: calc(1120px + 4rem); margin-inline: auto; padding-inline: clamp(1rem, 4vw, 2rem); }
+.calet-section { padding-top: clamp(3.5rem, 8vw, 6.5rem); }
+.calet-band { margin-top: clamp(3.5rem, 8vw, 6.5rem); padding-block: clamp(3.5rem, 8vw, 6rem); }
+.calet-band--crema { background: color-mix(in srgb, var(--ar) 18%, var(--cr)); }
+.calet-band--verde { background: var(--v); color: var(--cr); }
+.calet-h2 { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: clamp(1.75rem, 3.4vw, 2.75rem); line-height: 1.1; margin-bottom: clamp(1.25rem, 2.5vw, 2rem); }
+.calet-text { max-width: 58ch; font-size: clamp(1rem, 1.3vw, 1.125rem); line-height: 1.6; }
+.calet-text + .calet-text { margin-top: 1rem; }
+
+/* Hero */
+.calet-hero { padding-top: clamp(6rem, 12vw, 8.5rem); }
+.calet-back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.875rem; opacity: 0.8; }
+.calet-back:hover { opacity: 1; }
+.calet-label { margin-top: clamp(2rem, 5vw, 3.5rem); font-size: 0.8125rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.8; }
+.calet-title { margin-top: 0.5rem; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: clamp(4rem, 13vw, 9.5rem); line-height: 0.95; }
+.calet-line { margin-top: 1rem; max-width: 32ch; font-size: clamp(1.125rem, 2vw, 1.5rem); }
+.calet-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+.calet-tags li { padding: 0.35rem 0.85rem; border: 1.5px solid var(--v); border-radius: 99px; font-size: 0.875rem; }
+.calet-tags .calet-year { background: var(--v); color: var(--cr); }
+.calet-hero-media { margin-top: clamp(2rem, 5vw, 3.5rem); }
+.calet-hero-media img { display: block; width: 100%; height: auto; }
+
+/* Ficha */
+.calet-intro .calet-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+.calet-facts { display: grid; gap: 1rem; }
+.calet-facts dt { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; }
+.calet-facts dd { margin-top: 0.15rem; }
+.calet-lead { font-size: clamp(1.125rem, 1.8vw, 1.375rem); line-height: 1.55; }
+
+/* Concepto */
+.calet-quote { max-width: 26ch; margin-bottom: 1.25rem; font-family: "Fredoka", sans-serif; font-weight: 500; font-size: clamp(1.5rem, 3.2vw, 2.5rem); line-height: 1.2; }
+.calet-logo-detail { position: relative; width: min(100%, 760px); margin: clamp(2.5rem, 6vw, 4rem) auto 0; padding-bottom: 3rem; }
+.calet-logo-detail img { display: block; width: 100%; height: auto; }
+.calet-pin, .calet-num { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--v); color: var(--cr); font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 0.95rem; }
+.calet-pin { position: absolute; bottom: 0; transform: translateX(-50%); }
+.calet-pin::before { content: ""; position: absolute; bottom: 100%; left: 50%; width: 1.5px; height: 0.9rem; background: var(--v); }
+.calet-details { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; margin-top: clamp(2rem, 4vw, 3rem); }
+.calet-details li { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; align-items: center; }
+.calet-details strong { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 1.25rem; }
+.calet-details p { grid-column: 2; margin-top: 0.25rem; line-height: 1.5; }
+
+/* Versiones */
+.calet-versions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.calet-tile { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; min-height: clamp(12rem, 26vw, 18rem); padding: 2rem 1.5rem 1.25rem; border-radius: 1.25rem; }
+.calet-tile img { width: min(70%, 320px); height: auto; margin-block: auto; }
+.calet-tile .calet-vertical { width: auto; height: clamp(7rem, 15vw, 10rem); }
+.calet-tile--avatar { background: var(--cr); }
+.calet-tile--avatar img { width: min(100%, 460px); }
+.calet-tile figcaption { align-self: flex-start; font-size: 0.875rem; }
+.calet-tile--crema { background: var(--tile); box-shadow: inset 0 0 0 1.5px var(--ar); }
+.calet-tile--verde { background: var(--v); color: var(--cr); }
+.calet-figure { margin-top: 1rem; }
+.calet-figure img, .calet-shot img { display: block; width: 100%; height: auto; border-radius: 1rem; }
+.calet-figure figcaption, .calet-shot figcaption { margin-top: 0.6rem; font-size: 0.875rem; line-height: 1.45; }
+
+/* Color: el ancho de cada muestra es su proporción */
+.calet-colors { display: flex; gap: 1rem; }
+.calet-color { flex-basis: 0; min-width: 6.5rem; }
+.calet-chip { display: flex; align-items: flex-end; height: clamp(9rem, 22vw, 15rem); padding: 1rem; border-radius: 1.25rem; background: var(--c); color: var(--cr); font-family: "Fredoka", sans-serif; font-weight: 600; font-size: clamp(1.25rem, 2.4vw, 2rem); }
+.calet-chip[data-light] { color: var(--v); box-shadow: inset 0 0 0 1.5px var(--ar); }
+.calet-color:nth-child(3) .calet-chip { color: var(--v); } /* nunca crema sobre arena */
+.calet-color-name { margin-top: 0.75rem; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 1.125rem; }
+.calet-color-role, .calet-color-code { font-size: 0.8125rem; line-height: 1.45; opacity: 0.8; }
+.calet-note { margin-top: 1.25rem; font-size: 0.875rem; opacity: 0.8; }
+
+/* Tipografía: la muestra con botones de Marca Personal, en los colores de Calet */
+.calet-specimens { color: var(--v); }
+.calet-specimens .cs-style { border-color: color-mix(in srgb, var(--v) 35%, transparent); color: var(--v); }
+.calet-specimens .cs-style[aria-pressed="true"] { background: var(--v); color: var(--cr); border-color: var(--v); }
+.calet-hierarchy { margin-top: 2rem; border-top: 1.5px solid var(--ar); }
+.calet-hier-row { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1rem; align-items: baseline; padding-block: 1.1rem; border-bottom: 1.5px solid color-mix(in srgb, var(--ar) 50%, transparent); }
+.calet-hier-label { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7; }
+.calet-hier-h1 { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.05; }
+.calet-hier-h2 { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: clamp(1.25rem, 2.6vw, 1.75rem); }
+.calet-hier-p { font-size: 1.0625rem; line-height: 1.55; }
+.calet-hier-small { font-size: 0.8125rem; }
+
+/* Sistema gráfico */
+.calet-system { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.calet-sys { display: flex; flex-direction: column; gap: 0.75rem; }
+.calet-sys--wide { grid-column: 1 / -1; }
+.calet-sys img { display: block; width: 100%; height: auto; border-radius: 1rem; }
+.calet-sys figcaption { font-size: 0.9375rem; line-height: 1.5; }
+.calet-sys strong { margin-right: 0.35rem; font-family: "Fredoka", sans-serif; font-weight: 600; }
+.calet-pots { display: grid; flex: 1; grid-template-columns: repeat(3, 1fr); gap: 1rem; align-items: stretch; }
+.calet-pots img { width: 100%; height: 100%; aspect-ratio: 3 / 4; object-fit: contain; padding: 0.9rem; box-sizing: border-box; border-radius: 0.75rem; }
+.calet-pots img:first-child { background: #FFFFFF; } /* maceta clara: siempre sobre blanco */
+.calet-pots img:nth-child(2) { background: var(--cr); } /* terracota: sobre el fondo crema */
+.calet-pots img:nth-child(3) { background: var(--ar); } /* hojas crema: sobre arena */
+.calet-sys:last-child { justify-content: space-between; }
+
+/* Tono */
+.calet-words { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.75rem; }
+.calet-words li { padding: 0.4rem 1rem; border-radius: 99px; background: var(--ar); color: var(--v); font-family: "Fredoka", sans-serif; font-weight: 500; }
+.calet-voice { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.calet-msg { padding: 1.5rem; border-radius: 1.5rem 1.5rem 1.5rem 0.35rem; font-size: clamp(1rem, 1.5vw, 1.1875rem); line-height: 1.55; }
+.calet-msg span { display: block; margin-bottom: 0.5rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.calet-msg--good { background: var(--v); color: var(--cr); }
+.calet-msg--bad { background: var(--tile); box-shadow: inset 0 0 0 1.5px var(--ar); }
+.calet-msg--bad p { text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--v) 45%, transparent); }
+
+/* Aplicaciones y manual */
+.calet-apps { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
+.calet-apps-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+.calet-manual-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+.calet-btn { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.8rem 1.5rem; border-radius: 99px; background: var(--v); color: var(--cr); font-family: "Fredoka", sans-serif; font-weight: 500; transition: transform 0.2s; }
+.calet-btn:hover { transform: translateY(-2px); }
+.calet-btn--ghost { background: transparent; color: var(--v); box-shadow: inset 0 0 0 1.5px var(--v); }
+.calet-ia { padding-top: 1.5rem; font-size: 0.8125rem; opacity: 0.75; }
+
+/* Cierre: la web recupera su identidad */
+.calet .cs-cta-band { margin-top: clamp(2.5rem, 5vw, 4rem); font-family: "Quicksand", sans-serif; }
+.calet > nav { color: var(--color-ink); padding-bottom: 2.5rem; }
+
+@media (max-width: 760px) {
+  .calet-intro .calet-wrap, .calet-details, .calet-voice, .calet-system { grid-template-columns: minmax(0, 1fr); }
+  .calet-colors { flex-direction: column; }
+  .calet-color { flex-basis: auto; }
+  .calet-chip { height: 6rem; }
+  .calet-hier-row { grid-template-columns: minmax(0, 1fr); gap: 0.25rem; }
+  .calet-apps-pair { gap: 0.75rem; }
+}
+@media (max-width: 480px) { .calet-apps-pair, .calet-versions { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .calet-btn { transition: none; } }
+.calet-sys--wide img { aspect-ratio: 16 / 5; object-fit: cover; } /* el patrón es continuo: se puede recortar */
+
+/* Proceso: bocetos a mano, exploraciones y logo final en tarjetas iguales */
+.calet-process { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; counter-reset: p; }
+.calet-process-card { display: grid; place-items: center; aspect-ratio: 4 / 3; padding: 1rem; border-radius: 1rem; background: var(--cr); box-shadow: inset 0 0 0 1.5px var(--ar); }
+.calet-process-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.calet-process-card .is-sketch { mix-blend-mode: multiply; } /* el papel blanco del boceto se funde con la crema */
+.calet-process .is-final .calet-process-card { background: var(--tile); box-shadow: inset 0 0 0 2px var(--v); }
+.calet-process-label { margin-top: 0.75rem; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 1.0625rem; }
+.calet-process-label span { margin-right: 0.35rem; color: color-mix(in srgb, var(--v) 55%, var(--ar)); }
+.calet-process-text { margin-top: 0.25rem; font-size: 0.875rem; line-height: 1.45; }
+@media (max-width: 900px) { .calet-process { grid-template-columns: repeat(2, minmax(0, 1fr)); } .calet-process .is-final { grid-column: 1 / -1; } .calet-process .is-final .calet-process-card { aspect-ratio: 16 / 6; } }
+
+/* Galería en filas: todas las piezas de una fila a la misma altura, sin recortes */
+.calet-apps-row { display: flex; gap: 1rem; align-items: flex-start; }
+.calet-apps-cell { flex-basis: 0; min-width: 0; }
+@media (max-width: 640px) { .calet-apps-row { flex-direction: column; } .calet-apps-cell { flex-basis: auto; width: 100%; } }

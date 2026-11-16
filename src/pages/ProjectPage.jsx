@@ -9,6 +9,7 @@ import ShowcaseGrid from '../components/case/ShowcaseGrid'
 import BeforeAfter from '../components/case/BeforeAfter'
 import ProcessStrip from '../components/case/ProcessStrip'
 import ReadingProgress from '../components/case/ReadingProgress'
+import CaletPage from './CaletPage'
 import { Link } from 'react-router-dom'
 import { composeProject } from '../data/projectsData'
 import { useContent, useProjectPages } from '../data/useContent'
@@ -16,10 +17,16 @@ import { useUi } from '../i18n/ui'
 
 const TYPEKIT_SLUG = 'casa-ricardo'
 // Peso de los títulos cuando la tipografía del proyecto no es Quicksand Bold.
-const HEADING_WEIGHT = { 'identidad-visual': 600, 'casa-ricardo': 400 }
+const HEADING_WEIGHT = { 'casa-ricardo': 400 }
+
+/** Calet tiene página propia; el resto comparte la plantilla. */
+export default function ProjectRoute() {
+  const { slug } = useParams()
+  return slug === 'calet' ? <MotionConfig reducedMotion="user"><CaletPage /></MotionConfig> : <ProjectPage />
+}
 
 /** Caso de estudio de cada proyecto: una sola plantilla (portada, historia, sistema de marca, aplicaciones, navegación), con su tipografía. */
-export default function ProjectPage() {
+function ProjectPage() {
   const { slug } = useParams()
   const { projects, featuredProjects, toolLabels } = useContent()
   const { projectPages, projectFonts } = useProjectPages()

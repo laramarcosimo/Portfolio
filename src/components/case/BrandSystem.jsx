@@ -2,7 +2,7 @@ import { useState } from 'react'
 import ShowcaseGrid, { Rise } from './ShowcaseGrid'
 
 /** Muestra tipográfica: cada estilo es un botón que aplica su familia y su peso al texto de ejemplo. */
-function Specimen({ ty, stylesLabel, role }) {
+export function Specimen({ ty, stylesLabel, role }) {
   const [active, setActive] = useState(0)
   const extra = Array.isArray(ty.extra) ? ty.extra.join(' ') : ty.extra
   const faceOf = (x) => ({ fontFamily: `${x.family}, sans-serif`, fontWeight: x.weight, fontStyle: x.style ?? 'normal' })

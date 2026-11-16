@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 // Color de cada proyecto para la tarjeta "siguiente": invita a seguir con su propia identidad
 const ACCENT = {
   'marca-personal': { bg: '#9690E4', ink: '#10131A' },
-  'identidad-visual': { bg: '#00C896', ink: '#10131A' },
+  calet: { bg: '#224826', ink: '#FAEFCA' },
   'casa-ricardo': { bg: '#DB251E', ink: '#FFFFFF' },
   'proyecto-video': { bg: '#192A56', ink: '#FFFFFF' },
 }

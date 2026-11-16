@@ -8,8 +8,6 @@ import marcaExplicacion from '../assets/video/marca-explicacion.mp4'
 import marcaFondo from '../assets/video/marca-fondo.mp4'
 import marcaLogoBlanco from '../assets/video/marca-logo-blanco.mp4'
 import marcaLogoAzul from '../assets/video/marca-logo-azul.mp4'
-import jaimeLogoBlanco from '../assets/video/jaime-logo-blanco.mp4'
-import jaimeLogoNegro from '../assets/video/jaime-logo-negro.mp4'
 import patronAzul from '../assets/marca-personal/patron-azul.png'
 import patronBlanco from '../assets/marca-personal/patron-blanco.png'
 import videoLola from '../assets/video/video-lola.mp4'
@@ -123,77 +121,8 @@ export const projectPages = {
     tools: ['illustrator', 'photoshop', 'after-effects'],
   },
 
-  'identidad-visual': {
-    labels,
-    title: 'Visual Identity',
-    cover: { desktop: img('identidad-visual/portada-interior'), mobile: img('identidad-visual/portada-interior'), alt: 'Visual Identity inner cover' },
-    context: 'Commission · Personal brand for an engineer',
-    story: [
-      { key: 'reto', text: "An engineer needed a serious personal brand that conveyed precision without feeling cold." },
-      { key: 'concepto', text: "His initials connected like parts of a system, each stroke resting on the one before." },
-      { key: 'resultado', text: "A clean monogram that works from a mug to his website, in black, white and a green that gives it character." },
-    ],
-    videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro] },
-    colors: [
-      {
-        name: 'Black',
-        lines: ['HEX: #000000', 'RGB 0, 0, 0', 'CMYK 0, 0,0,  100'],
-        bg: '#000000',
-        logos: [ph('identidad-visual/logotipo-blanco', 'White Logo')],
-      },
-      {
-        name: 'Caribbean Green',
-        lines: ['HEX: #00C896', 'RGB 0, 200, 150', 'CMYK 75, 0, 60, 0'],
-        bg: '#00C896',
-        dark: true,
-        logos: [ph('identidad-visual/logotipo-negro', 'Black Logo'), ph('identidad-visual/logotipo-blanco', 'White Logo')],
-      },
-      {
-        name: 'White',
-        lines: ['HEX: #FFFFFF', 'RGB 255, 255, 255', 'CMYK 0, 0,0, 0'],
-        bg: '#FFFFFF',
-        dark: true,
-        bordered: true,
-        logos: [ph('identidad-visual/logotipo-negro', 'Black Logo')],
-      },
-    ],
-    typographyPair: [
-      {
-        title: 'Fieldwork Geo',
-        chars: alphabet,
-        extra: '1234567890!@#$%*',
-        weights: [
-          { label: 'Bold', weight: 600, family: "'Fieldwork Geo'" },
-        ],
-      },
-      {
-        title: 'Fieldwork Hum',
-        chars: alphabet,
-        extra: '1234567890!@#$%*',
-        weights: [
-          { label: 'Regular', weight: 400, family: "'Fieldwork Hum'" },
-          { label: 'Light', weight: 300, family: "'Fieldwork Hum'" },
-          { label: 'Hair', weight: 100, family: "'Fieldwork Hum'" },
-        ],
-      },
-    ],
-    shots: {
-      tarjeta: ph('identidad-visual/tarjeta', 'Business Card'),
-      boligrafo: ph('identidad-visual/boligrafo', 'Pen'),
-      agenda: ph('identidad-visual/agenda', 'Notebook'),
-      taza: ph('identidad-visual/taza', 'Mug'),
-      web: ph('identidad-visual/web', 'Jaime Website'),
-    },
-    usage: { main: img('identidad-visual/logotipo-negro-trim'), versions: [
-      { kind: 'positivo', bg: '#FFFFFF', src: img('identidad-visual/logotipo-negro-trim') },
-      { kind: 'negativo', bg: '#000000', src: img('identidad-visual/logotipo-blanco-trim') },
-      { kind: 'color', bg: '#00C896', src: img('identidad-visual/logotipo-negro-trim') },
-      { kind: 'tinta', bg: '#FFFFFF', ink: '#00A07A', src: img('identidad-visual/logotipo-negro-trim') },
-    ] },
-    tools: ['illustrator', 'photoshop', 'after-effects'],
-    webTools: ['UI', 'UX', 'AI'],
-    link: 'https://jaimemartglez.vercel.app',
-  },
+  // Calet tiene página propia (CaletPage, datos en calet.js); aquí solo lo que usa el visor del manual
+  calet: { title: 'Calet', manual: null }, // el PDF se añade cuando Lara lo exporte en buena calidad
 
   'casa-ricardo': {
     labels,

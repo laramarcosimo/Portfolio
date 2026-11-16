@@ -1,9 +1,8 @@
 // Tamaños naturales: reservan el hueco antes de cargar para que nada salte.
 const SIZE = {
   libretas: [1200, 900], boligrafos: [1200, 900], tarjetaMarca: [1200, 676], carpeta: [1200, 900], carpetaGomas: [2000, 1422], sobre: [1200, 900], patron: [596, 842],
-  tarjetaJaime: [1200, 800], agenda: [1200, 900], boligrafo: [1200, 1200], taza: [1200, 576], web: [1400, 940],
   packaging: [1200, 960], pegatinas: [1200, 676], bolsas: [1200, 1066], tarjetaCasa: [1200, 900], valla: [1400, 1050], mupi: [1200, 900],
-  logoCasa: [900, 506], logoMarca: [900, 506], poster: [1080, 1350], film: [640, 360], logoViejo: [900, 744], logoJaime: [600, 288],
+  logoCasa: [900, 506], logoMarca: [900, 506], poster: [1080, 1350], film: [640, 360], logoViejo: [900, 744],
 }
 
 const full = (item) => ({ type: 'full', items: [item] })
@@ -31,18 +30,6 @@ export function composeProject(slug, page, project, t) {
       logoSize: SIZE.logoMarca,
       patterns: [squares(shot(s.patronAzul, SIZE.patron, s.patronAzul.tile), shot(s.patronBlanco, SIZE.patron, s.patronBlanco.tile))],
       applications: [grid(shot(s.libretas, SIZE.libretas), shot(s.boligrafos, SIZE.boligrafos), shot(s.sobre, SIZE.sobre), shot(s.carpetaGomas, SIZE.carpetaGomas)), full(shot(s.tarjeta, SIZE.tarjetaMarca)), full(loop(v.wide, [4000, 1000]))],
-    }
-  }
-  if (slug === 'identidad-visual') {
-    const s = page.shots
-    return {
-      band: page.colors[1],
-      hero: shot(s.tarjeta, SIZE.tarjetaJaime),
-      logo: [duo({ ...loop(page.videos.pair[0], [1080, 964]), frame: { scale: 0.68, bg: '#000000' } }, { ...loop(page.videos.pair[1], [1080, 964]), frame: { scale: 0.68, bg: '#FFFFFF' } }), logos(mark(page.colors[2].logos[0], '#FFFFFF', SIZE.logoJaime), mark(page.colors[0].logos[0], '#000000', SIZE.logoJaime))],
-      logoSize: SIZE.logoJaime,
-      applications: [
-        grid(shot(s.agenda, SIZE.agenda), shot(s.boligrafo, SIZE.boligrafo), shot(s.taza, SIZE.taza), { ...shot(s.web, SIZE.web), href: page.link, caption: `${t.webHechaCon.replace(/:$/, '')} ${page.webTools.join(' · ')}` }),
-      ],
     }
   }
   if (slug === 'casa-ricardo') {

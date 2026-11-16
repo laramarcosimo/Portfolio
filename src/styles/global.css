@@ -1,15 +1,11 @@
 @import "tailwindcss";
 
-/* Tipografías de los proyectos (Marca Personal: Quicksand · Identidad Visual: Fieldwork) */
+/* Tipografías de los proyectos (Marca Personal: Quicksand · Calet: en calet.css) */
 @font-face { font-family: "Quicksand"; font-weight: 300; font-display: swap; src: url("../assets/fonts/Quicksand-Light.ttf") format("truetype"); }
 @font-face { font-family: "Quicksand"; font-weight: 400; font-display: swap; src: url("../assets/fonts/Quicksand-Regular.ttf") format("truetype"); }
 @font-face { font-family: "Quicksand"; font-weight: 500; font-display: swap; src: url("../assets/fonts/Quicksand-Medium.ttf") format("truetype"); }
 @font-face { font-family: "Quicksand"; font-weight: 600; font-display: swap; src: url("../assets/fonts/Quicksand-SemiBold.ttf") format("truetype"); }
 @font-face { font-family: "Quicksand"; font-weight: 700; font-display: swap; src: url("../assets/fonts/Quicksand-Bold.ttf") format("truetype"); }
-@font-face { font-family: "Fieldwork Hum"; font-weight: 100; font-display: swap; src: url("../assets/fonts/Fieldwork-Hum-Hair.otf") format("opentype"); }
-@font-face { font-family: "Fieldwork Hum"; font-weight: 300; font-display: swap; src: url("../assets/fonts/Fieldwork-Hum-Light.otf") format("opentype"); }
-@font-face { font-family: "Fieldwork Hum"; font-weight: 400; font-display: swap; src: url("../assets/fonts/Fieldwork-Hum-Regular.otf") format("opentype"); }
-@font-face { font-family: "Fieldwork Geo"; font-weight: 600; font-display: swap; src: url("../assets/fonts/Fieldwork-Semi-Bold-Geo.otf") format("opentype"); }
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
@@ -446,7 +442,7 @@
 .cs-duo .cs-media { width: 100%; max-width: none; }
 .cs-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2.5vw, 2.5rem); align-items: start; }
 .cs-grid2 .cs-media { width: 100%; max-width: none; }
-[data-project="marca-personal"] .cs-grid2:not(.cs-grid2--square) img.cs-media, [data-project="identidad-visual"] .cs-grid2 img.cs-media { aspect-ratio: 4 / 3 !important; object-fit: cover; }
+[data-project="marca-personal"] .cs-grid2:not(.cs-grid2--square) img.cs-media { aspect-ratio: 4 / 3 !important; object-fit: cover; }
 .cs-palette.cs-palette--wave > div { justify-content: center; padding-block: 2.5rem; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 12C17 2 33 2 50 12S83 22 100 12V88C83 98 67 98 50 88S17 78 0 88Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 12C17 2 33 2 50 12S83 22 100 12V88C83 98 67 98 50 88S17 78 0 88Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
 .cs-palette--logo { gap: clamp(1rem, 3vw, 2.5rem); }
 .cs-palette--logo figure { position: relative; margin: 0; text-align: center; }
@@ -479,7 +475,6 @@
   .cs { --cs-section: 3.25rem; --cs-block: 2rem; --cs-margin: 1rem; }
   .cs-cover { height: clamp(11rem, 34svh, 16rem); }
   .cs-cover--logo img { width: min(78%, 20rem); }
-  [data-project="identidad-visual"] .cs-grid2 { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
   .cs-hero .cs-back { min-height: 2.75rem; font-size: 0.8125rem; }
   .cs-title { font-size: 1.75rem; }
   .cs-concept { font-size: 0.9375rem; }

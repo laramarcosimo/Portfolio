@@ -1,14 +1,12 @@
 /*
  * Contenido de cada página de proyecto. Textos tomados de las páginas de la web original
- * (marca-personal, identidad-visual, casa-ricardo y Proyecto-video); no reescribir.
+ * (marca-personal, casa-ricardo y Proyecto-video); no reescribir.
  */
 import { img } from './content'
 import marcaExplicacion from '../assets/video/marca-explicacion.mp4'
 import marcaFondo from '../assets/video/marca-fondo.mp4'
 import marcaLogoBlanco from '../assets/video/marca-logo-blanco.mp4'
 import marcaLogoAzul from '../assets/video/marca-logo-azul.mp4'
-import jaimeLogoBlanco from '../assets/video/jaime-logo-blanco.mp4'
-import jaimeLogoNegro from '../assets/video/jaime-logo-negro.mp4'
 import patronAzul from '../assets/marca-personal/patron-azul.png'
 import patronBlanco from '../assets/marca-personal/patron-blanco.png'
 import videoLola from '../assets/video/video-lola.mp4'
@@ -26,7 +24,6 @@ const Q = "'Quicksand', sans-serif"
 const S = "'Cormorant Garamond', 'Quicksand', sans-serif" // titulares de la marca de Lara
 export const projectFonts = {
   'marca-personal': { body: Q, heading: S },
-  'identidad-visual': { body: "'Fieldwork Hum', 'Quicksand', sans-serif", heading: "'Fieldwork Geo', 'Quicksand', sans-serif" },
   'casa-ricardo': { body: "'depot-new-condensed-web', 'Quicksand', sans-serif", heading: "'ella-roman', 'Quicksand', serif" },
   'proyecto-video': { body: Q, heading: S },
 }
@@ -131,77 +128,8 @@ export const projectPages = {
     tools: ['illustrator', 'photoshop', 'after-effects'],
   },
 
-  'identidad-visual': {
-    labels,
-    title: 'Identidad Visual',
-    cover: { desktop: img('identidad-visual/portada-interior'), mobile: img('identidad-visual/portada-interior'), alt: 'Portada Interior Identidad Visual' },
-    context: 'Encargo · Marca personal de un ingeniero',
-    story: [
-      { key: 'reto', text: "Un ingeniero necesitaba una marca personal seria, que transmitiera precisión sin parecer fría." },
-      { key: 'concepto', text: "Sus iniciales conectadas como piezas de un sistema, cada trazo apoyado en el anterior." },
-      { key: 'resultado', text: "Un monograma limpio que funciona desde una taza hasta su web, en negro, blanco y un verde que le da carácter." },
-    ],
-    videos: { pair: [jaimeLogoBlanco, jaimeLogoNegro] },
-    colors: [
-      {
-        name: 'Negro',
-        lines: ['HEX: #000000', 'RGB 0, 0, 0', 'CMYK 0, 0,0,  100'],
-        bg: '#000000',
-        logos: [ph('identidad-visual/logotipo-blanco', 'Logotipo Blanco')],
-      },
-      {
-        name: 'Caribbean Green',
-        lines: ['HEX: #00C896', 'RGB 0, 200, 150', 'CMYK 75, 0, 60, 0'],
-        bg: '#00C896',
-        dark: true,
-        logos: [ph('identidad-visual/logotipo-negro', 'Logotipo Negro'), ph('identidad-visual/logotipo-blanco', 'Logotipo Blanco')],
-      },
-      {
-        name: 'Blanco',
-        lines: ['HEX: #FFFFFF', 'RGB 255, 255, 255', 'CMYK 0, 0,0, 0'],
-        bg: '#FFFFFF',
-        dark: true,
-        bordered: true,
-        logos: [ph('identidad-visual/logotipo-negro', 'Logotipo Negro')],
-      },
-    ],
-    typographyPair: [
-      {
-        title: 'Fieldwork Geo',
-        chars: alphabet,
-        extra: '1234567890!@#$%*',
-        weights: [
-          { label: 'Bold', weight: 600, family: "'Fieldwork Geo'" },
-        ],
-      },
-      {
-        title: 'Fieldwork Hum',
-        chars: alphabet,
-        extra: '1234567890!@#$%*',
-        weights: [
-          { label: 'Regular', weight: 400, family: "'Fieldwork Hum'" },
-          { label: 'Light', weight: 300, family: "'Fieldwork Hum'" },
-          { label: 'Hair', weight: 100, family: "'Fieldwork Hum'" },
-        ],
-      },
-    ],
-    shots: {
-      tarjeta: ph('identidad-visual/tarjeta', 'Tarjeta de Visita'),
-      boligrafo: ph('identidad-visual/boligrafo', 'Bolígrafo'),
-      agenda: ph('identidad-visual/agenda', 'Libreta'),
-      taza: ph('identidad-visual/taza', 'Taza'),
-      web: ph('identidad-visual/web', 'Web Jaime'),
-    },
-    usage: { main: img('identidad-visual/logotipo-negro-trim'), versions: [
-      { kind: 'positivo', bg: '#FFFFFF', src: img('identidad-visual/logotipo-negro-trim') },
-      { kind: 'negativo', bg: '#000000', src: img('identidad-visual/logotipo-blanco-trim') },
-      { kind: 'color', bg: '#00C896', src: img('identidad-visual/logotipo-negro-trim') },
-      { kind: 'tinta', bg: '#FFFFFF', ink: '#00A07A', src: img('identidad-visual/logotipo-negro-trim') },
-    ] },
-    tools: ['illustrator', 'photoshop', 'after-effects'],
-    webTools: ['UI', 'UX', 'AI'],
-    link: 'https://jaimemartglez.vercel.app',
-  },
+  // Calet tiene página propia (CaletPage, datos en calet.js); aquí solo lo que usa el visor del manual
+  calet: { title: 'Calet', manual: null }, // el PDF se añade cuando Lara lo exporte en buena calidad
 
   'casa-ricardo': {
     labels,

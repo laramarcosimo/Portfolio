@@ -108,20 +108,20 @@ export const contactItems = [
 // ---------- Projects (list and carousel cards) ----------
 export const projects = [
   { slug: 'marca-personal', number: '01', name: 'Personal Brand', cover: img('marca-personal/brand-board'), hero: img('marca-personal/libretas'), heroAlt: 'Personal brand notebooks in navy, lilac and sky blue', concept: 'A monogram interweaving the initials L, M and S.' },
-  { slug: 'identidad-visual', number: '02', name: 'Visual Identity', cover: img('identidad-visual/portada'), hero: img('identidad-visual/tarjeta'), heroAlt: 'Business cards with the JMG monogram', concept: "A minimalist monogram for an engineer's personal brand." },
+  { slug: 'calet', number: '02', name: 'Calet', cover: img('calet/portada'), hero: img('calet/fachada'), heroAlt: 'Calet plant shop front', concept: 'Brand identity for a plant shop.' },
   { slug: 'casa-ricardo', number: '03', name: 'Casa Ricardo', cover: img('casa-ricardo/portada'), hero: img('casa-ricardo/packaging-delante'), heroAlt: 'Casa Ricardo nut packaging', concept: 'Redesigning the identity of a sweets and nuts shop.' },
   { slug: 'proyecto-video', number: '04', name: 'SloMo × Lola Índigo', cover: img('video/portada'), hero: img('video/portada'), heroAlt: 'Cover of the SloMo × Lola Índigo music video', concept: "A music video pairing Chanel's ‘SloMo’ with Lola Índigo's dance." },
 ]
 
 const categories = {
   'marca-personal': 'Visual identity',
-  'identidad-visual': 'Monogram and website',
+  calet: 'Brand identity',
   'casa-ricardo': 'Visual identity redesign',
   'proyecto-video': 'Music video',
 }
 // Project folders: one per category, each in a brand colour
 export const projectGroups = [
-  { id: 'identidad', label: 'Visual identity', color: 'navy', slugs: ['marca-personal', 'identidad-visual'] },
+  { id: 'identidad', label: 'Visual identity', color: 'navy', slugs: ['marca-personal', 'calet'] },
   { id: 'rediseno', label: 'Brand redesign', color: 'lilac', slugs: ['casa-ricardo'] },
   { id: 'audiovisual', label: 'Audiovisual', color: 'sky', slugs: ['proyecto-video'] },
 ]
