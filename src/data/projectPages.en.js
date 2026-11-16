@@ -122,7 +122,7 @@ export const projectPages = {
   },
 
   // Calet tiene página propia (CaletPage, datos en calet.js); aquí solo lo que usa el visor del manual
-  calet: { title: 'Calet', manual: null }, // el PDF se añade cuando Lara lo exporte en buena calidad
+  calet: { title: 'Calet', manual: 'manual/Calet-Manual-de-marca.pdf' },
 
   'casa-ricardo': {
     labels,

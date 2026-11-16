@@ -17,7 +17,7 @@ const common = {
   logos: { verde: logoVerde, crema: logoCrema, vertical: logoVerticalVerde },
   hero: shot('fachada', 1800, 808),
   details: [35.5, 70.5, 93], // posición de cada detalle sobre el ancho del logo (%)
-  manual: null, // Lara subirá el PDF en buena calidad; hasta entonces no se muestra
+  manual: 'manual/Calet-Manual-de-marca.pdf',
   manualPages: 41,
   logoFinal: logoVerde,
 }
